@@ -1,5 +1,5 @@
 import type { Address } from 'viem';
-import { GRPC_ENDPOINT, DOMAIN } from './constants';
+import { GRPC_ENDPOINT, DOMAIN } from '../constants';
 
 interface CreateSIWEMessageArgs {
   chainId: number;

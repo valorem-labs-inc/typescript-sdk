@@ -1,4 +1,4 @@
-import { ONE_DAY_UNIX, ONE_WEEK_UNIX } from './constants';
+import { ONE_DAY_UNIX, ONE_WEEK_UNIX } from '../constants';
 
 /**
  * By aligning to 8AM UTC, we limit fragmentation of liquidity

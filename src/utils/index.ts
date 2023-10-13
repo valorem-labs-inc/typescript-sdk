@@ -1,4 +1,4 @@
-export type { SupportedChain } from './constants';
+export type { SupportedChain } from '../constants';
 
 export * from './hi-lo-bit-segmentation';
 export { createSIWEMessage } from './siwe';
@@ -15,4 +15,4 @@ export {
   WETH_ADDRESS,
   nullBytes32,
   supportedChains,
-} from './constants';
+} from '../constants';

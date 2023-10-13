@@ -1,7 +1,8 @@
-import type { ParsedQuoteResponse } from '../../utils/index';
-import { toH160, toH256, CLEAR_ADDRESS, nullBytes32 } from '../../utils';
+import type { ParsedQuoteResponse } from '~/utils/index';
+import { toH160, toH256, CLEAR_ADDRESS, nullBytes32 } from '~/utils';
+import { QuoteRequest, ItemType, Action } from '~/lib';
+import type { SimulatedTxRequest } from '~/types';
 import type { SeaportContract } from '../contracts/seaport';
-import { QuoteRequest, ItemType, Action } from '../../lib';
 import type { TraderConstructorArgs } from './base-trader';
 import { Trader } from './base-trader';
 
@@ -41,7 +42,9 @@ export class Taker extends Trader {
       nullBytes32,
     ]);
     // send tx
-    const receipt = await this.executeTransaction(request);
+    const receipt = await this.executeTransaction(
+      request as SimulatedTxRequest,
+    );
     // check result
     if (receipt.status === 'success') {
       console.log('Successfully fulfilled RFQ.');

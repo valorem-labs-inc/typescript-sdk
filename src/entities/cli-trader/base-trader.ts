@@ -1,11 +1,12 @@
 import type {
   PublicClient,
-  WalletClient,
   Address,
   PrivateKeyAccount,
   Transport,
-  WriteContractParameters,
   Chain,
+  WalletClient,
+  Account,
+  LocalAccount,
 } from 'viem';
 import {
   createPublicClient,
@@ -14,24 +15,24 @@ import {
   publicActions,
   parseUnits,
 } from 'viem';
-import { privateKeyToAccount } from 'viem/accounts';
-import type { ERC20Contract } from '../contracts/erc20';
-import type { CLEAR_ADDRESS, SEAPORT_ADDRESS } from '../../utils/constants';
-import { authClient, handleGRPCRequest } from '../../utils/grpc';
-import { createSIWEMessage } from '../../utils/index';
+import type { ERC20Contract } from '~/entities/contracts/erc20';
+import type { SimulatedTxRequest } from '~/types';
+import type { CLEAR_ADDRESS, SEAPORT_ADDRESS } from '~/constants';
+import { authClient, handleGRPCRequest } from '~/utils/grpc';
+import { createSIWEMessage } from '~/utils/index';
 import type { ClearinghouseContract } from '../contracts/clearinghouse';
 
 export interface TraderConstructorArgs {
-  privateKey: `0x${string}`;
+  account: Account;
   chain: Chain;
 }
 
 export class Trader {
-  public account: PrivateKeyAccount;
+  public account: Account;
   public chain: Chain;
   public authenticated = false;
   public publicClient: PublicClient<Transport, Chain>;
-  public walletClient: WalletClient<Transport, Chain, PrivateKeyAccount>;
+  public walletClient: WalletClient; //<Transport, Chain, PrivateKeyAccount>;
 
   /** cached results */
   // { [ERC20_ADDRESS]: BALANCE}
@@ -45,13 +46,13 @@ export class Trader {
     }
   >();
 
-  public constructor({ privateKey, chain }: TraderConstructorArgs) {
+  public constructor({ account, chain }: TraderConstructorArgs) {
     this.publicClient = createPublicClient({
       chain,
       transport: http(),
     });
 
-    this.account = privateKeyToAccount(privateKey);
+    this.account = account;
     this.walletClient = createWalletClient({
       account: this.account,
       chain,
@@ -112,12 +113,17 @@ export class Trader {
   }
 
   public async createAndSignMessage(nonce: string) {
+    if (!(this.account as PrivateKeyAccount | undefined)?.signMessage) {
+      throw new Error('Account does not support signing messages.');
+    }
     const message = createSIWEMessage({
       nonce,
       chainId: this.chain.id,
       address: this.account.address,
     });
-    const signature = await this.account.signMessage({ message });
+    const signature = await (this.account as LocalAccount).signMessage({
+      message,
+    });
     return { message, signature };
   }
 
@@ -195,7 +201,9 @@ export class Trader {
     // prepare tx
     const { request } = await erc20.simulate.approve([spender, amount]);
     // send tx
-    const receipt = await this.executeTransaction(request);
+    const receipt = await this.executeTransaction(
+      request as SimulatedTxRequest,
+    );
     // check result
     if (receipt.status === 'success') {
       console.log(
@@ -222,7 +230,9 @@ export class Trader {
       amount,
     ]);
     // send tx
-    const receipt = await this.executeTransaction(request);
+    const receipt = await this.executeTransaction(
+      request as SimulatedTxRequest,
+    );
     // check result
     if (receipt.status === 'success') {
       console.log(
@@ -241,14 +251,16 @@ export class Trader {
     // prepare tx
     const { request } = await clearinghouse.simulate.redeem([optionId]);
     // send tx
-    const receipt = await this.executeTransaction(request);
+    const receipt = await this.executeTransaction(
+      request as SimulatedTxRequest,
+    );
     // check result
     if (receipt.status === 'success') {
       console.log(`Successfully redeemed claim with ID ${optionId.toString()}`);
     }
   }
 
-  public async executeTransaction(request: WriteContractParameters) {
+  public async executeTransaction(request: SimulatedTxRequest) {
     // submit tx to chain
     const hash = await this.walletClient.writeContract(request);
     // wait for tx to be mined

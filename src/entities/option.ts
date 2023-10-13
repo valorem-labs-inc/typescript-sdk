@@ -7,6 +7,7 @@ import {
   sliceHex,
   toBytes,
 } from 'viem';
+import type { SimulatedTxRequest } from '~/types';
 import type { Trader } from './cli-trader/base-trader';
 import type { ClearinghouseContract } from './contracts/clearinghouse';
 
@@ -70,7 +71,9 @@ export class Option {
       this.expiryTimestamp,
     ]);
     // send tx
-    const receipt = await trader.executeTransaction(request);
+    const receipt = await trader.executeTransaction(
+      request as SimulatedTxRequest,
+    );
     // check result
     if (receipt.status === 'success') {
       console.log(

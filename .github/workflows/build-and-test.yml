@@ -28,8 +28,9 @@ jobs:
         with:
           version: latest
 
-      - name: Install packages, build, and test
+      - name: Install packages, build, lint, and test
         run: |
           pnpm i
           pnpm build
+          pnpm lint
           pnpm test

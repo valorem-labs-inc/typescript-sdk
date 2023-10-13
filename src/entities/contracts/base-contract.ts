@@ -1,14 +1,15 @@
-import type { PublicClient, erc20ABI as ERC20_ABI } from '@wagmi/core';
+import type { erc20ABI as ERC20_ABI } from '@wagmi/core';
 import type {
   Abi,
+  Account,
   Address,
   Chain,
-  PrivateKeyAccount,
   Transport,
+  PublicClient,
   WalletClient,
 } from 'viem';
 import { getContract } from 'viem';
-import type { CLEAR_ABI, SEAPORT_V1_5_ABI } from '../../abis';
+import type { CLEAR_ABI, SEAPORT_V1_5_ABI } from '~/abis';
 
 type IContract<T extends Abi> = ReturnType<
   typeof getContract<
@@ -16,9 +17,9 @@ type IContract<T extends Abi> = ReturnType<
     Address,
     T,
     Chain,
-    PrivateKeyAccount,
-    PublicClient,
-    WalletClient<Transport, Chain, PrivateKeyAccount>
+    Account,
+    PublicClient<Transport, Chain>,
+    WalletClient<Transport, Chain, Account>
   >
 >;
 
@@ -34,13 +35,13 @@ export type ISeaport = IContract<typeof SEAPORT_V1_5_ABI>;
 export type IERC20 = IContract<typeof ERC20_ABI>;
 
 /** Reusable extension of viem's contract interface */
-export class Contract<T extends IClearinghouse | ISeaport | IERC20> {
+export class Contract<TContract extends IClearinghouse | ISeaport | IERC20> {
   public address: Address;
-  public read: T['read'];
-  public simulate: T['simulate'];
-  public write: T['write'];
+  public read: TContract['read'];
+  public simulate: TContract['simulate'];
+  public write?: TContract['write'];
 
-  private contract: T;
+  private contract: TContract;
 
   public constructor({
     address,
@@ -53,11 +54,11 @@ export class Contract<T extends IClearinghouse | ISeaport | IERC20> {
       abi,
       walletClient,
       publicClient,
-    }) as unknown as T;
+    }) as unknown as TContract;
 
     this.address = address;
-    this.read = this.contract.read as T['read'];
-    this.simulate = this.contract.simulate as T['simulate'];
-    this.write = this.contract.write as T['write'];
+    this.read = this.contract.read as TContract['read'];
+    this.simulate = this.contract.simulate as TContract['simulate'];
+    this.write = this.contract.write as TContract['write'];
   }
 }

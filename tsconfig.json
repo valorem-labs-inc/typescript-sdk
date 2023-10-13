@@ -19,7 +19,15 @@
     "rootDir": "./src",
     "skipLibCheck": true,
     "strict": true,
-    "strictNullChecks": true
+    "strictNullChecks": true,
+    "paths": {
+      "~/*": ["./*"],
+      "~/abis/*": ["./abis/*"],
+      "~/entities/*": ["./entities/*"],
+      "~/lib/*": ["./lib/*"],
+      "~/types/*": ["./types/*"],
+      "~/utils/*": ["./utils/*"]
+    }
   },
   "include": ["src"],
   "exclude": ["dist", "test", "src/lib/trade-interfaces", "src/lib/codegen"]

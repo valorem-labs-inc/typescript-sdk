@@ -1,6 +1,6 @@
 import type { Address } from 'viem';
 import { getAddress, pad, toHex } from 'viem';
-import type { H40, H96, H128, H160, H256 } from '../../lib';
+import type { H40, H96, H128, H160, H256 } from '~/lib';
 
 export const fromH40 = (value: H40): bigint => {
   const lo = BigInt(value.lo);
