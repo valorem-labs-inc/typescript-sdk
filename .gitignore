@@ -16,6 +16,7 @@ build
 # misc
 .DS_Store
 *.pem
+!trade.valorem.xyz.pem
 
 # debug
 npm-debug.log*
@@ -34,3 +35,8 @@ yarn-error.log*
 
 # vercel
 .vercel
+
+# CI will build and deploy
+# apps/docs
+# WIP
+packages/_react-hooks

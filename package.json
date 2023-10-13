@@ -1,17 +1,25 @@
 {
+  "name": "@valorem-labs-inc/ts-monorepo",
   "private": true,
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
+    "docs:all": "rm -rf ./apps/docs && typedoc",
+    "format": "prettier --write \"**/*.{ts,tsx,md,json}\"",
     "lint": "turbo run lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "lint:fix": "turbo run lint:fix",
+    "prepare": "turbo run prepare",
+    "test": "turbo run test"
   },
+  "prettier": "@vercel/style-guide/prettier",
   "devDependencies": {
+    "@vercel/style-guide": "^5.0.0",
     "eslint": "^8.48.0",
     "prettier": "^3.0.3",
     "tsconfig": "workspace:*",
-    "turbo": "latest"
+    "tsup": "^7.2.0",
+    "turbo": "latest",
+    "typedoc": "^0.25.2"
   },
-  "packageManager": "pnpm@8.6.10",
-  "name": "ts-monorepo"
+  "packageManager": "pnpm@8.6.10"
 }

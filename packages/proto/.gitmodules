@@ -1,0 +1,3 @@
+[submodule "trade-interfaces"]
+	path = packages/proto/trade-interfaces
+	url = https://github.com/valorem-labs-inc/trade-interfaces.git

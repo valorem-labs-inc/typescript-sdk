@@ -1,0 +1,8 @@
+{
+  "extends": ["./typedoc.base.json"],
+  "entryPoints": ["packages/proto", "packages/sdk-core"],
+  "name": "Packages Example",
+  "entryPointStrategy": "packages",
+  "includeVersion": true,
+  "out": "apps/docs"
+}

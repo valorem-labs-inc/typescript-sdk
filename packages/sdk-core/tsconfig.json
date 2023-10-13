@@ -1,0 +1,14 @@
+{
+  "extends": "tsconfig/base.json",
+  "compilerOptions": {
+    "lib": ["es2021", "dom"],
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "target": "es2021",
+    "noEmit": false,
+    "baseUrl": "./src",
+    "outDir": "dist"
+  },
+  "include": ["src"],
+  "exclude": ["dist", "test"]
+}
