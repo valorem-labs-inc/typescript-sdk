@@ -1,3 +1,26 @@
 {
-  "extends": "tsconfig/base.json"
+  "compilerOptions": {
+    "lib": ["es2021", "dom"],
+    "module": "ESNext",
+    "target": "es2021",
+    "noEmit": false,
+    "baseUrl": "./src",
+    "outDir": "dist",
+    "composite": false,
+    "declaration": true,
+    "declarationMap": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "inlineSources": false,
+    "isolatedModules": true,
+    "moduleResolution": "node",
+    "noUnusedParameters": false,
+    "preserveWatchOutput": true,
+    "rootDir": "./src",
+    "skipLibCheck": true,
+    "strict": true,
+    "strictNullChecks": true
+  },
+  "include": ["src"],
+  "exclude": ["dist", "test", "src/lib/trade-interfaces", "src/lib/codegen"]
 }

@@ -1,8 +1,9 @@
 {
-  "extends": ["./typedoc.base.json"],
-  "entryPoints": ["packages/proto", "packages/sdk-core"],
-  "name": "Packages Example",
-  "entryPointStrategy": "packages",
+  "$schema": "https://typedoc.org/schema.json",
   "includeVersion": true,
-  "out": "apps/docs"
+  "entryPoints": ["src/index.ts"],
+  "name": "Valorem SDK Docs",
+  "out": "docs",
+  "plugin": ["typedoc-plugin-missing-exports"],
+  "logLevel": "Verbose"
 }

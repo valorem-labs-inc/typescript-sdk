@@ -1,0 +1,5 @@
+{
+  "$schema": "https://json.schemastore.org/semantic-release.json",
+  "branches": ["main"],
+  "repositoryUrl": "https://github.com/valorem-labs-inc/sdk.git"
+}
