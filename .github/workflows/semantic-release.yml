@@ -1,4 +1,4 @@
-name: Release
+name: Semantic Release
 
 on:
   release:
@@ -8,7 +8,7 @@ permissions:
   contents: read # for checkout
 
 jobs:
-  release:
+  semantic-release:
     name: Release
     runs-on: ubuntu-latest
     permissions:

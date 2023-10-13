@@ -14,7 +14,7 @@ on:
           - major
 
 jobs:
-  bump-version:
+  bump-pkg-version-and-tag-release:
     runs-on: ubuntu-latest
     steps:
       # Check out the content (source branch).  Use a deploy key so that

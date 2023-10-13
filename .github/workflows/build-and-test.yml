@@ -14,7 +14,7 @@ on:
       - 'releases/v**'
 
 jobs:
-  build:
+  build-and-test:
     runs-on: ubuntu-latest
 
     steps:
