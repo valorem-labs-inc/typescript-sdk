@@ -1,6 +1,10 @@
 {
   "name": "@valorem-labs-inc/sdk",
   "version": "0.0.0-development",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/valorem-labs-inc/sdk.git"
+  },
   "license": "MIT",
   "sideEffects": false,
   "type": "module",
@@ -26,8 +30,8 @@
     "lint:fix": "eslint . --fix",
     "prepare": "git submodule update --init --recursive",
     "prepublish": "pnpm build",
-    "test": "jest",
-    "semantic-release": "semantic-release"
+    "semantic-release": "semantic-release",
+    "test": "jest"
   },
   "prettier": "@vercel/style-guide/prettier",
   "dependencies": {
@@ -61,10 +65,6 @@
   "packageManager": "pnpm@8.6.10",
   "engines": {
     "node": ">=18"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/valorem-labs-inc/sdk.git"
   },
   "publishConfig": {
     "access": "restricted"
