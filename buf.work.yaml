@@ -1,0 +1,3 @@
+version: v1
+directories:
+  - src/lib/trade-interfaces/proto/valorem/trade/v1

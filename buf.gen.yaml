@@ -1,0 +1,11 @@
+version: v1
+plugins:
+  - plugin: es
+    opt: target=ts+js+dts # ,import_extension=none
+    out: src/lib/codegen
+  - plugin: connect-es
+    opt: target=ts+js+dts # ,import_extension=none
+    out: src/lib/codegen
+  - name: connect-query
+    opt: target=ts+js+dts # ,import_extension=none
+    out: src/lib/codegen

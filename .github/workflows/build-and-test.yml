@@ -1,0 +1,36 @@
+name: Build and Test
+
+on:
+  push:
+    branches:
+      - main
+      - 'v**'
+      - 'releases/v**'
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - main
+      - 'v**'
+      - 'releases/v**'
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+        with:
+          submodules: true
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: latest
+
+      - name: Install packages, build, lint, and test
+        run: |
+          pnpm i
+          pnpm build
+          pnpm lint
+          pnpm test
