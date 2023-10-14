@@ -1,7 +1,6 @@
 import { createGrpcTransport } from '@connectrpc/connect-node';
 import { ConnectError, createPromiseClient } from '@connectrpc/connect';
-import { Auth, RFQ } from '~/lib';
-import { TLS_CERT, CA } from '../certs';
+import { Auth, RFQ } from '../lib';
 import { GRPC_ENDPOINT } from '../constants';
 
 let COOKIE: string | undefined; // to be used for all server interactions
@@ -27,8 +26,8 @@ const transport = createGrpcTransport({
   interceptors: [trackCookie],
   nodeOptions: {
     // TODO THIS IS INSECURE
-    cert: TLS_CERT, // doesnt work
-    ca: CA, // doesnt work
+    // cert: TLS_CERT, // doesnt work
+    // ca: CA, // doesnt work
     rejectUnauthorized: false, // insecure
   },
 });
@@ -44,10 +43,8 @@ export const handleGRPCRequest = async <T>(
   try {
     return await request();
   } catch (error) {
-    if (error instanceof ConnectError) {
-      const err = ConnectError.from(error);
-      console.error(`\nGRPC Error: ${err.message}\nCode: ${err.code}\n`);
-    }
+    const err = ConnectError.from(error);
+    console.error(`\nGRPC Error: ${err.message}\nCode: ${err.code}\n`);
     return null;
   }
 };

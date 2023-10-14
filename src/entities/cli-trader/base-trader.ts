@@ -15,11 +15,10 @@ import {
   publicActions,
   parseUnits,
 } from 'viem';
-import type { ERC20Contract } from '~/entities/contracts/erc20';
-import type { SimulatedTxRequest } from '~/types';
-import type { CLEAR_ADDRESS, SEAPORT_ADDRESS } from '~/constants';
-import { authClient, handleGRPCRequest } from '~/utils/grpc';
-import { createSIWEMessage } from '~/utils/index';
+import type { ERC20Contract } from '../contracts/erc20';
+import type { SimulatedTxRequest } from '../../types';
+import { handleGRPCRequest, authClient, createSIWEMessage } from '../../utils';
+import type { CLEAR_ADDRESS, SEAPORT_ADDRESS } from '../../constants';
 import type { ClearinghouseContract } from '../contracts/clearinghouse';
 
 export interface TraderConstructorArgs {
@@ -147,7 +146,7 @@ export class Trader {
     amount,
   }: {
     erc20: ERC20Contract;
-    spender: typeof CLEAR_ADDRESS | typeof SEAPORT_ADDRESS;
+    spender: typeof CLEAR_ADDRESS;
     amount: bigint;
   }) => {
     const approvedAmount = await this.getAllowanceFor({ erc20, spender });
@@ -169,7 +168,7 @@ export class Trader {
     spender,
   }: {
     erc20: ERC20Contract;
-    spender: typeof CLEAR_ADDRESS | typeof SEAPORT_ADDRESS;
+    spender: typeof CLEAR_ADDRESS;
   }) => {
     const cachedAllowance = this.erc20Allowances.get(erc20.address)?.[spender];
     if (cachedAllowance) {
