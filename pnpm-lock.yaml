@@ -49,9 +49,6 @@ devDependencies:
   eslint:
     specifier: ^8.51.0
     version: 8.51.0
-  jest:
-    specifier: ^29.7.0
-    version: 29.7.0(@types/node@20.8.6)(ts-node@10.9.1)
   prettier:
     specifier: ^3.0.3
     version: 3.0.3
