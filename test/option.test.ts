@@ -1,4 +1,5 @@
 import { Option } from '../src/entities/option';
+import { describe, expect, it } from 'vitest';
 
 describe('Option Class', () => {
   it('Should be able to create an option, and return the correct optionId', () => {
