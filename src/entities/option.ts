@@ -7,7 +7,7 @@ import {
   sliceHex,
   toBytes,
 } from 'viem';
-import type { SimulatedTxRequest } from '~/types';
+import type { SimulatedTxRequest } from '../types';
 import type { Trader } from './cli-trader/base-trader';
 import type { ClearinghouseContract } from './contracts/clearinghouse';
 

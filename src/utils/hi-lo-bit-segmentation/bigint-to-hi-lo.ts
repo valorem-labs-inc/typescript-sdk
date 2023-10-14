@@ -1,4 +1,4 @@
-import { H40, H96, H128, H160, H256 } from '~/lib';
+import { H40, H96, H128, H160, H256 } from '../../lib';
 
 type BigIntable = string | number | bigint | boolean;
 

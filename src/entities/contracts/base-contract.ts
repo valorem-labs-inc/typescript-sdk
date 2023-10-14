@@ -9,7 +9,7 @@ import type {
   WalletClient,
 } from 'viem';
 import { getContract } from 'viem';
-import type { CLEAR_ABI, SEAPORT_V1_5_ABI } from '~/abis';
+import type { CLEAR_ABI, SEAPORT_V1_5_ABI } from '../../abis';
 
 type IContract<T extends Abi> = ReturnType<
   typeof getContract<

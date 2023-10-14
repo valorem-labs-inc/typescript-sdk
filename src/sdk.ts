@@ -13,7 +13,7 @@ import {
   Maker,
   ClearinghouseContract,
   SeaportContract,
-} from '~/entities';
+} from './entities';
 
 interface SDKOptions {
   publicClient: PublicClient;

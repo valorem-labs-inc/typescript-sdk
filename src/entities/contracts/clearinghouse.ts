@@ -1,5 +1,5 @@
-import { CLEAR_ADDRESS } from '~/constants';
-import { CLEAR_ABI } from '~/abis';
+import { CLEAR_ADDRESS } from '../../constants';
+import { CLEAR_ABI } from '../../abis';
 import type { IClearinghouse, ContractConstructorArgs } from './base-contract';
 import { Contract } from './base-contract';
 

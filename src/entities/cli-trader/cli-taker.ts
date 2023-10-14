@@ -1,10 +1,10 @@
-import type { ParsedQuoteResponse } from '~/utils/index';
-import { toH160, toH256, CLEAR_ADDRESS, nullBytes32 } from '~/utils';
-import { QuoteRequest, ItemType, Action } from '~/lib';
-import type { SimulatedTxRequest } from '~/types';
+import { toH160, toH256, CLEAR_ADDRESS, nullBytes32 } from '../../utils';
 import type { SeaportContract } from '../contracts/seaport';
-import type { TraderConstructorArgs } from './base-trader';
+import type { ParsedQuoteResponse } from '../../utils';
+import { QuoteRequest, ItemType, Action } from '../../lib';
+import type { SimulatedTxRequest } from '../../types';
 import { Trader } from './base-trader';
+import type { TraderConstructorArgs } from './base-trader';
 
 export class Taker extends Trader {
   public constructor(args: TraderConstructorArgs) {
