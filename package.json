@@ -1,6 +1,6 @@
 {
   "name": "@valorem-labs-inc/sdk",
-  "version": "0.0.0-development",
+  "version": "0.0.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/valorem-labs-inc/sdk.git"
@@ -65,8 +65,5 @@
   "packageManager": "pnpm@8.6.10",
   "engines": {
     "node": ">=18"
-  },
-  "publishConfig": {
-    "access": "restricted"
   }
 }
