@@ -24,9 +24,9 @@ export class ValoremSDK {
   public walletClient?: WalletClient;
   public account?: Account;
 
-  private maker?: Maker;
-  private taker?: Taker;
-  private webTaker?: WebTaker;
+  private _maker?: Maker;
+  private _taker?: Taker;
+  private _webTaker?: WebTaker;
 
   constructor({ publicClient, walletClient }: SDKOptions) {
     const isSupportedNetwork =
@@ -49,17 +49,17 @@ export class ValoremSDK {
         (this.account as LocalAccount<'privateKey' | 'custom'>).source ===
         'privateKey'
       ) {
-        this.taker = new Taker({
+        this._taker = new Taker({
           chain: this.chain,
           account: this.account as PrivateKeyAccount,
         });
 
-        this.webTaker = new WebTaker({
+        this._webTaker = new WebTaker({
           chain: this.chain,
           account: this.account as PrivateKeyAccount,
         });
 
-        this.maker = new Maker({
+        this._maker = new Maker({
           chain: this.chain,
           account: this.account as PrivateKeyAccount,
         });
@@ -77,30 +77,30 @@ export class ValoremSDK {
     });
   }
 
-  public getWebTaker() {
-    if (this.webTaker === undefined)
+  public get webTaker() {
+    if (this._webTaker === undefined)
       throw new Error(
         'Failed to get WebTaker. Please initialize Valorem SDK with a wallet client to access WebTaker.',
       );
 
-    return this.webTaker;
+    return this._webTaker;
   }
 
-  public getTaker() {
-    if (this.taker === undefined)
+  public get taker() {
+    if (this._taker === undefined)
       throw new Error(
         'Failed to get Taker. Please initialize Valorem SDK with a wallet client to access Taker.',
       );
 
-    return this.taker;
+    return this._taker;
   }
 
-  public getMaker() {
-    if (this.maker === undefined)
+  public get maker() {
+    if (this._maker === undefined)
       throw new Error(
         'Failed to get Maker. Please initialize Valorem SDK with a wallet client to access Maker.',
       );
 
-    return this.maker;
+    return this._maker;
   }
 }
