@@ -5,7 +5,7 @@ import type { QuoteRequest } from '../../lib/codegen/rfq_pb';
 import { Trader } from './base-trader';
 import type { TraderConstructorArgs } from './base-trader';
 
-export class Taker extends Trader {
+export class WebTaker extends Trader {
   public constructor(args: TraderConstructorArgs) {
     super(args);
   }
@@ -21,25 +21,17 @@ export class Taker extends Trader {
   }) {
     // continuously send requests and handle responses
     console.log('Sending RFQs');
-    // eslint-disable-next-line @typescript-eslint/require-await
-    const quoteRequestStream = async function* () {
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      while (true) {
-        yield quoteRequest;
-      }
-    };
-
     try {
-      for await (const quoteResponse of rfqClient.taker(quoteRequestStream(), {
+      for await (const quoteResponse of rfqClient.webTaker(quoteRequest, {
         signal,
         timeoutMs: 0,
       })) {
         if (Object.keys(quoteResponse).length === 0) {
-          // empty response
+          console.log('Received an empty quote response');
           continue;
         }
         if (!quoteResponse.order || !quoteResponse.seaportAddress) {
-          // invalid response
+          console.log('Received an invalid quote response');
           continue;
         }
         // parse the response

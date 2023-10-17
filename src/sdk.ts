@@ -6,6 +6,7 @@ import {
   Maker,
   ClearinghouseContract,
   SeaportContract,
+  WebTaker,
 } from './entities';
 
 interface SDKOptions {
@@ -22,8 +23,10 @@ export class ValoremSDK {
 
   public walletClient?: WalletClient;
   public account?: Account;
-  public maker?: Maker;
-  public taker?: Taker;
+
+  private maker?: Maker;
+  private taker?: Taker;
+  private webTaker?: WebTaker;
 
   constructor({ publicClient, walletClient }: SDKOptions) {
     const isSupportedNetwork =
@@ -51,6 +54,11 @@ export class ValoremSDK {
           account: this.account as PrivateKeyAccount,
         });
 
+        this.webTaker = new WebTaker({
+          chain: this.chain,
+          account: this.account as PrivateKeyAccount,
+        });
+
         this.maker = new Maker({
           chain: this.chain,
           account: this.account as PrivateKeyAccount,
@@ -67,5 +75,32 @@ export class ValoremSDK {
       publicClient: this.publicClient,
       walletClient: this.walletClient,
     });
+  }
+
+  public getWebTaker() {
+    if (this.webTaker === undefined)
+      throw new Error(
+        'Failed to get WebTaker. Please initialize Valorem SDK with a wallet client to access WebTaker.',
+      );
+
+    return this.webTaker;
+  }
+
+  public getTaker() {
+    if (this.taker === undefined)
+      throw new Error(
+        'Failed to get Taker. Please initialize Valorem SDK with a wallet client to access Taker.',
+      );
+
+    return this.taker;
+  }
+
+  public getMaker() {
+    if (this.maker === undefined)
+      throw new Error(
+        'Failed to get Maker. Please initialize Valorem SDK with a wallet client to access Maker.',
+      );
+
+    return this.maker;
   }
 }

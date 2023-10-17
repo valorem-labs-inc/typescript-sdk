@@ -5,7 +5,11 @@ import type {
 } from '@wagmi/core';
 import type { Abi, Account, Address, Chain, Transport } from 'viem';
 import { getContract } from 'viem';
-import type { CLEAR_ABI, SEAPORT_V1_5_ABI } from '../../abis';
+import type {
+  CLEAR_ABI,
+  SEAPORT_V1_5_ABI,
+  SEAPORT_VALIDATOR_ABI,
+} from '../../abis';
 
 type IContract<T extends Abi> = ReturnType<
   typeof getContract<
@@ -28,6 +32,7 @@ export interface ContractConstructorArgs {
 
 export type IClearinghouse = IContract<typeof CLEAR_ABI>;
 export type ISeaport = IContract<typeof SEAPORT_V1_5_ABI>;
+export type ISeaportValidator = IContract<typeof SEAPORT_VALIDATOR_ABI>;
 export type IERC20 = IContract<typeof ERC20_ABI>;
 
 /** Reusable extension of viem's contract interface */

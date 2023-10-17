@@ -11,13 +11,24 @@ import {
   createWalletClient,
   publicActions,
   parseUnits,
+  hexToBigInt,
 } from 'viem';
 import type { PublicClient, WalletClient } from '@wagmi/core';
 import type { ERC20Contract } from '../contracts/erc20';
 import type { SimulatedTxRequest } from '../../types';
-import { handleGRPCRequest, authClient, createSIWEMessage } from '../../utils';
-import type { CLEAR_ADDRESS, SEAPORT_ADDRESS } from '../../constants';
+import type { ParsedQuoteResponse } from '../../utils';
+import {
+  handleGRPCRequest,
+  authClient,
+  createSIWEMessage,
+  toH256,
+  toH160,
+} from '../../utils';
+import { nullBytes32, CLEAR_ADDRESS, SEAPORT_ADDRESS } from '../../constants';
 import type { Claim, Option } from '../options';
+import { ClearinghouseContract, SeaportContract } from '../contracts';
+import { Action, QuoteRequest } from '../../lib/codegen/rfq_pb';
+import { ItemType } from '../../lib/codegen/seaport_pb';
 
 export interface TraderConstructorArgs {
   account: Account;
@@ -30,6 +41,8 @@ export class Trader {
   public authenticated = false;
   public publicClient: PublicClient;
   public walletClient: WalletClient;
+  public seaport: SeaportContract;
+  public clearinghouse: ClearinghouseContract;
 
   /** cached results */
   // { [ERC20_ADDRESS]: BALANCE}
@@ -49,6 +62,7 @@ export class Trader {
       transport: http(),
     });
 
+    this.chain = chain;
     this.account = account;
     this.walletClient = createWalletClient({
       account: this.account,
@@ -56,7 +70,14 @@ export class Trader {
       transport: http(),
     }).extend(publicActions) as typeof this.walletClient;
 
-    this.chain = chain;
+    this.clearinghouse = new ClearinghouseContract({
+      publicClient: this.publicClient,
+      walletClient: this.walletClient,
+    });
+    this.seaport = new SeaportContract({
+      publicClient: this.publicClient,
+      walletClient: this.walletClient,
+    });
   }
 
   /**
@@ -122,6 +143,26 @@ export class Trader {
       message,
     });
     return { message, signature };
+  }
+
+  public createQuoteRequest({
+    optionId,
+    quantityToBuy,
+  }: {
+    optionId: bigint;
+    quantityToBuy: number;
+  }) {
+    return new QuoteRequest({
+      ulid: undefined,
+      chainId: toH256(BigInt(this.chain.id)),
+      seaportAddress: toH160(hexToBigInt(SEAPORT_ADDRESS)),
+      takerAddress: toH160(this.account.address),
+      itemType: ItemType.ERC1155,
+      tokenAddress: toH160(CLEAR_ADDRESS),
+      identifierOrCriteria: toH256(optionId),
+      amount: toH256(quantityToBuy),
+      action: Action.BUY,
+    });
   }
 
   /**
@@ -227,6 +268,42 @@ export class Trader {
 
   public async redeemClaim({ claim }: { claim: Claim }) {
     await claim.redeemClaim(this);
+  }
+
+  public async acceptQuote({ quote }: { quote: ParsedQuoteResponse }) {
+    if (!this.seaport.write)
+      throw new Error('Must initialize Seaport with Wallet Client');
+
+    const { parameters, signature } = quote.order;
+    try {
+      // send tx (simulating will fail)
+      const hash = await this.seaport.write.fulfillOrder([
+        { parameters, signature },
+        nullBytes32,
+      ]);
+      // get receipt
+      const receipt = await this.publicClient.waitForTransactionReceipt({
+        hash,
+      });
+      // check result
+      if (receipt.status === 'success') {
+        console.log('Successfully fulfilled RFQ.');
+      }
+    } catch (error) {
+      console.log(
+        `Failed to accept quote.`,
+        error,
+        `Checking order validity...`,
+      );
+      const errorsAndWarnings = await this.seaport.validator.read.isValidOrder([
+        { parameters, signature },
+        SEAPORT_ADDRESS,
+      ]);
+      console.log(
+        { errorsAndWarnings },
+        'Learn more at https://github.com/ProjectOpenSea/seaport/blob/main/docs/OrderValidator.md',
+      );
+    }
   }
 
   public async executeTransaction(request: SimulatedTxRequest) {
