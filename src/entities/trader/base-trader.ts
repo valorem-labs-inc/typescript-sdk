@@ -16,7 +16,11 @@ import {
 import type { PublicClient, WalletClient } from '@wagmi/core';
 import type { ERC20Contract } from '../contracts/erc20';
 import type { SimulatedTxRequest } from '../../types';
-import type { ParsedQuoteResponse } from '../../utils';
+import {
+  ParsedQuoteResponse,
+  parseQuoteResponse,
+  rfqClient,
+} from '../../utils';
 import {
   handleGRPCRequest,
   authClient,
@@ -29,6 +33,8 @@ import type { Claim, Option } from '../options';
 import { ClearinghouseContract, SeaportContract } from '../contracts';
 import { Action, QuoteRequest } from '../../lib/codegen/rfq_pb';
 import { ItemType } from '../../lib/codegen/seaport_pb';
+import { PartialMessage } from '@bufbuild/protobuf';
+import { ConnectError } from '@connectrpc/connect';
 
 export interface TraderConstructorArgs {
   account: Account;
@@ -145,6 +151,9 @@ export class Trader {
     return { message, signature };
   }
 
+  /**
+   * RFQs
+   */
   public createQuoteRequest({
     optionId,
     quantityToBuy,
@@ -163,6 +172,62 @@ export class Trader {
       amount: toH256(quantityToBuy),
       action: Action.BUY,
     });
+  }
+
+  public async openRFQStream<TMethod extends 'taker' | 'webTaker'>({
+    method,
+    request,
+    onQuoteResponse,
+    options,
+  }: {
+    method: TMethod;
+    request: TMethod extends 'webTaker'
+      ? PartialMessage<QuoteRequest>
+      : () => AsyncIterable<PartialMessage<QuoteRequest>>;
+    onQuoteResponse: (quoteResponse: ParsedQuoteResponse) => void;
+    options?: { signal?: AbortSignal; timeoutMs: number };
+  }) {
+    // continuously send requests and handle responses
+    console.log('Sending RFQs');
+
+    try {
+      for await (const quoteResponse of method === 'taker'
+        ? rfqClient.taker(
+            (request as () => AsyncIterable<PartialMessage<QuoteRequest>>)(),
+            options,
+          )
+        : rfqClient.webTaker(
+            request as PartialMessage<QuoteRequest>,
+            options,
+          )) {
+        if (Object.keys(quoteResponse).length === 0) {
+          if (method === 'webTaker') {
+            console.log('Received an empty quote response');
+          }
+          continue;
+        }
+        if (!quoteResponse.order || !quoteResponse.seaportAddress) {
+          console.log('Received an invalid quote response');
+          continue;
+        }
+        // parse the response
+        try {
+          const parsedQuoteResponse = parseQuoteResponse(quoteResponse);
+          console.log('Received a valid quote response!');
+          onQuoteResponse(parsedQuoteResponse);
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    } catch (error) {
+      if (error instanceof ConnectError) {
+        const connectError = ConnectError.from(error);
+        if (!connectError.rawMessage.includes('This operation was aborted')) {
+          console.log(error);
+        }
+      }
+    }
+    console.log('Stream closed');
   }
 
   /**
