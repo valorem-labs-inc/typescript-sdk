@@ -11,8 +11,6 @@ export {
   ONE_DAY_UNIX,
   ONE_WEEK_UNIX,
   SEAPORT_ADDRESS,
-  USDC_ADDRESS,
-  WETH_ADDRESS,
   nullBytes32,
   supportedChains,
 } from '../constants';
