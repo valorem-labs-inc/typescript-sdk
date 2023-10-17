@@ -1,12 +1,12 @@
 import { arbitrum, arbitrumGoerli } from 'viem/chains';
 
 /** Chains */
-export const supportedChains = {
+export const SUPPORTED_CHAINS = {
   arbitrum,
   arbitrumGoerli,
 };
 export type SupportedChain =
-  (typeof supportedChains)[keyof typeof supportedChains];
+  (typeof SUPPORTED_CHAINS)[keyof typeof SUPPORTED_CHAINS];
 
 /** Contracts */
 // Valorem Clearinghouse on Arbitrum One (mainnet) & Arbitrum Goerli (testnet)
@@ -27,5 +27,5 @@ export const ONE_DAY_UNIX = 60 * 60 * 24;
 export const ONE_WEEK_UNIX = ONE_DAY_UNIX * 7;
 
 /** Misc */
-export const nullBytes32 =
+export const NULL_BYTES32 =
   '0x0000000000000000000000000000000000000000000000000000000000000000';

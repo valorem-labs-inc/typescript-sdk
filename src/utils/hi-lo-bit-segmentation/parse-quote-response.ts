@@ -6,7 +6,7 @@ import {
   toHex,
   zeroAddress,
 } from 'viem';
-import { nullBytes32 } from '../../constants';
+import { NULL_BYTES32 } from '../../constants';
 import type { QuoteResponse } from '../../lib';
 import { fromH128, fromH160ToAddress, fromH256 } from './hi-lo-to-big-int';
 
@@ -103,13 +103,13 @@ export const parseQuoteResponse = (res: QuoteResponse) => {
           ? pad(toHex(fromH256(res.order.parameters.zoneHash)), {
               size: 32,
             })
-          : nullBytes32,
+          : NULL_BYTES32,
         salt: fromH256(res.order.parameters.salt),
         conduitKey: res.order.parameters.conduitKey
           ? pad(toHex(fromH256(res.order.parameters.conduitKey)), {
               size: 32,
             })
-          : nullBytes32,
+          : NULL_BYTES32,
       },
     },
   };
