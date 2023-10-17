@@ -1,5 +1,5 @@
-import { describe, expect, it, vi } from 'vitest';
-import { publicClient } from '../../../test';
+import { describe, expect, it } from 'vitest';
+import { clearinghouse } from '../../../test';
 import { Claim } from './redeemable-claim';
 
 const claimId =
@@ -9,11 +9,8 @@ const expectedOptionTypeId =
 
 describe('Redeemable Claim', () => {
   it('Should be able to load a Claim', async () => {
-    const claim = new Claim({ claimId, publicClient });
+    const claim = await Claim.fromId({ tokenId: claimId, clearinghouse });
 
-    await vi.waitUntil(() => claim.ready);
-
-    expect(claim.ready).toBeTruthy();
     expect(claim.tokenId).toEqual(claimId);
     expect(claim.tokenType).toEqual(2);
     expect(claim.typeExists).toBeTruthy();

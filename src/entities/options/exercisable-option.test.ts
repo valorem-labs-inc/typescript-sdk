@@ -1,5 +1,5 @@
-import { describe, expect, it, vi } from 'vitest';
-import { publicClient } from '../../../test';
+import { describe, expect, it } from 'vitest';
+import { clearinghouse } from '../../../test';
 import { Option } from './exercisable-option';
 
 const optionId =
@@ -7,11 +7,8 @@ const optionId =
 
 describe('Exercisable Option', () => {
   it('Should be able to load a Option', async () => {
-    const option = new Option({ optionId, publicClient });
+    const option = await Option.fromId({ tokenId: optionId, clearinghouse });
 
-    await vi.waitUntil(() => option.ready);
-
-    expect(option.ready).toBeTruthy();
     expect(option.tokenId).toEqual(optionId);
     expect(option.tokenType).toEqual(1);
     expect(option.typeExists).toBeTruthy();

@@ -7,10 +7,9 @@ import {
   sliceHex,
   toBytes,
 } from 'viem';
-import type { PublicClient } from '@wagmi/core';
 import type { SimulatedTxRequest } from '../../types';
 import type { Trader } from '../trader/base-trader';
-import { ClearinghouseContract } from '../contracts/clearinghouse';
+import type { ClearinghouseContract } from '../contracts/clearinghouse';
 
 export interface OptionTypeInfo {
   underlyingAsset: Address;
@@ -21,84 +20,44 @@ export interface OptionTypeInfo {
   expiryTimestamp: number;
 }
 
-type OptionTypeArgs =
-  | {
-      publicClient: PublicClient;
-      optionInfo: OptionTypeInfo;
-      tokenId?: undefined;
-    }
-  | {
-      publicClient: PublicClient;
-      tokenId: bigint;
-      optionInfo?: undefined;
-    };
+interface OptionTypeArgs {
+  optionInfo: OptionTypeInfo;
+  optionTypeId: bigint;
+  tokenId: bigint;
+  tokenType: 0 | 1 | 2;
+}
 
 export class OptionType {
-  public publicClient: PublicClient;
-  public clearinghouse: ClearinghouseContract;
-
   // Specific to OptionTypes
-  public optionInfo?: OptionTypeInfo;
+  public optionInfo: OptionTypeInfo;
+  public optionTypeId: bigint;
 
   // Specific to Options (Exercisable Options + Redeemable Claims)
-  private _tokenId?: bigint;
-  private _tokenType?: number;
+  public tokenId: bigint;
+  public tokenType: 0 | 1 | 2;
 
-  constructor({ optionInfo, tokenId, publicClient }: OptionTypeArgs) {
-    this.publicClient = publicClient;
-    this.clearinghouse = new ClearinghouseContract({ publicClient });
-    // if passed option info directly, we can initialize immediately
-    if (optionInfo !== undefined) {
-      this.optionInfo = optionInfo;
-      void this.init();
-    } else {
-      // otherwise if the ID is the only parameter, we must derive the rest asynchronously
-      this._tokenId = tokenId;
-      void this.init(tokenId);
-    }
-  }
-
-  public get optionTypeId() {
-    if (!this.hashedParams) return undefined;
-    const asBytes20 = toBytes(sliceHex(this.hashedParams, 0, 20), {
-      size: 20,
-    });
-    const padded = pad(asBytes20, { dir: 'left', size: 32 });
-    const optionTypeId = bytesToBigInt(padded) << BigInt(96);
-    return optionTypeId;
-  }
-
-  public get tokenId() {
-    if (this._tokenId) return this._tokenId;
-    return this.optionTypeId;
+  public constructor({
+    optionInfo,
+    optionTypeId,
+    tokenId,
+    tokenType,
+  }: OptionTypeArgs) {
+    this.optionInfo = optionInfo;
+    this.optionTypeId = optionTypeId;
+    this.tokenId = tokenId;
+    this.tokenType = tokenType;
   }
 
   public get typeExists() {
-    if (this._tokenType === undefined) {
-      void this.getTokenType();
-      return undefined;
-    }
-    return this._tokenType !== 0;
-  }
-
-  public get tokenType() {
-    if (!this._tokenType) {
-      void this.getTokenType();
-      return undefined;
-    }
-    return this._tokenType;
+    return this.tokenType !== 0;
   }
 
   public async createOptionType(trader: Trader) {
-    if (!this.optionInfo) {
-      throw new Error('Option info not initialized');
-    }
-
     console.log(
-      `Initializing new OptionType with Clearinghouse. ID:${this.optionTypeId?.toString()}`,
+      `Initializing new OptionType with Clearinghouse. ID:${this.optionTypeId.toString()}`,
     );
     // prepare tx
-    const { request } = await this.clearinghouse.simulate.newOptionType([
+    const { request } = await trader.clearinghouse.simulate.newOptionType([
       this.optionInfo.underlyingAsset,
       this.optionInfo.underlyingAmount,
       this.optionInfo.exerciseAsset,
@@ -115,34 +74,67 @@ export class OptionType {
       console.log(
         `Successfully created new option type. txHash: ${receipt.transactionHash}`,
       );
+      this.tokenType = 1;
     }
   }
 
-  private async getOptionTypeInfo(tokenId: bigint) {
-    const _optionInfo = await this.clearinghouse.read.option([tokenId]);
-    this.optionInfo = {
-      underlyingAsset: _optionInfo.underlyingAsset,
-      underlyingAmount: _optionInfo.underlyingAmount,
-      exerciseAsset: _optionInfo.exerciseAsset,
-      exerciseAmount: _optionInfo.exerciseAmount,
-      exerciseTimestamp: _optionInfo.exerciseTimestamp,
-      expiryTimestamp: _optionInfo.expiryTimestamp,
-    };
+  static async fromInfo({
+    optionInfo,
+    clearinghouse,
+  }: {
+    optionInfo: OptionTypeInfo;
+    clearinghouse: ClearinghouseContract;
+  }) {
+    const optionTypeId = this.getOptionTypeId(optionInfo);
+    const tokenType = await OptionType.getTokenType(
+      optionTypeId,
+      clearinghouse,
+    );
+    return new this({
+      optionInfo,
+      tokenId: optionTypeId,
+      optionTypeId,
+      tokenType,
+    });
   }
 
-  private async getTokenType() {
-    const id = this._tokenId ?? this.optionTypeId;
-    if (!id) {
-      console.log('Missing TokenId');
-      return undefined;
-    }
-    const tokenType = await this.clearinghouse.read.tokenType([id]);
-    this._tokenType = tokenType;
-    return tokenType;
+  static async fromId({
+    tokenId,
+    clearinghouse,
+  }: {
+    tokenId: bigint;
+    clearinghouse: ClearinghouseContract;
+  }) {
+    const optionInfo = await OptionType.getOptionTypeInfo(
+      tokenId,
+      clearinghouse,
+    );
+    const tokenType = await OptionType.getTokenType(tokenId, clearinghouse);
+    const optionTypeId = OptionType.getOptionTypeId(optionInfo);
+
+    return new this({
+      optionInfo,
+      optionTypeId,
+      tokenId,
+      tokenType,
+    });
   }
 
-  private get hashedParams() {
-    if (!this.optionInfo) return undefined;
+  private static async getOptionTypeInfo(
+    tokenId: bigint,
+    clearinghouse: ClearinghouseContract,
+  ) {
+    return clearinghouse.read.option([tokenId]);
+  }
+
+  private static async getTokenType(
+    tokenId: bigint,
+    clearinghouse: ClearinghouseContract,
+  ): Promise<0 | 1 | 2> {
+    return clearinghouse.read.tokenType([tokenId]) as Promise<0 | 1 | 2>;
+  }
+
+  private static getOptionTypeId(info: OptionTypeInfo) {
     const encoded = encodeAbiParameters(
       [
         { type: 'address', name: 'underlyingAsset' },
@@ -153,29 +145,20 @@ export class OptionType {
         { type: 'uint40', name: 'expiryTimestamp' },
       ],
       [
-        this.optionInfo.underlyingAsset,
-        this.optionInfo.underlyingAmount,
-        this.optionInfo.exerciseAsset,
-        this.optionInfo.exerciseAmount,
-        this.optionInfo.exerciseTimestamp,
-        this.optionInfo.expiryTimestamp,
+        info.underlyingAsset,
+        info.underlyingAmount,
+        info.exerciseAsset,
+        info.exerciseAmount,
+        info.exerciseTimestamp,
+        info.expiryTimestamp,
       ],
     );
-    return keccak256(encoded);
-  }
-
-  public get ready() {
-    return this._tokenType !== undefined && this.optionInfo !== undefined;
-  }
-
-  private async init(tokenId?: bigint) {
-    try {
-      await this.getTokenType();
-      if (tokenId) {
-        await this.getOptionTypeInfo(tokenId);
-      }
-    } catch (err) {
-      console.warn('Failed to initialize the optionType', { err });
-    }
+    const hashedParams = keccak256(encoded);
+    const asBytes20 = toBytes(sliceHex(hashedParams, 0, 20), {
+      size: 20,
+    });
+    const padded = pad(asBytes20, { dir: 'left', size: 32 });
+    const optionTypeId = bytesToBigInt(padded) << BigInt(96);
+    return optionTypeId;
   }
 }

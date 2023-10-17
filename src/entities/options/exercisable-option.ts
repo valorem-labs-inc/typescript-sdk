@@ -1,19 +1,8 @@
-import type { PublicClient } from '@wagmi/core';
 import type { Trader } from '../trader/base-trader';
 import type { SimulatedTxRequest } from '../../types';
 import { OptionType } from './option-type';
 
 export class Option extends OptionType {
-  constructor({
-    optionId,
-    publicClient,
-  }: {
-    optionId: bigint;
-    publicClient: PublicClient;
-  }) {
-    super({ tokenId: optionId, publicClient });
-  }
-
   public async exerciseOption({
     amount,
     trader,
@@ -26,7 +15,7 @@ export class Option extends OptionType {
       return undefined;
     }
     // prepare tx
-    const { request } = await this.clearinghouse.simulate.exercise([
+    const { request } = await trader.clearinghouse.simulate.exercise([
       this.tokenId,
       amount,
     ]);
