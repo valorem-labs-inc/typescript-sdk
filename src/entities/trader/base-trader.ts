@@ -1,10 +1,7 @@
 import type {
-  PublicClient,
   Address,
   PrivateKeyAccount,
-  Transport,
   Chain,
-  WalletClient,
   Account,
   LocalAccount,
 } from 'viem';
@@ -15,11 +12,12 @@ import {
   publicActions,
   parseUnits,
 } from 'viem';
+import type { PublicClient, WalletClient } from '@wagmi/core';
 import type { ERC20Contract } from '../contracts/erc20';
 import type { SimulatedTxRequest } from '../../types';
 import { handleGRPCRequest, authClient, createSIWEMessage } from '../../utils';
 import type { CLEAR_ADDRESS, SEAPORT_ADDRESS } from '../../constants';
-import type { ClearinghouseContract } from '../contracts/clearinghouse';
+import type { Claim, Option } from '../options';
 
 export interface TraderConstructorArgs {
   account: Account;
@@ -30,8 +28,8 @@ export class Trader {
   public account: Account;
   public chain: Chain;
   public authenticated = false;
-  public publicClient: PublicClient<Transport, Chain>;
-  public walletClient: WalletClient; //<Transport, Chain, PrivateKeyAccount>;
+  public publicClient: PublicClient;
+  public walletClient: WalletClient;
 
   /** cached results */
   // { [ERC20_ADDRESS]: BALANCE}
@@ -146,7 +144,7 @@ export class Trader {
     amount,
   }: {
     erc20: ERC20Contract;
-    spender: typeof CLEAR_ADDRESS;
+    spender: typeof CLEAR_ADDRESS | typeof SEAPORT_ADDRESS;
     amount: bigint;
   }) => {
     const approvedAmount = await this.getAllowanceFor({ erc20, spender });
@@ -168,7 +166,7 @@ export class Trader {
     spender,
   }: {
     erc20: ERC20Contract;
-    spender: typeof CLEAR_ADDRESS;
+    spender: typeof CLEAR_ADDRESS | typeof SEAPORT_ADDRESS;
   }) => {
     const cachedAllowance = this.erc20Allowances.get(erc20.address)?.[spender];
     if (cachedAllowance) {
@@ -215,48 +213,20 @@ export class Trader {
   }
 
   public async exerciseOption({
-    optionId,
+    option,
     amount,
-    clearinghouse,
   }: {
-    optionId: bigint;
+    option: Option;
     amount: bigint;
-    clearinghouse: ClearinghouseContract;
   }) {
-    // prepare tx
-    const { request } = await clearinghouse.simulate.exercise([
-      optionId,
+    await option.exerciseOption({
       amount,
-    ]);
-    // send tx
-    const receipt = await this.executeTransaction(
-      request as SimulatedTxRequest,
-    );
-    // check result
-    if (receipt.status === 'success') {
-      console.log(
-        `Successfully exercised ${amount}x options, with ID ${optionId.toString()}`,
-      );
-    }
+      trader: this,
+    });
   }
 
-  public async redeemClaim({
-    optionId,
-    clearinghouse,
-  }: {
-    optionId: bigint;
-    clearinghouse: ClearinghouseContract;
-  }) {
-    // prepare tx
-    const { request } = await clearinghouse.simulate.redeem([optionId]);
-    // send tx
-    const receipt = await this.executeTransaction(
-      request as SimulatedTxRequest,
-    );
-    // check result
-    if (receipt.status === 'success') {
-      console.log(`Successfully redeemed claim with ID ${optionId.toString()}`);
-    }
+  public async redeemClaim({ claim }: { claim: Claim }) {
+    await claim.redeemClaim(this);
   }
 
   public async executeTransaction(request: SimulatedTxRequest) {

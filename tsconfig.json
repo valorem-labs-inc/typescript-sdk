@@ -16,11 +16,10 @@
     "moduleResolution": "node",
     "noUnusedParameters": false,
     "preserveWatchOutput": true,
-    "rootDir": "./src",
     "skipLibCheck": true,
     "strict": true,
     "strictNullChecks": true
   },
-  "include": ["src"],
-  "exclude": ["dist", "test", "src/lib/trade-interfaces", "src/lib/codegen"]
+  "include": ["src", "test"],
+  "exclude": ["dist", "src/lib/trade-interfaces", "src/lib/codegen"]
 }

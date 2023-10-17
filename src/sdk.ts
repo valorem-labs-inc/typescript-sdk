@@ -1,13 +1,6 @@
-import type {
-  Chain,
-  PublicClient,
-  PrivateKeyAccount,
-  WalletClient,
-  Account,
-  LocalAccount,
-  Transport,
-} from 'viem';
+import type { Chain, PrivateKeyAccount, Account, LocalAccount } from 'viem';
 import { arbitrum, arbitrumGoerli } from 'viem/chains';
+import type { PublicClient, WalletClient } from '@wagmi/core';
 import {
   Taker,
   Maker,
@@ -29,18 +22,16 @@ export class ValoremSDK {
 
   public walletClient?: WalletClient;
   public account?: Account;
-  private maker?: Maker;
-  private taker?: Taker;
+  public maker?: Maker;
+  public taker?: Taker;
 
   constructor({ publicClient, walletClient }: SDKOptions) {
     const isSupportedNetwork =
-      publicClient.chain?.id === arbitrum.id ||
-      publicClient.chain?.id === arbitrumGoerli.id;
-    if (!isSupportedNetwork || !publicClient.chain) {
+      publicClient.chain.id === arbitrum.id ||
+      publicClient.chain.id === arbitrumGoerli.id;
+    if (!isSupportedNetwork) {
       throw new Error(
-        `Unsupported network: ${
-          publicClient.chain?.name ?? 'N/A'
-        }. Please use Arbitrum or Arbitrum Goerli`,
+        `Unsupported network: ${publicClient.chain.name}. Please use Arbitrum or Arbitrum Goerli`,
       );
     }
 
@@ -68,21 +59,13 @@ export class ValoremSDK {
     }
 
     this.clearinghouse = new ClearinghouseContract({
-      publicClient: this.publicClient as PublicClient<Transport, Chain>,
-      walletClient: this.walletClient as WalletClient<
-        Transport,
-        Chain,
-        Account
-      >,
+      publicClient: this.publicClient,
+      walletClient: this.walletClient,
     });
 
     this.seaport = new SeaportContract({
-      publicClient: this.publicClient as PublicClient<Transport, Chain>,
-      walletClient: this.walletClient as WalletClient<
-        Transport,
-        Chain,
-        Account
-      >,
+      publicClient: this.publicClient,
+      walletClient: this.walletClient,
     });
   }
 }

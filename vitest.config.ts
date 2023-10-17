@@ -6,7 +6,6 @@ export default defineConfig({
       reporter: ['text', 'json', 'html'],
     },
     environment: 'node',
-    include: ['test/**/*.test.ts'],
-    setupFiles: ['./test/setup.ts'],
+    include: ['**/*.test.ts'],
   },
 });

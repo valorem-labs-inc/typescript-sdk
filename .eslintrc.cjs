@@ -23,6 +23,8 @@ module.exports = {
     'no-console': 'warn',
     'eslint-comments/require-description': 'off',
     'import/no-extraneous-dependencies': 'off',
+    'unicorn/filename-case': 'off',
+    '@typescript-eslint/no-non-null-assertion': 'warn',
     '@typescript-eslint/no-unsafe-member-access': 'off',
     '@typescript-eslint/no-unsafe-call': 'off',
     '@typescript-eslint/no-unsafe-return': 'off',
@@ -31,7 +33,6 @@ module.exports = {
     '@typescript-eslint/explicit-function-return-type': 'off',
   },
   ignorePatterns: [
-    'test',
     '*.config.*',
     'node_modules',
     'dist',
