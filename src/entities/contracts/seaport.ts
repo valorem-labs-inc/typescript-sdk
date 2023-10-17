@@ -11,9 +11,6 @@ export class SeaportContract extends Contract<ISeaport> {
     args: Pick<ContractConstructorArgs, 'publicClient' | 'walletClient'>,
   ) {
     super({ ...args, address: SEAPORT_ADDRESS, abi: SEAPORT_V1_5_ABI });
-    this.validator = new SeaportValidatorContract({
-      publicClient: args.publicClient,
-      walletClient: args.walletClient,
-    });
+    this.validator = new SeaportValidatorContract(args);
   }
 }
