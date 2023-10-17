@@ -41,6 +41,8 @@ export interface TraderConstructorArgs {
   chain: Chain;
 }
 
+type Spender = typeof CLEAR_ADDRESS | typeof SEAPORT_ADDRESS;
+
 export class Trader {
   public account: Account;
   public chain: Chain;
@@ -250,7 +252,7 @@ export class Trader {
     amount,
   }: {
     erc20: ERC20Contract;
-    spender: typeof CLEAR_ADDRESS | typeof SEAPORT_ADDRESS;
+    spender: Spender;
     amount: bigint;
   }) => {
     const approvedAmount = await this.getAllowanceFor({ erc20, spender });
@@ -272,7 +274,7 @@ export class Trader {
     spender,
   }: {
     erc20: ERC20Contract;
-    spender: typeof CLEAR_ADDRESS | typeof SEAPORT_ADDRESS;
+    spender: Spender;
   }) => {
     const cachedAllowance = this.erc20Allowances.get(erc20.address)?.[spender];
     if (cachedAllowance) {
