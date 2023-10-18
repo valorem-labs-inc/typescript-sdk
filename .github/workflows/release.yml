@@ -1,4 +1,4 @@
-name: Semantic Release
+name: Release
 
 on:
   release:
@@ -8,14 +8,9 @@ permissions:
   contents: read # for checkout
 
 jobs:
-  semantic-release:
+  release:
     name: Release
     runs-on: ubuntu-latest
-    permissions:
-      contents: write # to be able to publish a GitHub release
-      issues: write # to be able to comment on released issues
-      pull-requests: write # to be able to comment on released pull requests
-      id-token: write # to enable use of OIDC for npm provenance
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
@@ -27,16 +22,27 @@ jobs:
         with:
           version: latest
 
-      - name: Install packages and build
+      - name: Install packages, compile SDK, and build docs
         run: |
           pnpm i
           pnpm build
+          pnpm gen-docs
+
+      - name: Deploy Docs to Github Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: docs
 
       - name: Verify the integrity of provenance attestations and registry signatures for installed dependencies
         run: pnpm audit signatures
 
-      - name: Release
+      # Setup .npmrc file to publish to npm
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18.x'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Publish
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npx semantic-release
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: pnpm publish --access public --no-git-checks
