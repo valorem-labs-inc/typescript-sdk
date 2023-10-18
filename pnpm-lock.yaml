@@ -18,11 +18,8 @@ dependencies:
     specifier: ^1.1.2
     version: 1.1.2(@bufbuild/protobuf@1.3.3)(@connectrpc/connect@1.1.2)
   '@wagmi/core':
-    specifier: ^1.4.3
+    specifier: ^1.4.4
     version: 1.4.4(react@18.2.0)(typescript@5.2.2)(viem@1.16.6)
-  viem:
-    specifier: ^1.16.5
-    version: 1.16.6(typescript@5.2.2)
 
 devDependencies:
   '@bufbuild/protoc-gen-es':
@@ -64,6 +61,9 @@ devDependencies:
   typescript:
     specifier: ^5.2.2
     version: 5.2.2
+  viem:
+    specifier: ^1.16.5
+    version: 1.16.6(typescript@5.2.2)
   vitest:
     specifier: ^0.34.6
     version: 0.34.6
@@ -77,7 +77,6 @@ packages:
 
   /@adraffy/ens-normalize@1.9.4:
     resolution: {integrity: sha512-UK0bHA7hh9cR39V+4gl2/NnBBjoXIxkuWAPCaY4X7fbH4L/azIi7ilWOCjMUYfpJgraLUAqkRi2BqrjME8Rynw==}
-    dev: false
 
   /@ampproject/remapping@2.2.1:
     resolution: {integrity: sha512-lFMjJTrFL3j7L9yBxwYfCq2k6qqwHyzuUl/XBnif78PWTJYyL/dfowQHWE3sp6U6ZzqWiiIZnpTMO96zhkjwtg==}
@@ -914,12 +913,10 @@ packages:
     resolution: {integrity: sha512-oYclrNgRaM9SsBUBVbb8M6DTV7ZHRTKugureoYEncY5c65HOmRzvSiTE3y5CYaPYJA/GVkrhXEoF0M3Ya9PMnw==}
     dependencies:
       '@noble/hashes': 1.3.2
-    dev: false
 
   /@noble/hashes@1.3.2:
     resolution: {integrity: sha512-MVC8EAQp7MvEcm30KWENFjgR+Mkmf+D189XJTkFIlwohU5hcBbn1ZkKq7KVTi2Hme3PMGF390DaL52beVrIihQ==}
     engines: {node: '>= 16'}
-    dev: false
 
   /@nodelib/fs.scandir@2.1.5:
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -1001,7 +998,6 @@ packages:
 
   /@scure/base@1.1.3:
     resolution: {integrity: sha512-/+SgoRjLq7Xlf0CWuLHq2LUZeL/w65kfzAPG5NH9pcmBhs+nunQTn4gvdwgMTIXnt9b2C/1SeL2XiysZEyIC9Q==}
-    dev: false
 
   /@scure/bip32@1.3.2:
     resolution: {integrity: sha512-N1ZhksgwD3OBlwTv3R6KFEcPojl/W4ElJOeCZdi+vuI5QmTFwLq3OFf2zd2ROpKvxFdgZ6hUpb0dx9bVNEwYCA==}
@@ -1009,14 +1005,12 @@ packages:
       '@noble/curves': 1.2.0
       '@noble/hashes': 1.3.2
       '@scure/base': 1.1.3
-    dev: false
 
   /@scure/bip39@1.2.1:
     resolution: {integrity: sha512-Z3/Fsz1yr904dduJD0NpiyRHhRYHdcnyh73FZWiV+/qhWi83wNJ3NWolYqCEN+ZWsUz2TWwajJggcRE9r1zUYg==}
     dependencies:
       '@noble/hashes': 1.3.2
       '@scure/base': 1.1.3
-    dev: false
 
   /@sinclair/typebox@0.27.8:
     resolution: {integrity: sha512-+Fj43pSMwJs4KRrH/938Uf+uAELIgVBmQzg/q1YG10djyfA3TnrU8N8XzqCh/okZdszqBQTZf96idMfE5lnwTA==}
@@ -2026,7 +2020,6 @@ packages:
         optional: true
     dependencies:
       typescript: 5.2.2
-    dev: false
 
   /acorn-jsx@5.3.2(acorn@8.10.0):
     resolution: {integrity: sha512-rq9s+JNhf0IChjtDXxllJ7g41oZk5SlXtp0LHwyA5cejwn7vKmKp4pPri6YEePv2PU65sAsegbXtIinmDFDXgQ==}
@@ -2323,7 +2316,7 @@ packages:
     hasBin: true
     dependencies:
       caniuse-lite: 1.0.30001550
-      electron-to-chromium: 1.4.557
+      electron-to-chromium: 1.4.558
       node-releases: 2.0.13
       update-browserslist-db: 1.0.13(browserslist@4.22.1)
     dev: true
@@ -2691,8 +2684,8 @@ packages:
       stream-shift: 1.0.1
     dev: false
 
-  /electron-to-chromium@1.4.557:
-    resolution: {integrity: sha512-6x0zsxyMXpnMJnHrondrD3SuAeKcwij9S+83j2qHAQPXbGTDDfgImzzwgGlzrIcXbHQ42tkG4qA6U860cImNhw==}
+  /electron-to-chromium@1.4.558:
+    resolution: {integrity: sha512-j9IcGmfkyN5MBH/0Xzg45GDHasXsnwEJDM6Xnr9H7GlGUni+JH4q6xp6Nk7NV5LjTmoEFBqhILIqg1McJrv6uA==}
     dev: true
 
   /emoji-regex@8.0.0:
@@ -3961,7 +3954,6 @@ packages:
       ws: '*'
     dependencies:
       ws: 8.13.0
-    dev: false
 
   /istanbul-lib-coverage@3.2.0:
     resolution: {integrity: sha512-eOeJ5BHCmHYvQK7xt9GkdHuzuCGS1Y6g9Gvnx3Ym33fz/HpLRYxiS0wHNr+m/MBC8B647Xt608vCDEvhl9c6Mw==}
@@ -5842,7 +5834,6 @@ packages:
       - bufferutil
       - utf-8-validate
       - zod
-    dev: false
 
   /vite-node@0.34.6(@types/node@20.8.7):
     resolution: {integrity: sha512-nlBMJ9x6n7/Amaz6F3zJ97EBwR2FkzhBRxF5e+jE6LA3yi6Wtc2lyTij1OnDMIr34v5g/tVQtsVAzhT0jc5ygA==}
@@ -6102,7 +6093,6 @@ packages:
         optional: true
       utf-8-validate:
         optional: true
-    dev: false
 
   /ws@8.14.2(bufferutil@4.0.8)(utf-8-validate@5.0.10):
     resolution: {integrity: sha512-wEBG1ftX4jcglPxgFCMJmZ2PLtSbJ2Peg6TmpJFTbe9GZYOQCDPdMYu/Tm0/bGZkw8paZnJY45J4K2PZrLYq8g==}

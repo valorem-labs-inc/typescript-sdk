@@ -38,8 +38,7 @@
     "@bufbuild/protobuf": "^1.3.3",
     "@connectrpc/connect": "^1.1.2",
     "@connectrpc/connect-node": "^1.1.2",
-    "@wagmi/core": "^1.4.3",
-    "viem": "^1.16.5"
+    "@wagmi/core": "^1.4.4"
   },
   "devDependencies": {
     "@bufbuild/protoc-gen-es": "^1.3.3",
@@ -55,7 +54,17 @@
     "typedoc": "^0.25.2",
     "typedoc-plugin-missing-exports": "^2.1.0",
     "typescript": "^5.2.2",
+    "viem": "^1.16.5",
     "vitest": "^0.34.6"
+  },
+  "peerDependencies": {
+    "typescript": ">=5.2.0",
+    "viem": ">=1.0.0"
+  },
+  "peerDependenciesMeta": {
+    "typescript": {
+      "optional": true
+    }
   },
   "packageManager": "pnpm@8.6.10",
   "engines": {
