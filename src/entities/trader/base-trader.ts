@@ -320,23 +320,6 @@ export class Trader {
     }
   }
 
-  public async exerciseOption({
-    option,
-    amount,
-  }: {
-    option: Option;
-    amount: bigint;
-  }) {
-    await option.exerciseOption({
-      amount,
-      trader: this,
-    });
-  }
-
-  public async redeemClaim({ claim }: { claim: Claim }) {
-    await claim.redeemClaim(this);
-  }
-
   public async acceptQuote({ quote }: { quote: ParsedQuoteResponse }) {
     if (!this.seaport.write)
       throw new Error('Must initialize Seaport with Wallet Client');
