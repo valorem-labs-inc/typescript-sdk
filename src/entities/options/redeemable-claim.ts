@@ -1,6 +1,7 @@
 import type { Trader } from '../trader/base-trader';
 import type { SimulatedTxRequest } from '../../types';
 import { OptionType } from './option-type';
+import { ClearinghouseContract } from '../contracts';
 
 export class Claim extends OptionType {
   public async redeemClaim(trader: Trader) {
@@ -22,5 +23,15 @@ export class Claim extends OptionType {
         `Successfully redeemed claim with ID ${this.tokenId.toString()}`,
       );
     }
+  }
+
+  static async fromId(claimId: bigint, clearinghouse: ClearinghouseContract) {
+    const type = await super.fromId(claimId, clearinghouse);
+    return new this({
+      optionInfo: type.optionInfo,
+      optionTypeId: type.optionTypeId,
+      tokenId: type.tokenId,
+      tokenType: type.tokenType,
+    });
   }
 }

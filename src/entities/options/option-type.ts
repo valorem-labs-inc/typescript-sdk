@@ -98,19 +98,13 @@ export class OptionType {
     });
   }
 
-  static async fromId({
-    tokenId,
-    clearinghouse,
-  }: {
-    tokenId: bigint;
-    clearinghouse: ClearinghouseContract;
-  }) {
+  static async fromId(tokenId: bigint, clearinghouse: ClearinghouseContract) {
     const optionInfo = await OptionType.getOptionTypeInfo(
       tokenId,
       clearinghouse,
     );
-    const tokenType = await OptionType.getTokenType(tokenId, clearinghouse);
     const optionTypeId = OptionType.getOptionTypeId(optionInfo);
+    const tokenType = await OptionType.getTokenType(tokenId, clearinghouse);
 
     return new this({
       optionInfo,

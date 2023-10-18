@@ -1,6 +1,7 @@
 import type { Trader } from '../trader/base-trader';
 import type { SimulatedTxRequest } from '../../types';
 import { OptionType } from './option-type';
+import { ClearinghouseContract } from '../contracts';
 
 export class Option extends OptionType {
   public async exerciseOption({
@@ -29,5 +30,15 @@ export class Option extends OptionType {
         `Successfully exercised ${amount}x options, with ID ${this.tokenId.toString()}`,
       );
     }
+  }
+
+  static async fromId(optionId: bigint, clearinghouse: ClearinghouseContract) {
+    const type = await super.fromId(optionId, clearinghouse);
+    return new this({
+      optionInfo: type.optionInfo,
+      optionTypeId: type.optionTypeId,
+      tokenId: type.tokenId,
+      tokenType: type.tokenType,
+    });
   }
 }
