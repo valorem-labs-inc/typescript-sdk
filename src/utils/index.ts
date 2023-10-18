@@ -13,6 +13,6 @@ export {
   SEAPORT_ADDRESS,
   USDC_ADDRESS,
   WETH_ADDRESS,
-  nullBytes32,
-  supportedChains,
+  NULL_BYTES32 as nullBytes32,
+  SUPPORTED_CHAINS as supportedChains,
 } from '../constants';
