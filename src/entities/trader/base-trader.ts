@@ -295,14 +295,20 @@ export class Trader {
    * Contract Writes
    */
   public async approveERC20({
-    erc20,
+    tokenAddress,
     spender,
     amount,
   }: {
-    erc20: ERC20Contract;
+    tokenAddress: Address;
     spender: Address;
     amount: bigint;
   }) {
+    const erc20 = new ERC20Contract({
+      address: tokenAddress,
+      publicClient: this.publicClient,
+      walletClient: this.walletClient,
+    });
+
     // prepare tx
     const { request } = await erc20.simulate.approve([spender, amount]);
     // send tx
