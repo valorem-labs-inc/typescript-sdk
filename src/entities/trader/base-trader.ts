@@ -27,8 +27,9 @@ import {
   createSIWEMessage,
   toH256,
   toH160,
+  fromH160ToAddress,
 } from '../../utils';
-import { nullBytes32, CLEAR_ADDRESS, SEAPORT_ADDRESS } from '../../constants';
+import { CLEAR_ADDRESS, SEAPORT_ADDRESS, NULL_BYTES32 } from '../../constants';
 import { ClearinghouseContract, SeaportContract } from '../contracts';
 import { Action, QuoteRequest } from '../../lib/codegen/rfq_pb';
 import { ItemType } from '../../lib/codegen/seaport_pb';
@@ -50,9 +51,7 @@ export class Trader {
   public clearinghouse: ClearinghouseContract;
 
   /** cached results */
-  // { [ERC20_ADDRESS]: BALANCE}
   private erc20Balances = new Map<Address, bigint>();
-  // { [ERC20_ADDRESS]: { [CLEAR_ADDRESS]: APPROVED_AMOUNT, [SEAPORT_ADDRESS]: APPROVED_AMOUNT } }
   private erc20Allowances = new Map<
     Address,
     {
@@ -120,7 +119,11 @@ export class Trader {
     const res = await handleGRPCRequest(async () =>
       authClient.authenticate({}),
     );
-    this.authenticated = res !== null;
+    if (res)
+      this.authenticated =
+        fromH160ToAddress(res).toLowerCase() ===
+        this.account.address.toLowerCase();
+    return this.authenticated;
   }
 
   public async verifyWithSIWE(message: string, signature: `0x${string}`) {
@@ -132,7 +135,13 @@ export class Trader {
         }),
       }),
     );
-    return { verified: res !== null };
+    if (res)
+      return {
+        verified:
+          fromH160ToAddress(res).toLowerCase() ===
+          this.account.address.toLowerCase(),
+      };
+    return { verified: null };
   }
 
   public async createAndSignMessage(nonce: string) {
@@ -332,7 +341,7 @@ export class Trader {
       // send tx (simulating will fail)
       const hash = await this.seaport.write.fulfillOrder([
         { parameters, signature },
-        nullBytes32,
+        NULL_BYTES32,
       ]);
       // get receipt
       const receipt = await this.publicClient.waitForTransactionReceipt({
