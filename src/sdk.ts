@@ -1,18 +1,12 @@
-import type {
-  Chain,
-  PublicClient,
-  PrivateKeyAccount,
-  WalletClient,
-  Account,
-  LocalAccount,
-  Transport,
-} from 'viem';
+import type { Chain, PrivateKeyAccount, Account, LocalAccount } from 'viem';
 import { arbitrum, arbitrumGoerli } from 'viem/chains';
+import type { PublicClient, WalletClient } from '@wagmi/core';
 import {
   Taker,
   Maker,
   ClearinghouseContract,
   SeaportContract,
+  WebTaker,
 } from './entities';
 
 interface SDKOptions {
@@ -29,18 +23,18 @@ export class ValoremSDK {
 
   public walletClient?: WalletClient;
   public account?: Account;
-  private maker?: Maker;
-  private taker?: Taker;
+
+  private _maker?: Maker;
+  private _taker?: Taker;
+  private _webTaker?: WebTaker;
 
   constructor({ publicClient, walletClient }: SDKOptions) {
     const isSupportedNetwork =
-      publicClient.chain?.id === arbitrum.id ||
-      publicClient.chain?.id === arbitrumGoerli.id;
-    if (!isSupportedNetwork || !publicClient.chain) {
+      publicClient.chain.id === arbitrum.id ||
+      publicClient.chain.id === arbitrumGoerli.id;
+    if (!isSupportedNetwork) {
       throw new Error(
-        `Unsupported network: ${
-          publicClient.chain?.name ?? 'N/A'
-        }. Please use Arbitrum or Arbitrum Goerli`,
+        `Unsupported network: ${publicClient.chain.name}. Please use Arbitrum or Arbitrum Goerli`,
       );
     }
 
@@ -55,12 +49,17 @@ export class ValoremSDK {
         (this.account as LocalAccount<'privateKey' | 'custom'>).source ===
         'privateKey'
       ) {
-        this.taker = new Taker({
+        this._taker = new Taker({
           chain: this.chain,
           account: this.account as PrivateKeyAccount,
         });
 
-        this.maker = new Maker({
+        this._webTaker = new WebTaker({
+          chain: this.chain,
+          account: this.account as PrivateKeyAccount,
+        });
+
+        this._maker = new Maker({
           chain: this.chain,
           account: this.account as PrivateKeyAccount,
         });
@@ -68,21 +67,40 @@ export class ValoremSDK {
     }
 
     this.clearinghouse = new ClearinghouseContract({
-      publicClient: this.publicClient as PublicClient<Transport, Chain>,
-      walletClient: this.walletClient as WalletClient<
-        Transport,
-        Chain,
-        Account
-      >,
+      publicClient: this.publicClient,
+      walletClient: this.walletClient,
     });
 
     this.seaport = new SeaportContract({
-      publicClient: this.publicClient as PublicClient<Transport, Chain>,
-      walletClient: this.walletClient as WalletClient<
-        Transport,
-        Chain,
-        Account
-      >,
+      publicClient: this.publicClient,
+      walletClient: this.walletClient,
     });
+  }
+
+  public get webTaker() {
+    if (this._webTaker === undefined)
+      throw new Error(
+        'Failed to get WebTaker. Please initialize Valorem SDK with a wallet client to access WebTaker.',
+      );
+
+    return this._webTaker;
+  }
+
+  public get taker() {
+    if (this._taker === undefined)
+      throw new Error(
+        'Failed to get Taker. Please initialize Valorem SDK with a wallet client to access Taker.',
+      );
+
+    return this._taker;
+  }
+
+  public get maker() {
+    if (this._maker === undefined)
+      throw new Error(
+        'Failed to get Maker. Please initialize Valorem SDK with a wallet client to access Maker.',
+      );
+
+    return this._maker;
   }
 }

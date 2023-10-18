@@ -1,15 +1,15 @@
-import type { erc20ABI as ERC20_ABI } from '@wagmi/core';
 import type {
-  Abi,
-  Account,
-  Address,
-  Chain,
-  Transport,
+  erc20ABI as ERC20_ABI,
   PublicClient,
   WalletClient,
-} from 'viem';
+} from '@wagmi/core';
+import type { Abi, Account, Address, Chain, Transport } from 'viem';
 import { getContract } from 'viem';
-import type { CLEAR_ABI, SEAPORT_V1_5_ABI } from '../../abis';
+import type {
+  CLEAR_ABI,
+  SEAPORT_V1_5_ABI,
+  SEAPORT_VALIDATOR_ABI,
+} from '../../abis';
 
 type IContract<T extends Abi> = ReturnType<
   typeof getContract<
@@ -18,8 +18,8 @@ type IContract<T extends Abi> = ReturnType<
     T,
     Chain,
     Account,
-    PublicClient<Transport, Chain>,
-    WalletClient<Transport, Chain, Account>
+    PublicClient,
+    WalletClient
   >
 >;
 
@@ -27,11 +27,12 @@ export interface ContractConstructorArgs {
   address: Address;
   abi: Abi;
   publicClient: PublicClient;
-  walletClient: WalletClient;
+  walletClient?: WalletClient;
 }
 
 export type IClearinghouse = IContract<typeof CLEAR_ABI>;
 export type ISeaport = IContract<typeof SEAPORT_V1_5_ABI>;
+export type ISeaportValidator = IContract<typeof SEAPORT_VALIDATOR_ABI>;
 export type IERC20 = IContract<typeof ERC20_ABI>;
 
 /** Reusable extension of viem's contract interface */
