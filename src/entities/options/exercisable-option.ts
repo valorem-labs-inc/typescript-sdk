@@ -1,7 +1,7 @@
 import type { Trader } from '../trader/base-trader';
 import type { SimulatedTxRequest } from '../../types';
+import type { ClearinghouseContract } from '../contracts';
 import { OptionType } from './option-type';
-import { ClearinghouseContract } from '../contracts';
 
 export class Option extends OptionType {
   public async exerciseOption({
