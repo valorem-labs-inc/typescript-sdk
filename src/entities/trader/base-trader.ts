@@ -14,14 +14,14 @@ import {
   hexToBigInt,
 } from 'viem';
 import type { PublicClient, WalletClient } from '@wagmi/core';
-import type { ERC20Contract } from '../contracts/erc20';
+import type { PartialMessage } from '@bufbuild/protobuf';
+import { ConnectError } from '@connectrpc/connect';
+import { ERC20Contract } from '../contracts/erc20';
 import type { SimulatedTxRequest } from '../../types';
+import type { ParsedQuoteResponse } from '../../utils';
 import {
-  ParsedQuoteResponse,
   parseQuoteResponse,
   rfqClient,
-} from '../../utils';
-import {
   handleGRPCRequest,
   authClient,
   createSIWEMessage,
@@ -29,12 +29,9 @@ import {
   toH160,
 } from '../../utils';
 import { nullBytes32, CLEAR_ADDRESS, SEAPORT_ADDRESS } from '../../constants';
-import type { Claim, Option } from '../options';
 import { ClearinghouseContract, SeaportContract } from '../contracts';
 import { Action, QuoteRequest } from '../../lib/codegen/rfq_pb';
 import { ItemType } from '../../lib/codegen/seaport_pb';
-import { PartialMessage } from '@bufbuild/protobuf';
-import { ConnectError } from '@connectrpc/connect';
 
 export interface TraderConstructorArgs {
   account: Account;

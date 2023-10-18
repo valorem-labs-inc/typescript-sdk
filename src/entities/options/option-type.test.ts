@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { OptionType } from './option-type';
 import { clearinghouse } from '../../../test';
+import { OptionType } from './option-type';
 
 const expectedOptionTypeId =
   39619444411110155182191577564943662405077439414287374917766485031893178777600n;
