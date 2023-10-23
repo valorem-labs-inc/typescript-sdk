@@ -10,18 +10,23 @@
   "type": "module",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "default": "./dist/index.js"
+      "types": "./dist/_esm/index.d.ts",
+      "import": "./dist/_esm/index.js",
+      "default": "./dist/_cjs/index.js"
     },
     "./package.json": "./package.json"
   },
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "./dist/_cjs/index.js",
+  "module": "./dist/_esm/index.js",
+  "types": "./dist/_esm/index.d.ts",
+  "typings": "./dist/_esm/index.d.ts",
   "files": [
-    "/dist"
+    "./dist"
   ],
   "scripts": {
-    "build": "pnpm clean && pnpm codegen && pnpm tsup",
+    "build": "pnpm clean && pnpm codegen && pnpm build:cjs && pnpm build:esm",
+    "build:cjs": "pnpm tsup --config tsup.cjs.ts",
+    "build:esm": "pnpm tsup --config tsup.esm.ts",
     "clean": "rm -rf ./dist",
     "codegen": "rm -rf ./src/lib/codegen && npx buf generate",
     "format": "prettier --write \"**/*.{ts,tsx,md,json}\"",
@@ -29,7 +34,6 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "prepare": "git submodule update --init --recursive",
-    "prepublish": "pnpm build",
     "test": "vitest run --coverage"
   },
   "prettier": "@vercel/style-guide/prettier",

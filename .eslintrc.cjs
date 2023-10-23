@@ -34,6 +34,7 @@ module.exports = {
   },
   ignorePatterns: [
     '*.config.*',
+    'tsup*',
     'node_modules',
     'dist',
     'build',
