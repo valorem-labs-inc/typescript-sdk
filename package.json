@@ -1,6 +1,6 @@
 {
   "name": "@valorem-labs-inc/sdk",
-  "version": "0.0.1",
+  "version": "0.0.2-alpha.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/valorem-labs-inc/typescript-sdk.git"
