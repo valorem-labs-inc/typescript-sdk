@@ -21,9 +21,10 @@ describe('Option Class', () => {
     });
 
     expect(optionType.optionTypeId).toEqual(expectedOptionTypeId);
-    expect(optionType.tokenId).toEqual(expectedOptionTypeId);
-    expect(optionType.typeExists).toBeTruthy();
-    expect(optionType.tokenType).toEqual(1);
     expect(optionType.optionInfo).toBeDefined();
+    expect(optionType.typeExists).toBeTruthy();
+
+    expect(optionType.tokenType).not.toBeDefined();
+    expect(optionType.tokenId).not.toBeDefined();
   });
 });

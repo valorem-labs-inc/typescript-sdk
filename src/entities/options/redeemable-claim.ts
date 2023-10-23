@@ -1,9 +1,24 @@
 import type { Trader } from '../trader/base-trader';
 import type { SimulatedTxRequest } from '../../types';
 import type { ClearinghouseContract } from '../contracts';
+import type { OptionTypeArgs } from './option-type';
 import { OptionType } from './option-type';
 
+export interface ClaimArgs extends OptionTypeArgs {
+  tokenId: bigint;
+  tokenType: 0 | 2;
+}
+
 export class Claim extends OptionType {
+  public tokenId: bigint;
+  public tokenType: 0 | 2;
+
+  public constructor(args: ClaimArgs) {
+    super(args);
+    this.tokenId = args.tokenId;
+    this.tokenType = args.tokenType;
+  }
+
   public async redeemClaim(trader: Trader) {
     if (!this.tokenId) {
       console.log('Missing TokenId');
@@ -25,13 +40,24 @@ export class Claim extends OptionType {
     }
   }
 
+  public get redeemed() {
+    return this.tokenType === 0;
+  }
+
   static async fromId(claimId: bigint, clearinghouse: ClearinghouseContract) {
-    const type = await super.fromId(claimId, clearinghouse);
+    const tokenType = await super.getTokenType(claimId, clearinghouse);
+    if (tokenType === 1) {
+      throw new Error(
+        'The provided tokenId corresponds to an exercisable Option, not a redeemable Claim. Please use Option.fromId instead.',
+      );
+    }
+    const optionType = await super.fromId(claimId, clearinghouse);
     return new this({
-      optionInfo: type.optionInfo,
-      optionTypeId: type.optionTypeId,
-      tokenId: type.tokenId,
-      tokenType: type.tokenType,
+      optionInfo: optionType.optionInfo,
+      optionTypeId: optionType.optionTypeId,
+      typeExists: optionType.typeExists,
+      tokenId: claimId,
+      tokenType,
     });
   }
 }

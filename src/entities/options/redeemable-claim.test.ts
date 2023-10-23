@@ -14,7 +14,8 @@ describe('Redeemable Claim', () => {
     const claim = await Claim.fromId(claimId, clearinghouse);
 
     expect(claim.tokenId).toEqual(claimId);
-    expect(claim.tokenType).toEqual(2);
+    expect(claim.tokenType).toEqual(0);
+    expect(claim.redeemed).toBeTruthy();
     expect(claim.typeExists).toBeTruthy();
     expect(claim.optionTypeId).toEqual(expectedOptionTypeId);
     expect(claim.optionInfo).toBeDefined();
