@@ -1,7 +1,7 @@
 import { createGrpcTransport } from '@connectrpc/connect-node';
 import { ConnectError, createPromiseClient } from '@connectrpc/connect';
-import { Auth, RFQ } from '../lib';
-import { GRPC_ENDPOINT } from '../constants';
+import { Auth, RFQ } from './lib';
+import { GRPC_ENDPOINT } from './constants';
 
 let COOKIE: string | undefined; // to be used for all server interactions
 

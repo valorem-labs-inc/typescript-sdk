@@ -21,9 +21,6 @@ import type { SimulatedTxRequest } from '../../types';
 import type { ParsedQuoteResponse } from '../../utils';
 import {
   parseQuoteResponse,
-  rfqClient,
-  handleGRPCRequest,
-  authClient,
   createSIWEMessage,
   toH256,
   toH160,
@@ -33,6 +30,7 @@ import { CLEAR_ADDRESS, SEAPORT_ADDRESS, NULL_BYTES32 } from '../../constants';
 import { ClearinghouseContract, SeaportContract } from '../contracts';
 import { Action, QuoteRequest } from '../../lib/codegen/rfq_pb';
 import { ItemType } from '../../lib/codegen/seaport_pb';
+import { handleGRPCRequest, authClient, rfqClient } from '../../grpc';
 
 export interface TraderConstructorArgs {
   account: Account;

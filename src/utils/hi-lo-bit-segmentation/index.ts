@@ -1,7 +1,4 @@
-export type { ParsedQuoteResponse } from './parse-quote-response';
-
 export { toH40, toH96, toH128, toH160, toH256 } from './bigint-to-hi-lo';
-export { parseQuoteResponse } from './parse-quote-response';
 export {
   fromH40,
   fromH96,
@@ -10,3 +7,7 @@ export {
   fromH160ToAddress,
   fromH256,
 } from './hi-lo-to-big-int';
+export {
+  parseQuoteResponse,
+  type ParsedQuoteResponse,
+} from './parse-quote-response';

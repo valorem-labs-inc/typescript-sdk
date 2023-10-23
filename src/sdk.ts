@@ -1,13 +1,9 @@
 import type { Chain, PrivateKeyAccount, Account, LocalAccount } from 'viem';
 import { arbitrum, arbitrumGoerli } from 'viem/chains';
 import type { PublicClient, WalletClient } from '@wagmi/core';
-import {
-  Taker,
-  Maker,
-  ClearinghouseContract,
-  SeaportContract,
-  WebTaker,
-} from './entities';
+import { ClearinghouseContract, SeaportContract, WebTaker } from './entities';
+import { Maker } from './entities/trader/maker';
+import { Taker } from './entities/trader/taker';
 
 interface SDKOptions {
   publicClient: PublicClient;

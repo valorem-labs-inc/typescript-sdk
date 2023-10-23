@@ -1,3 +1,3 @@
-export * from './maker';
-export * from './taker';
-export * from './web-taker';
+export { Maker } from './maker';
+export { Taker } from './taker';
+export { WebTaker } from './web-taker';
