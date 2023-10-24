@@ -30,11 +30,13 @@ import { CLEAR_ADDRESS, SEAPORT_ADDRESS, NULL_BYTES32 } from '../../constants';
 import { ClearinghouseContract, SeaportContract } from '../contracts';
 import { Action, QuoteRequest } from '../../lib/codegen/rfq_pb';
 import { ItemType } from '../../lib/codegen/seaport_pb';
-import { handleGRPCRequest, authClient, rfqClient } from '../../grpc';
+import { handleGRPCRequest, type AuthClient, type RFQClient } from '../../grpc';
 
 export interface TraderConstructorArgs {
   account: Account;
   chain: Chain;
+  authClient: AuthClient;
+  rfqClient: RFQClient;
 }
 
 type Spender = typeof CLEAR_ADDRESS | typeof SEAPORT_ADDRESS;
@@ -48,6 +50,9 @@ export class Trader {
   public seaport: SeaportContract;
   public clearinghouse: ClearinghouseContract;
 
+  public authClient: AuthClient;
+  public rfqClient: RFQClient;
+
   /** cached results */
   private erc20Balances = new Map<Address, bigint>();
   private erc20Allowances = new Map<
@@ -58,7 +63,12 @@ export class Trader {
     }
   >();
 
-  public constructor({ account, chain }: TraderConstructorArgs) {
+  public constructor({
+    account,
+    chain,
+    authClient,
+    rfqClient,
+  }: TraderConstructorArgs) {
     this.publicClient = createPublicClient({
       chain,
       transport: http(),
@@ -80,6 +90,9 @@ export class Trader {
       publicClient: this.publicClient,
       walletClient: this.walletClient,
     });
+
+    this.authClient = authClient;
+    this.rfqClient = rfqClient;
   }
 
   /**
@@ -108,14 +121,14 @@ export class Trader {
   }
 
   public async getNonce() {
-    const res = await handleGRPCRequest(async () => authClient.nonce({}));
+    const res = await handleGRPCRequest(async () => this.authClient.nonce({}));
     if (res === null) throw new Error('Failed to get nonce for SIWE message.');
     return res.nonce;
   }
 
   public async checkAuthentication() {
     const res = await handleGRPCRequest(async () =>
-      authClient.authenticate({}),
+      this.authClient.authenticate({}),
     );
     if (res)
       this.authenticated =
@@ -126,7 +139,7 @@ export class Trader {
 
   public async verifyWithSIWE(message: string, signature: `0x${string}`) {
     const res = await handleGRPCRequest(async () =>
-      authClient.verify({
+      this.authClient.verify({
         body: JSON.stringify({
           message,
           signature,
@@ -198,11 +211,11 @@ export class Trader {
 
     try {
       for await (const quoteResponse of method === 'taker'
-        ? rfqClient.taker(
+        ? this.rfqClient.taker(
             (request as () => AsyncIterable<PartialMessage<QuoteRequest>>)(),
             options,
           )
-        : rfqClient.webTaker(
+        : this.rfqClient.webTaker(
             request as PartialMessage<QuoteRequest>,
             options,
           )) {

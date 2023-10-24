@@ -5,6 +5,7 @@ export const baseTsupConfig: Options = {
   target: 'es2021',
   bundle: true,
   treeshake: true,
+  platform: 'neutral',
 };
 
 export default defineConfig({

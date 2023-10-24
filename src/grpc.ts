@@ -1,13 +1,12 @@
-import { createGrpcTransport } from '@connectrpc/connect-node';
-import { ConnectError, createPromiseClient } from '@connectrpc/connect';
-import { Auth, RFQ } from './lib';
-import { GRPC_ENDPOINT } from './constants';
+import type { createPromiseClient } from '@connectrpc/connect';
+import { ConnectError } from '@connectrpc/connect';
+import type { Auth, RFQ } from './lib';
 
 let COOKIE: string | undefined; // to be used for all server interactions
 
 // custom Connect-node transport interceptor for retrieving cookie
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const trackCookie = (next: any) => async (req: any) => {
+export const trackCookieInterceptor = (next: any) => async (req: any) => {
   if (COOKIE !== undefined) {
     req.header = [['cookie', COOKIE]];
   }
@@ -19,23 +18,8 @@ const trackCookie = (next: any) => async (req: any) => {
   return res;
 };
 
-// transport for connection to Valorem Trade gRPC server
-const transport = createGrpcTransport({
-  baseUrl: GRPC_ENDPOINT,
-  httpVersion: '2',
-  interceptors: [trackCookie],
-  nodeOptions: {
-    // TODO THIS IS INSECURE
-    // cert: TLS_CERT, // doesnt work
-    // ca: CA, // doesnt work
-    rejectUnauthorized: false, // insecure
-  },
-});
-
-export const authClient: ReturnType<typeof createPromiseClient<typeof Auth>> =
-  createPromiseClient(Auth, transport);
-export const rfqClient: ReturnType<typeof createPromiseClient<typeof RFQ>> =
-  createPromiseClient(RFQ, transport);
+export type AuthClient = ReturnType<typeof createPromiseClient<typeof Auth>>;
+export type RFQClient = ReturnType<typeof createPromiseClient<typeof RFQ>>;
 
 export const handleGRPCRequest = async <T>(
   request: () => Promise<T>,

@@ -30,6 +30,13 @@ export {
 } from './entities';
 
 export {
+  trackCookieInterceptor,
+  handleGRPCRequest,
+  type AuthClient,
+  type RFQClient,
+} from './grpc';
+
+export {
   Auth,
   NonceText,
   VerifyText,
