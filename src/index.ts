@@ -6,6 +6,7 @@ export {
   SEAPORT_ADDRESS,
   VALIDATOR_ADDRESS,
   SUPPORTED_CHAINS,
+  NULL_BYTES32,
 } from './constants';
 
 export {
@@ -30,10 +31,26 @@ export {
 } from './entities';
 
 export {
+  type AuthClient,
+  type FeesClient,
+  type RFQClient,
+  type SpotClient,
+  type ValoremGRPCClients,
   trackCookieInterceptor,
   handleGRPCRequest,
-  type AuthClient,
-  type RFQClient,
+  toH40,
+  toH96,
+  toH128,
+  toH160,
+  toH256,
+  fromH40,
+  fromH96,
+  fromH128,
+  fromH160,
+  fromH160ToAddress,
+  fromH256,
+  parseQuoteResponse,
+  type ParsedQuoteResponse,
 } from './grpc';
 
 export {
@@ -76,21 +93,4 @@ export type {
   SupportedChainId,
 } from './types';
 
-export {
-  toH40,
-  toH96,
-  toH128,
-  toH160,
-  toH256,
-  fromH40,
-  fromH96,
-  fromH128,
-  fromH160,
-  fromH160ToAddress,
-  fromH256,
-  parseQuoteResponse,
-  type ParsedQuoteResponse,
-  createSIWEMessage,
-  get24HrTimestamps,
-  get8AMUTCDate,
-} from './utils';
+export { createSIWEMessage, get24HrTimestamps, get8AMUTCDate } from './utils';

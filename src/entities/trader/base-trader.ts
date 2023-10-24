@@ -18,21 +18,26 @@ import type { PartialMessage } from '@bufbuild/protobuf';
 import { ConnectError } from '@connectrpc/connect';
 import { ERC20Contract } from '../contracts/erc20';
 import type { SimulatedTxRequest } from '../../types';
-import type { ParsedQuoteResponse } from '../../utils';
 import {
   parseQuoteResponse,
-  createSIWEMessage,
   toH256,
   toH160,
   fromH160ToAddress,
-} from '../../utils';
+  handleGRPCRequest,
+  type AuthClient,
+  type FeesClient,
+  type RFQClient,
+  type SpotClient,
+  type ParsedQuoteResponse,
+  type ValoremGRPCClients,
+} from '../../grpc';
+import { createSIWEMessage } from '../../utils';
 import { CLEAR_ADDRESS, SEAPORT_ADDRESS, NULL_BYTES32 } from '../../constants';
 import { ClearinghouseContract, SeaportContract } from '../contracts';
 import { Action, QuoteRequest } from '../../lib/codegen/rfq_pb';
 import { ItemType } from '../../lib/codegen/seaport_pb';
-import { handleGRPCRequest, type AuthClient, type RFQClient } from '../../grpc';
 
-export interface TraderConstructorArgs {
+export interface TraderConstructorArgs extends ValoremGRPCClients {
   account: Account;
   chain: Chain;
   authClient: AuthClient;
@@ -51,7 +56,9 @@ export class Trader {
   public clearinghouse: ClearinghouseContract;
 
   public authClient: AuthClient;
+  private feesClient?: FeesClient;
   public rfqClient: RFQClient;
+  private spotClient?: SpotClient;
 
   /** cached results */
   private erc20Balances = new Map<Address, bigint>();
@@ -67,7 +74,9 @@ export class Trader {
     account,
     chain,
     authClient,
+    feesClient,
     rfqClient,
+    spotClient,
   }: TraderConstructorArgs) {
     this.publicClient = createPublicClient({
       chain,
@@ -92,7 +101,9 @@ export class Trader {
     });
 
     this.authClient = authClient;
+    this.feesClient = feesClient;
     this.rfqClient = rfqClient;
+    this.spotClient = spotClient;
   }
 
   /**

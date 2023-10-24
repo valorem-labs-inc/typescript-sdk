@@ -4,14 +4,14 @@ import type { PublicClient, WalletClient } from '@wagmi/core';
 import { ClearinghouseContract, SeaportContract, WebTaker } from './entities';
 import { Maker } from './entities/trader/maker';
 import { Taker } from './entities/trader/taker';
-import type { AuthClient, RFQClient } from './grpc';
+import type { ValoremGRPCClients } from './grpc/clients';
 
-interface SDKOptions {
+interface ViemClients {
   publicClient: PublicClient;
   walletClient?: WalletClient;
-  authClient?: AuthClient;
-  rfqClient?: RFQClient;
 }
+
+type SDKOptions = ViemClients & ValoremGRPCClients;
 
 export class ValoremSDK {
   public chain: Chain;
