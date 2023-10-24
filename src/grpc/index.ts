@@ -20,5 +20,5 @@ export {
   parseQuoteResponse,
   type ParsedQuoteResponse,
 } from './hi-lo-bit-segmentation';
-export { trackCookieInterceptor } from './interceptors';
+export { trackCookieInterceptor, getloggerInterceptor } from './interceptors';
 export { handleGRPCRequest } from './utils';

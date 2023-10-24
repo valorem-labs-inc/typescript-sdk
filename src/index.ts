@@ -37,6 +37,7 @@ export {
   type SpotClient,
   type ValoremGRPCClients,
   trackCookieInterceptor,
+  getloggerInterceptor,
   handleGRPCRequest,
   toH40,
   toH96,
