@@ -9,8 +9,10 @@ import {
 import type { OptionTypeInfo, SimulatedTxRequest } from '../../types';
 import type { Trader } from '../trader/base-trader';
 import type { ClearinghouseContract } from '../contracts/clearinghouse';
+import type { LoggerConfig } from '../../logger';
+import { Logger } from '../../logger';
 
-export interface OptionTypeArgs {
+export interface OptionTypeArgs extends LoggerConfig {
   optionInfo: OptionTypeInfo;
   optionTypeId: bigint;
   typeExists: boolean;
@@ -26,14 +28,23 @@ export class OptionType {
   public tokenId: bigint | undefined = undefined;
   public tokenType: 0 | 1 | 2 | undefined = undefined;
 
-  public constructor({ optionInfo, optionTypeId, typeExists }: OptionTypeArgs) {
+  protected logger: Logger;
+
+  public constructor({
+    optionInfo,
+    optionTypeId,
+    typeExists,
+    logLevel,
+  }: OptionTypeArgs) {
     this.optionInfo = optionInfo;
     this.optionTypeId = optionTypeId;
     this.typeExists = typeExists;
+
+    this.logger = new Logger({ logLevel });
   }
 
   public async createOptionType(trader: Trader) {
-    console.log(
+    this.logger.info(
       `Initializing new OptionType with Clearinghouse. ID:${this.optionTypeId.toString()}`,
     );
     // prepare tx
@@ -51,7 +62,7 @@ export class OptionType {
     );
     // check result
     if (receipt.status === 'success') {
-      console.log(
+      this.logger.info(
         `Successfully created new option type. txHash: ${receipt.transactionHash}`,
       );
       this.typeExists = true;

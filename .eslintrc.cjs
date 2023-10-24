@@ -20,7 +20,6 @@ module.exports = {
   ].map(require.resolve),
   rules: {
     'no-bitwise': 'off',
-    'no-console': 'warn',
     'eslint-comments/require-description': 'off',
     'import/no-extraneous-dependencies': 'off',
     'unicorn/filename-case': 'off',

@@ -83,6 +83,8 @@ export {
   H256,
 } from './lib';
 
+export { Logger, LogLevel, type LoggerConfig } from './logger';
+
 export { ValoremSDK } from './sdk';
 
 export type {

@@ -1,17 +1,22 @@
 import type { Chain, PrivateKeyAccount, Account, LocalAccount } from 'viem';
 import { arbitrum, arbitrumGoerli } from 'viem/chains';
 import type { PublicClient, WalletClient } from '@wagmi/core';
-import { ClearinghouseContract, SeaportContract, WebTaker } from './entities';
-import { Maker } from './entities/trader/maker';
-import { Taker } from './entities/trader/taker';
+import {
+  ClearinghouseContract,
+  SeaportContract,
+  WebTaker,
+  Maker,
+  Taker,
+} from './entities';
 import type { ValoremGRPCClients } from './grpc/clients';
+import { Logger, type LoggerConfig } from './logger';
 
 interface ViemClients {
   publicClient: PublicClient;
   walletClient?: WalletClient;
 }
 
-type SDKOptions = ViemClients & ValoremGRPCClients;
+type SDKOptions = ViemClients & ValoremGRPCClients & LoggerConfig;
 
 export class ValoremSDK {
   public chain: Chain;
@@ -27,15 +32,21 @@ export class ValoremSDK {
   private _taker?: Taker;
   private _webTaker?: WebTaker;
 
+  private logger: Logger;
+
   constructor({
     publicClient,
     walletClient,
     authClient,
     rfqClient,
+    logLevel,
   }: SDKOptions) {
+    this.logger = new Logger({ logLevel });
+
     const isSupportedNetwork =
       publicClient.chain.id === arbitrum.id ||
       publicClient.chain.id === arbitrumGoerli.id;
+
     if (!isSupportedNetwork) {
       throw new Error(
         `Unsupported network: ${publicClient.chain.name}. Please use Arbitrum or Arbitrum Goerli`,
@@ -60,6 +71,7 @@ export class ValoremSDK {
           account: this.account as PrivateKeyAccount,
           authClient,
           rfqClient,
+          logLevel,
         });
 
         this._webTaker = new WebTaker({
@@ -67,6 +79,7 @@ export class ValoremSDK {
           account: this.account as PrivateKeyAccount,
           authClient,
           rfqClient,
+          logLevel,
         });
 
         this._maker = new Maker({
@@ -74,6 +87,7 @@ export class ValoremSDK {
           account: this.account as PrivateKeyAccount,
           authClient,
           rfqClient,
+          logLevel,
         });
       }
     }
@@ -81,11 +95,13 @@ export class ValoremSDK {
     this.clearinghouse = new ClearinghouseContract({
       publicClient: this.publicClient,
       walletClient: this.walletClient,
+      logLevel,
     });
 
     this.seaport = new SeaportContract({
       publicClient: this.publicClient,
       walletClient: this.walletClient,
+      logLevel,
     });
   }
 

@@ -21,7 +21,7 @@ export class Claim extends OptionType {
 
   public async redeemClaim(trader: Trader) {
     if (!this.tokenId) {
-      console.log('Missing TokenId');
+      this.logger.error('Missing TokenId');
       return undefined;
     }
     // prepare tx
@@ -34,7 +34,7 @@ export class Claim extends OptionType {
     );
     // check result
     if (receipt.status === 'success') {
-      console.log(
+      this.logger.info(
         `Successfully redeemed claim with ID ${this.tokenId.toString()}`,
       );
     }

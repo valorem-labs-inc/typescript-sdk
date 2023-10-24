@@ -6,12 +6,7 @@ export class ERC20Contract extends Contract<IERC20> {
   private _symbol?: string;
   private _decimals?: number;
 
-  public constructor(
-    args: Pick<
-      ContractConstructorArgs,
-      'address' | 'publicClient' | 'walletClient'
-    >,
-  ) {
+  public constructor(args: Omit<ContractConstructorArgs, 'abi'>) {
     super({ ...args, abi: erc20ABI });
     void this.getSymbol();
     void this.getDecimals();

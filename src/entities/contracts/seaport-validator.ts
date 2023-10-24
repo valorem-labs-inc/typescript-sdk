@@ -16,7 +16,7 @@ export class SeaportValidatorContract {
   public constructor({
     publicClient,
     walletClient,
-  }: Omit<ContractConstructorArgs, 'abi' | 'address'>) {
+  }: Omit<ContractConstructorArgs, 'address' | 'abi'>) {
     this.contract = getContract({
       address: VALIDATOR_ADDRESS,
       abi: SEAPORT_VALIDATOR_ABI,

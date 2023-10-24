@@ -27,7 +27,7 @@ export class Option extends OptionType {
     trader: Trader;
   }) {
     if (!this.tokenId) {
-      console.log('Missing TokenId');
+      this.logger.error('Missing TokenId');
       return undefined;
     }
     // prepare tx
@@ -41,7 +41,7 @@ export class Option extends OptionType {
     );
     // check result
     if (receipt.status === 'success') {
-      console.log(
+      this.logger.info(
         `Successfully exercised ${amount}x options, with ID ${this.tokenId.toString()}`,
       );
     }

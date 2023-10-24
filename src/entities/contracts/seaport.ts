@@ -7,9 +7,7 @@ import { SeaportValidatorContract } from './seaport-validator';
 export class SeaportContract extends Contract<ISeaport> {
   public validator: SeaportValidatorContract;
 
-  public constructor(
-    args: Pick<ContractConstructorArgs, 'publicClient' | 'walletClient'>,
-  ) {
+  public constructor(args: Omit<ContractConstructorArgs, 'address' | 'abi'>) {
     super({ ...args, address: SEAPORT_ADDRESS, abi: SEAPORT_V1_5_ABI });
     this.validator = new SeaportValidatorContract(args);
   }

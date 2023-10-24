@@ -10,6 +10,8 @@ import type {
   SEAPORT_V1_5_ABI,
   SEAPORT_VALIDATOR_ABI,
 } from '../../abi';
+import type { LoggerConfig } from '../../logger';
+import { Logger } from '../../logger';
 
 type IContract<T extends Abi> = ReturnType<
   typeof getContract<
@@ -23,7 +25,7 @@ type IContract<T extends Abi> = ReturnType<
   >
 >;
 
-export interface ContractConstructorArgs {
+export interface ContractConstructorArgs extends LoggerConfig {
   address: Address;
   abi: Abi;
   publicClient: PublicClient;
@@ -44,11 +46,14 @@ export class Contract<TContract extends IClearinghouse | ISeaport | IERC20> {
 
   private contract: TContract;
 
+  protected logger: Logger;
+
   public constructor({
     address,
     abi,
     publicClient,
     walletClient,
+    logLevel,
   }: ContractConstructorArgs) {
     this.contract = getContract({
       address,
@@ -61,5 +66,7 @@ export class Contract<TContract extends IClearinghouse | ISeaport | IERC20> {
     this.read = this.contract.read as TContract['read'];
     this.simulate = this.contract.simulate as TContract['simulate'];
     this.write = this.contract.write as TContract['write'];
+
+    this.logger = new Logger({ logLevel });
   }
 }

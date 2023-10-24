@@ -36,8 +36,12 @@ import { CLEAR_ADDRESS, SEAPORT_ADDRESS, NULL_BYTES32 } from '../../constants';
 import { ClearinghouseContract, SeaportContract } from '../contracts';
 import { Action, QuoteRequest } from '../../lib/codegen/rfq_pb';
 import { ItemType } from '../../lib/codegen/seaport_pb';
+import type { LoggerConfig } from '../../logger';
+import { Logger } from '../../logger';
 
-export interface TraderConstructorArgs extends ValoremGRPCClients {
+export interface TraderConstructorArgs
+  extends ValoremGRPCClients,
+    LoggerConfig {
   account: Account;
   chain: Chain;
   authClient: AuthClient;
@@ -70,6 +74,8 @@ export class Trader {
     }
   >();
 
+  protected logger: Logger;
+
   public constructor({
     account,
     chain,
@@ -77,7 +83,10 @@ export class Trader {
     feesClient,
     rfqClient,
     spotClient,
+    logLevel,
   }: TraderConstructorArgs) {
+    this.logger = new Logger({ logLevel });
+
     this.publicClient = createPublicClient({
       chain,
       transport: http(),
@@ -124,22 +133,26 @@ export class Trader {
 
     if (verified) {
       this.authenticated = true;
-      console.log('Client has authenticated with Valorem Trade API!');
+      this.logger.info('Client has authenticated with Valorem Trade API!');
     } else {
       this.authenticated = false;
-      console.log('SIWE Verification failed.');
+      this.logger.error('SIWE Verification failed.');
     }
   }
 
   public async getNonce() {
-    const res = await handleGRPCRequest(async () => this.authClient.nonce({}));
+    const res = await handleGRPCRequest(
+      async () => this.authClient.nonce({}),
+      this.logger,
+    );
     if (res === null) throw new Error('Failed to get nonce for SIWE message.');
     return res.nonce;
   }
 
   public async checkAuthentication() {
-    const res = await handleGRPCRequest(async () =>
-      this.authClient.authenticate({}),
+    const res = await handleGRPCRequest(
+      async () => this.authClient.authenticate({}),
+      this.logger,
     );
     if (res)
       this.authenticated =
@@ -149,13 +162,15 @@ export class Trader {
   }
 
   public async verifyWithSIWE(message: string, signature: `0x${string}`) {
-    const res = await handleGRPCRequest(async () =>
-      this.authClient.verify({
-        body: JSON.stringify({
-          message,
-          signature,
+    const res = await handleGRPCRequest(
+      async () =>
+        this.authClient.verify({
+          body: JSON.stringify({
+            message,
+            signature,
+          }),
         }),
-      }),
+      this.logger,
     );
     if (res)
       return {
@@ -218,7 +233,7 @@ export class Trader {
     options?: { signal?: AbortSignal; timeoutMs: number };
   }) {
     // continuously send requests and handle responses
-    console.log('Sending RFQs');
+    this.logger.info('Sending RFQs');
 
     try {
       for await (const quoteResponse of method === 'taker'
@@ -232,32 +247,32 @@ export class Trader {
           )) {
         if (Object.keys(quoteResponse).length === 0) {
           if (method === 'webTaker') {
-            console.log('Received an empty quote response');
+            this.logger.debug('Received an empty quote response');
           }
           continue;
         }
         if (!quoteResponse.order || !quoteResponse.seaportAddress) {
-          console.log('Received an invalid quote response');
+          this.logger.debug('Received an invalid quote response');
           continue;
         }
         // parse the response
         try {
           const parsedQuoteResponse = parseQuoteResponse(quoteResponse);
-          console.log('Received a valid quote response!');
+          this.logger.info('Received a valid quote response!');
           onQuoteResponse(parsedQuoteResponse);
         } catch (error) {
-          console.log(error);
+          this.logger.error(error);
         }
       }
     } catch (error) {
       if (error instanceof ConnectError) {
         const connectError = ConnectError.from(error);
         if (!connectError.rawMessage.includes('This operation was aborted')) {
-          console.log(error);
+          this.logger.error(error);
         }
       }
     }
-    console.log('Stream closed');
+    this.logger.info('Stream closed');
   }
 
   /**
@@ -345,7 +360,7 @@ export class Trader {
     );
     // check result
     if (receipt.status === 'success') {
-      console.log(
+      this.logger.info(
         `Successfully approved ${spender} for ${parseUnits(
           amount.toString(),
           erc20.decimals,
@@ -371,10 +386,10 @@ export class Trader {
       });
       // check result
       if (receipt.status === 'success') {
-        console.log('Successfully fulfilled RFQ.');
+        this.logger.info('Successfully fulfilled RFQ.');
       }
     } catch (error) {
-      console.log(
+      this.logger.warn(
         `Failed to accept quote.`,
         error,
         `Checking order validity...`,
@@ -383,7 +398,7 @@ export class Trader {
         { parameters, signature },
         SEAPORT_ADDRESS,
       ]);
-      console.log(
+      this.logger.error(
         { errorsAndWarnings },
         'Learn more at https://github.com/ProjectOpenSea/seaport/blob/main/docs/OrderValidator.md',
       );
