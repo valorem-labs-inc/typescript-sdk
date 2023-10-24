@@ -1,4 +1,5 @@
 import { defineConfig, Options } from 'tsup';
+import { dependencies, peerDependencies } from './package.json';
 
 export const baseTsupConfig: Options = {
   entry: ['src/index.ts'],
@@ -6,6 +7,7 @@ export const baseTsupConfig: Options = {
   bundle: true,
   treeshake: true,
   platform: 'neutral',
+  external: [...Object.keys(dependencies), ...Object.keys(peerDependencies)],
 };
 
 export default defineConfig({
