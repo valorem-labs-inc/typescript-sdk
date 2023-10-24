@@ -28,6 +28,11 @@ export {
   type OptionArgs,
   Claim,
   type ClaimArgs,
+  Asset,
+  SupportedAsset,
+  OptionAssetPair,
+  SUPPORTED_ASSETS,
+  type ERC20Token,
 } from './entities';
 
 export {

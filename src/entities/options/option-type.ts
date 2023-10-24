@@ -9,6 +9,8 @@ import {
 import type { OptionTypeInfo, SimulatedTxRequest } from '../../types';
 import type { Trader } from '../trader/base-trader';
 import type { ClearinghouseContract } from '../contracts/clearinghouse';
+import { SupportedAsset } from '../assets';
+import { OptionAssetPair } from '../assets/asset-pair';
 
 export interface OptionTypeArgs {
   optionInfo: OptionTypeInfo;
@@ -16,7 +18,7 @@ export interface OptionTypeArgs {
   typeExists: boolean;
 }
 
-export class OptionType {
+export class OptionType extends OptionAssetPair {
   // Specific to OptionTypes
   public optionInfo: OptionTypeInfo;
   public optionTypeId: bigint;
@@ -27,6 +29,10 @@ export class OptionType {
   public tokenType: 0 | 1 | 2 | undefined = undefined;
 
   public constructor({ optionInfo, optionTypeId, typeExists }: OptionTypeArgs) {
+    super({
+      exerciseAsset: SupportedAsset.fromAddress(optionInfo.exerciseAsset),
+      underlyingAsset: SupportedAsset.fromAddress(optionInfo.underlyingAsset),
+    });
     this.optionInfo = optionInfo;
     this.optionTypeId = optionTypeId;
     this.typeExists = typeExists;

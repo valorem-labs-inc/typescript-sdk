@@ -1,4 +1,11 @@
 export {
+  Asset,
+  SupportedAsset,
+  OptionAssetPair,
+  SUPPORTED_ASSETS,
+  type ERC20Token,
+} from './assets';
+export {
   type ContractConstructorArgs,
   type IClearinghouse,
   type IERC20,
