@@ -1,20 +1,18 @@
-import type { createPromiseClient } from '@connectrpc/connect';
+import type { Interceptor, createPromiseClient } from '@connectrpc/connect';
 import { ConnectError } from '@connectrpc/connect';
 import type { Auth, RFQ } from './lib';
 
 let COOKIE: string | undefined; // to be used for all server interactions
 
-// custom Connect-node transport interceptor for retrieving cookie
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const trackCookieInterceptor = (next: any) => async (req: any) => {
+/**
+ * Custom Connect transport interceptor for retrieving & storing session cookie
+ */
+export const trackCookieInterceptor: Interceptor = (next) => async (req) => {
   if (COOKIE !== undefined) {
-    req.header = [['cookie', COOKIE]];
+    req.header.set('cookie', COOKIE);
   }
-  const res = await next({
-    ...req,
-    headers: { ...req.headers, cookie: COOKIE },
-  });
-  COOKIE = res.header?.get('set-cookie')?.split(';')[0] ?? COOKIE;
+  const res = await next(req);
+  COOKIE = res.header.get('set-cookie')?.split(';')[0] ?? COOKIE;
   return res;
 };
 
