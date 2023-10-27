@@ -1,4 +1,4 @@
-import { SEAPORT_V1_5_ABI } from '../../abis';
+import { SEAPORT_V1_5_ABI } from '../../abi';
 import { SEAPORT_ADDRESS } from '../../constants';
 import type { ContractConstructorArgs, ISeaport } from './base-contract';
 import { Contract } from './base-contract';

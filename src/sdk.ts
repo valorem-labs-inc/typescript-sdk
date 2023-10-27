@@ -1,18 +1,17 @@
 import type { Chain, PrivateKeyAccount, Account, LocalAccount } from 'viem';
 import { arbitrum, arbitrumGoerli } from 'viem/chains';
 import type { PublicClient, WalletClient } from '@wagmi/core';
-import {
-  Taker,
-  Maker,
-  ClearinghouseContract,
-  SeaportContract,
-  WebTaker,
-} from './entities';
+import { ClearinghouseContract, SeaportContract, WebTaker } from './entities';
+import { Maker } from './entities/trader/maker';
+import { Taker } from './entities/trader/taker';
+import type { ValoremGRPCClients } from './grpc/clients';
 
-interface SDKOptions {
+interface ViemClients {
   publicClient: PublicClient;
   walletClient?: WalletClient;
 }
+
+type SDKOptions = ViemClients & ValoremGRPCClients;
 
 export class ValoremSDK {
   public chain: Chain;
@@ -28,7 +27,12 @@ export class ValoremSDK {
   private _taker?: Taker;
   private _webTaker?: WebTaker;
 
-  constructor({ publicClient, walletClient }: SDKOptions) {
+  constructor({
+    publicClient,
+    walletClient,
+    authClient,
+    rfqClient,
+  }: SDKOptions) {
     const isSupportedNetwork =
       publicClient.chain.id === arbitrum.id ||
       publicClient.chain.id === arbitrumGoerli.id;
@@ -46,22 +50,30 @@ export class ValoremSDK {
       this.account = walletClient.account;
 
       if (
+        authClient &&
+        rfqClient &&
         (this.account as LocalAccount<'privateKey' | 'custom'>).source ===
-        'privateKey'
+          'privateKey'
       ) {
         this._taker = new Taker({
           chain: this.chain,
           account: this.account as PrivateKeyAccount,
+          authClient,
+          rfqClient,
         });
 
         this._webTaker = new WebTaker({
           chain: this.chain,
           account: this.account as PrivateKeyAccount,
+          authClient,
+          rfqClient,
         });
 
         this._maker = new Maker({
           chain: this.chain,
           account: this.account as PrivateKeyAccount,
+          authClient,
+          rfqClient,
         });
       }
     }

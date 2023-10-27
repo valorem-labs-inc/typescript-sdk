@@ -12,6 +12,12 @@ export {
   OrderType,
   SignedOrder,
 } from './codegen/seaport_pb';
+export { Spot } from './codegen/spot_connect';
+export {
+  SpotPriceInfo,
+  SpotPriceRequest,
+  SpotPriceResponse,
+} from './codegen/spot_pb';
 export {
   Empty,
   EthSignature,

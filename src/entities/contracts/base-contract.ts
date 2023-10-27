@@ -9,7 +9,7 @@ import type {
   CLEAR_ABI,
   SEAPORT_V1_5_ABI,
   SEAPORT_VALIDATOR_ABI,
-} from '../../abis';
+} from '../../abi';
 
 type IContract<T extends Abi> = ReturnType<
   typeof getContract<

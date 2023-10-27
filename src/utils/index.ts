@@ -1,4 +1,2 @@
-export * from './hi-lo-bit-segmentation';
-export * from './siwe';
-export * from './timestamps';
-export * from './grpc';
+export { createSIWEMessage } from './siwe';
+export { get24HrTimestamps, get8AMUTCDate } from './timestamps';

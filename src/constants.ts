@@ -5,8 +5,6 @@ export const SUPPORTED_CHAINS = {
   arbitrum,
   arbitrumGoerli,
 };
-export type SupportedChain =
-  (typeof SUPPORTED_CHAINS)[keyof typeof SUPPORTED_CHAINS];
 
 /** Contracts */
 // Valorem Clearinghouse on Arbitrum One (mainnet) & Arbitrum Goerli (testnet)

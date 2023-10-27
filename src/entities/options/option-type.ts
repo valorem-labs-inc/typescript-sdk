@@ -1,4 +1,3 @@
-import type { Address } from 'viem';
 import {
   bytesToBigInt,
   encodeAbiParameters,
@@ -7,49 +6,30 @@ import {
   sliceHex,
   toBytes,
 } from 'viem';
-import type { SimulatedTxRequest } from '../../types';
+import type { OptionTypeInfo, SimulatedTxRequest } from '../../types';
 import type { Trader } from '../trader/base-trader';
 import type { ClearinghouseContract } from '../contracts/clearinghouse';
 
-export interface OptionTypeInfo {
-  underlyingAsset: Address;
-  underlyingAmount: bigint;
-  exerciseAsset: Address;
-  exerciseAmount: bigint;
-  exerciseTimestamp: number;
-  expiryTimestamp: number;
-}
-
-interface OptionTypeArgs {
+export interface OptionTypeArgs {
   optionInfo: OptionTypeInfo;
   optionTypeId: bigint;
-  tokenId: bigint;
-  tokenType: 0 | 1 | 2;
+  typeExists: boolean;
 }
 
 export class OptionType {
   // Specific to OptionTypes
   public optionInfo: OptionTypeInfo;
   public optionTypeId: bigint;
+  public typeExists: boolean;
 
   // Specific to Options (Exercisable Options + Redeemable Claims)
-  public tokenId: bigint;
-  public tokenType: 0 | 1 | 2;
+  public tokenId: bigint | undefined = undefined;
+  public tokenType: 0 | 1 | 2 | undefined = undefined;
 
-  public constructor({
-    optionInfo,
-    optionTypeId,
-    tokenId,
-    tokenType,
-  }: OptionTypeArgs) {
+  public constructor({ optionInfo, optionTypeId, typeExists }: OptionTypeArgs) {
     this.optionInfo = optionInfo;
     this.optionTypeId = optionTypeId;
-    this.tokenId = tokenId;
-    this.tokenType = tokenType;
-  }
-
-  public get typeExists() {
-    return this.tokenType !== 0;
+    this.typeExists = typeExists;
   }
 
   public async createOptionType(trader: Trader) {
@@ -74,7 +54,7 @@ export class OptionType {
       console.log(
         `Successfully created new option type. txHash: ${receipt.transactionHash}`,
       );
-      this.tokenType = 1;
+      this.typeExists = true;
     }
   }
 
@@ -92,9 +72,8 @@ export class OptionType {
     );
     return new this({
       optionInfo,
-      tokenId: optionTypeId,
       optionTypeId,
-      tokenType,
+      typeExists: tokenType !== 0,
     });
   }
 
@@ -104,31 +83,33 @@ export class OptionType {
       clearinghouse,
     );
     const optionTypeId = OptionType.getOptionTypeId(optionInfo);
-    const tokenType = await OptionType.getTokenType(tokenId, clearinghouse);
+    const tokenType = await OptionType.getTokenType(
+      optionTypeId,
+      clearinghouse,
+    );
 
     return new this({
       optionInfo,
       optionTypeId,
-      tokenId,
-      tokenType,
+      typeExists: tokenType !== 0,
     });
   }
 
-  private static async getOptionTypeInfo(
+  protected static async getOptionTypeInfo(
     tokenId: bigint,
     clearinghouse: ClearinghouseContract,
   ) {
     return clearinghouse.read.option([tokenId]);
   }
 
-  private static async getTokenType(
+  protected static async getTokenType(
     tokenId: bigint,
     clearinghouse: ClearinghouseContract,
   ): Promise<0 | 1 | 2> {
     return clearinghouse.read.tokenType([tokenId]) as Promise<0 | 1 | 2>;
   }
 
-  private static getOptionTypeId(info: OptionTypeInfo) {
+  protected static getOptionTypeId(info: OptionTypeInfo) {
     const encoded = encodeAbiParameters(
       [
         { type: 'address', name: 'underlyingAsset' },
