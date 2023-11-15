@@ -21,7 +21,7 @@ export function get8AMUTCDate(date?: Date) {
   const nextDate = new Date(today);
   nextDate.setUTCDate(today.getUTCDate() + shiftDays);
   nextDate.setUTCHours(8, 0, 0, 0); // Set the time to 8am UTC
-  return nextDate.getTime();
+  return toUnix(nextDate);
 }
 
 export function get24HrTimestamps(date?: Date): {
