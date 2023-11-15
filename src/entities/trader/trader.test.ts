@@ -13,8 +13,7 @@ const authClient = createPromiseClient(Auth, transport);
 const rfqClient = createPromiseClient(RFQ, transport);
 
 describe('Trader Class', () => {
-  it('Should fail to sign in due to access pass', async () => {
-    const logSpy = vi.spyOn(console, 'log');
+  it('Should successfully sign in', async () => {
     const errorSpy = vi.spyOn(console, 'error');
 
     const account = privateKeyToAccount(PRIVATE_KEY);
@@ -28,11 +27,7 @@ describe('Trader Class', () => {
     });
 
     await trader.signIn();
-    expect(trader.authenticated).toBeFalsy();
-
-    expect(logSpy).toHaveBeenCalledWith('SIWE Verification failed.');
-    expect(errorSpy).toHaveBeenCalledWith(
-      '\nGRPC Error: [unknown] [unauthenticated] Access denied: No Access Pass Found. "Address 0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266 does not hold access pass"\nCode: 2\n',
-    );
+    expect(trader.authenticated).toBeTruthy();
+    expect(errorSpy).not.toHaveBeenCalled();
   });
 });
