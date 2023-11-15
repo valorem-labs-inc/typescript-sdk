@@ -12,33 +12,23 @@ export const toUnix = (date: Date) => Math.floor(date.getTime() / 1000);
  * @param date - The date to adjust.
  * @returns The adjusted 8 AM UTC date.
  */
-export function get8AMUTCDate(date: Date) {
-  // Convert the date to its UTC equivalent. This is achieved by adjusting
-  // the local date with the timezone offset in milliseconds.
-  const tzOffsetMS = date.getTimezoneOffset() * 60000;
-  const utcDateMilliseconds = date.getTime() + tzOffsetMS;
-
-  // Create a new Date object from the UTC milliseconds.
-  const utcDate = new Date(utcDateMilliseconds);
-
-  // Set the UTC time to 8:00:00 AM.
-  utcDate.setUTCHours(8, 0, 0, 0);
-
-  // If the original date is before the newly constructed 8AM UTC date, return
-  // the 8AM date. Otherwise, return 8AM of the following day. This ensures that
-  // we're always returning a future date relative to the original input.
-  if (date.getTime() >= utcDate.getTime()) {
-    utcDate.setDate(utcDate.getDate() + 1); // Add a day to the UTC date
-  }
-
-  return toUnix(utcDate);
+export function get8AMUTCDate(date?: Date) {
+  const today = date ?? new Date();
+  const currentHour = today.getUTCHours();
+  const currentMinutes = today.getUTCMinutes();
+  const shiftDays =
+    currentHour > 7 || (currentHour === 7 && currentMinutes > 30) ? 1 : 0;
+  const nextDate = new Date(today);
+  nextDate.setUTCDate(today.getUTCDate() + shiftDays);
+  nextDate.setUTCHours(8, 0, 0, 0); // Set the time to 8am UTC
+  return nextDate.getTime();
 }
 
 export function get24HrTimestamps(date?: Date): {
   exerciseTimestamp: number;
   expiryTimestamp: number;
 } {
-  const exerciseTimestamp = get8AMUTCDate(date ?? new Date());
+  const exerciseTimestamp = get8AMUTCDate(date);
   const expiryTimestamp = exerciseTimestamp + ONE_DAY_UNIX; // expires in 1 day
 
   return { exerciseTimestamp, expiryTimestamp };
