@@ -12,8 +12,8 @@
   "source": "src/index.ts",
   "types": "dist/types.d.ts",
   "scripts": {
-    "build": "pnpm codegen && pnpm parcel build --no-cache",
-    "ci:release": "pnpm clean && pnpm build && pnpm changeset publish",
+    "build": "pnpm clean && pnpm codegen && pnpm parcel build --no-cache",
+    "ci:release": "pnpm build && pnpm changeset publish",
     "clean": "rm -rf ./dist",
     "codegen": "rm -rf ./src/lib/codegen && npx buf generate",
     "format": "prettier --write \"**/*.{ts,tsx,md,json}\"",
