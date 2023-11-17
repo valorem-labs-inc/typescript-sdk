@@ -1,11 +1,6 @@
 name: Test
 
 on:
-  push:
-    branches:
-      - main
-      - 'v**'
-      - 'releases/v**'
   pull_request:
     types: [opened, synchronize, reopened]
     branches:
