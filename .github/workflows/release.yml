@@ -5,7 +5,8 @@ on:
     types: [released]
 
 permissions:
-  contents: write # for github pages
+  packages: write
+  contents: write
 
 jobs:
   release:
@@ -25,7 +26,6 @@ jobs:
       - name: Install packages, compile SDK, and build docs
         run: |
           pnpm i
-          pnpm build
           pnpm gen-docs
 
       - name: Deploy Docs to Github Pages
@@ -36,13 +36,29 @@ jobs:
       - name: Verify the integrity of provenance attestations and registry signatures for installed dependencies
         run: pnpm audit signatures
 
-      # Setup .npmrc file to publish to npm
-      - uses: actions/setup-node@v3
+      - name: Setup .npmrc file to publish to npm
+        uses: actions/setup-node@v4
         with:
-          node-version: '18.x'
+          node-version: 18
           registry-url: 'https://registry.npmjs.org'
+          scope: '@valorem-labs-inc'
 
       - name: Publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: pnpm publish --access public --no-git-checks
+        run: |
+          pnpm ci:release
+
+      - name: Setup .npmrc for publishing to github packages
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@valorem-labs-inc'
+
+        # Runs changeset version to see if pkg v needs bumped
+        # () || true prevents exit code 1 when there is no v bump needed
+      - name: Publish to Github Packages
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: pnpm ci:release
