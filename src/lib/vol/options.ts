@@ -1,4 +1,4 @@
-import { abs, erf, exp, log, max, pi, pow, sqrt } from 'mathjs';
+import { abs, erf, exp, log, max, pi, pow, sqrt } from 'mathjs/number';
 
 interface Market {
   t: number; // The current time in years, expressed as a decimal
