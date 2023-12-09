@@ -50,7 +50,8 @@
     "@connectrpc/connect": "^1.1.3",
     "@wagmi/core": "^1.4.7",
     "typescript": "^5.2.0",
-    "viem": "^1.19.9"
+    "viem": "^1.19.9",
+    "mathjs": "^12.2.0"
   },
   "peerDependenciesMeta": {
     "typescript": {
@@ -60,8 +61,5 @@
   "packageManager": "pnpm@8.6.10",
   "engines": {
     "node": ">=18"
-  },
-  "dependencies": {
-    "mathjs": "^12.2.0"
   }
 }

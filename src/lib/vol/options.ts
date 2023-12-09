@@ -1,12 +1,19 @@
 import { abs, erf, exp, log, max, pi, pow, sqrt } from 'mathjs/number';
 
+// IMPORTANT: This file is brand new and has not been tested yet.
+// take everything in it with a whole block of salt.
+// TODOs:
+// - memoize the output of pure functions
+// - make sure functions are using more primitive functions where possible
+// - add helpers to have interfaces work with functions
+
 interface Market {
   t: number; // The current time in years, expressed as a decimal
   r: number; // r continuously compounded risk-free interest rate
 }
 
 interface Underlying {
-  S_t: number; // Spot price of the underlying asset at time t
+  st: number; // Spot price of the underlying asset at time t
   mu: number; // μ or drift is the drift rate of the asset, 0 if assuming a risk neutral world
   sigma: number; // σ or volatility is the standard deviation of the assets' returns.
   q: number; // q continuously compounded dividend yield
@@ -25,15 +32,125 @@ interface OptionData {
 }
 
 /**
+ * Brent's root-finding algorithm.
+ * 
+ * This method combines the bisection, secant, and inverse quadratic 
+ * interpolation methods for finding a root of a continuous function.
+ */
+class Brent {
+  private readonly maxIter: number;
+  private readonly accuracy: number;
+
+  /**
+   * Construct a Brent root-finding object.
+   * @param accuracy - Desired accuracy for finding the root.
+   */
+  constructor(accuracy = 1e-15) {
+    this.maxIter = 100; // Setting a sensible default for maximum iterations.
+    this.accuracy = accuracy;
+  }
+
+  /**
+   * The main method to find the root of the function using Brent's method.
+   * @param f - The function for which we are trying to find the root.
+   * @param a - Lower bound of the initial bracketing interval.
+   * @param b - Upper bound of the initial bracketing interval.
+   * @returns The root of the function.
+   */
+  public findRoot(f: (x: number) => number, a: number, b: number): number {
+    // Internal variables for manipulation.
+    let ia = a;
+    let ib = b;
+    // Function outputs at the interval endpoints.
+    let fa = f(ia);
+    let fb = f(ib);
+
+    if (fa * fb >= 0) {
+      throw new Error('Function values at the interval endpoints must have opposite signs.');
+    }
+
+    // If |f(ia)| < |f(ib)| then swap ia and ib.
+    if (abs(fa) < abs(fb)) {
+      [ia, ib] = [ib, ia];
+      [fa, fb] = [fb, fa];
+    }
+
+    let c = ia;  // At the start, c is equal to ia.
+    let fc = fa;
+    let s = ib;  // Initial condition for s.
+    let fs = fb;
+    let d = ib - ia; // Initialize d to the length of the interval.
+
+    let mflag = true; // A flag used to evaluate conditions.
+
+    // Main iteration loop.
+    for (let iter = 1; iter <= this.maxIter; iter++) {
+      // Check for convergence.
+      if (abs(fs) < this.accuracy || abs(fb - fa) < this.accuracy) {
+        return s;
+      }
+
+      // Inverse quadratic interpolation.
+      if (fa !== fc && fb !== fc) {
+        s = (ia * fb * fc) / ((fa - fb) * (fa - fc)) +
+            (ib * fa * fc) / ((fb - fa) * (fb - fc)) +
+            (c * fa * fb) / ((fc - fa) * (fc - fb));
+      } else {
+        // Secant method.
+        s = ib - fb * (ib - ia) / (fb - fa);
+      }
+
+      const condition1 = (s < (3 * ia + ib) / 4 || s > ib);
+      const condition2 = (mflag && abs(s - ib) >= abs(ib - c) / 2);
+      const condition3 = (!mflag && abs(s - ib) >= abs(c - d) / 2);
+      const condition4 = (mflag && abs(ib - c) < this.accuracy);
+      const condition5 = (!mflag && abs(c - d) < this.accuracy);
+
+      // Bisection method.
+      if (condition1 || condition2 || condition3 || condition4 || condition5) {
+        s = (ia + ib) / 2;
+        mflag = true;
+      } else {
+        mflag = false;
+      }
+
+      fs = f(s);
+      d = c;
+      c = ib;
+      fc = fb;
+
+      // Update ia, ib, fa, fb based on the value of f(s).
+      if (fa * fs < 0) {
+        ib = s;
+        fb = fs;
+      } else {
+        ia = s;
+        fa = fs;
+      }
+
+      // Ensure |f(ia)| >= |f(ib)| holds for the next iteration.
+      if (abs(fa) < abs(fb)) {
+        [ia, ib] = [ib, ia];
+        [fa, fb] = [fb, fa];
+      }
+    }
+
+    throw new Error('Maximum number of iterations exceeded.');
+  }
+}
+
+/**
  * Options Greeks and pricing calculations using the Black-Scholes model.
  */
+// This is a class both for organization and future development plans.
+// eslint-disable-next-line @typescript-eslint/no-extraneous-class
 class OptionsGreeks {
   /**
    * Calculates the cumulative distribution function for the standard normal distribution.
-   * @param x The value to calculate the CDF for.
+   * @param x - The value to calculate the CDF for.
    * @returns The CDF of the standard normal distribution at x.
    */
-  private static phi(x: number): number {
+  public static phi(x: number): number {
     return (1 + erf(x / sqrt(2))) / 2;
   }
 
@@ -49,7 +166,7 @@ class OptionsGreeks {
 
   /**
    * Calculates the d1 component used in the Black-Scholes formula.
-   * @param S_t - The spot price of the underlying asset.
+   * @param st - The spot price of the underlying asset.
    * @param K - The strike price of the option.
    * @param r - The risk-free interest rate.
    * @param q - The dividend yield.
@@ -57,8 +174,8 @@ class OptionsGreeks {
    * @param tau - The time to expiration.
    * @returns The d1 value.
    */
-  private static d1(
-    S_t: number,
+  public static d1(
+    st: number,
     K: number,
     r: number,
     q: number,
@@ -66,7 +183,7 @@ class OptionsGreeks {
     tau: number,
   ): number {
     return (
-      (log(S_t / K) + (r - q + pow(sigma, 2) / 2) * tau) / (sigma * sqrt(tau))
+      (log(st / K) + (r - q + pow(sigma, 2) / 2) * tau) / (sigma * sqrt(tau))
     );
   }
 
@@ -77,14 +194,14 @@ class OptionsGreeks {
    * @param tau - The time to expiration.
    * @returns The d2 value.
    */
-  private static d2(d1: number, sigma: number, tau: number): number {
+  public static d2(d1: number, sigma: number, tau: number): number {
     return d1 - sigma * sqrt(tau);
   }
 
   /**
    * Calculates the fair value of a European call option using the Black-Scholes model.
    * @param type - The type of option (either 'call' or 'put').
-   * @param S_t - The current spot price of the underlying asset.
+   * @param st - The current spot price of the underlying asset.
    * @param K - The strike price of the option.
    * @param r - The risk-free interest rate.
    * @param q - The dividend yield.
@@ -94,7 +211,7 @@ class OptionsGreeks {
    */
   public static blackScholesMerton(
     type: OptionType,
-    S_t: number,
+    st: number,
     K: number,
     r: number,
     q: number,
@@ -107,68 +224,66 @@ class OptionsGreeks {
     }
 
     // Calculate d1 and d2
-    const d1 = this.d1(S_t, K, r, q, sigma, tau);
+    const d1 = this.d1(st, K, r, q, sigma, tau);
     const d2 = this.d2(d1, sigma, tau);
 
     if (type === OptionType.Call) {
       // Calculate call option price
       return (
-        S_t * exp(-q * tau) * this.phi(d1) - K * exp(-r * tau) * this.phi(d2)
+        st * exp(-q * tau) * this.phi(d1) - K * exp(-r * tau) * this.phi(d2)
       );
     } 
       // Calculate put option price
       return (
-        K * exp(-r * tau) * this.phi(-d2) - S_t * exp(-q * tau) * this.phi(-d1)
+        K * exp(-r * tau) * this.phi(-d2) - st * exp(-q * tau) * this.phi(-d1)
       );
     
   }
 
   /**
-   * Calculates the implied volatility of an option using the Newton-Raphson method.
+   * Calculates the implied volatility of an option using the Brent method.
    *
    * @param type - The type of option: 'call' for a call option or 'put' for a put option.
    * @param marketPrice - The current market price of the option.
-   * @param S_t - The current spot price of the underlying asset.
+   * @param st - The current spot price of the underlying asset.
    * @param K - The strike price of the option.
    * @param r - The risk-free interest rate, expressed as a decimal.
    * @param q - The dividend yield of the underlying asset, expressed as a decimal.
-   * @param tau - The time to expiration of the option, in years.
+   * @param T - The time to expiration of the option, in years.
    * @returns The implied volatility as a decimal.
    */
   public static sigma(
-    type: OptionType,
-    marketPrice: number,
-    S_t: number,
-    K: number,
-    r: number,
-    q: number,
-    tau: number,
+      type: OptionType,
+      marketPrice: number,
+      st: number,
+      K: number,
+      r: number,
+      q: number,
+      T: number,
   ): number {
-    let sigma = 0.2; // Start with an initial guess for implied volatility
-    let sigmaPrev = 0.0;
-    const tolerance = 1e-5; // Set a tolerance level for convergence
-    let priceDifference =
-      marketPrice - this.blackScholesMerton(type, S_t, K, r, q, sigma, tau);
+    const brent = new Brent();
+    const lowerBound = 0.001; // Lower bound for volatility search
+    const upperBound = 5.0; // Upper bound for volatility search
 
-    // Iterate until the price difference is within the tolerance level
-    while (abs(priceDifference) > tolerance) {
-      const vega = this.vega(S_t, K, r, q, sigma, tau); // Calculate the vega of the option
-      if (vega === 0) {
-        throw 'Vega is zero. The Newton-Raphson method will not converge.';
+    // Define the function for which we want to find the root
+    const marketPriceDelta = (sigma: number) => {
+      const optionPrice = this.blackScholesMerton(type, st, K, r, q, sigma, T);
+      return optionPrice - marketPrice;
+    };
+
+    try {
+      // Use the Brent method to find the implied volatility
+      const impliedVolatility = brent.getRoot(marketPriceDelta, lowerBound, upperBound);
+
+      // Check if the implied volatility is within a reasonable range
+      if (impliedVolatility < lowerBound || impliedVolatility > upperBound) {
+        throw new Error('Implied volatility is outside the expected range.');
       }
-      sigmaPrev = sigma;
-      // Adjust sigma by the Newton-Raphson step
-      sigma = sigma - priceDifference / vega;
 
-      // If the change in sigma is less than the tolerance, convergence is assumed
-      if (abs(sigma - sigmaPrev) < tolerance) break;
-
-      // Recalculate the price difference with the new sigma
-      priceDifference =
-        marketPrice - this.blackScholesMerton(type, S_t, K, r, q, sigma, tau);
+      return impliedVolatility;
+    } catch (error) {
+      throw new Error('Implied volatility calculation did not converge.');
     }
-
-    return sigma; // Return the implied volatility
   }
 
   /**
@@ -176,7 +291,7 @@ class OptionsGreeks {
    * Delta measures the rate of change of the theoretical option value with respect to changes in the underlying asset's price.
    *
    * @param type - The type of option (either 'call' or 'put').
-   * @param S_t - The current spot price of the underlying asset.
+   * @param st - The current spot price of the underlying asset.
    * @param K - The strike price of the option.
    * @param r - The risk-free interest rate.
    * @param q - The dividend yield of the underlying asset.
@@ -190,14 +305,14 @@ class OptionsGreeks {
    */
   public static delta(
     type: OptionType,
-    S_t: number,
+    st: number,
     K: number,
     r: number,
     q: number,
     sigma: number,
     tau: number,
   ): number {
-    const d1 = this.d1(S_t, K, r, q, sigma, tau);
+    const d1 = this.d1(st, K, r, q, sigma, tau);
 
     if (type === OptionType.Call) {
       // Delta for a Call option
@@ -212,31 +327,30 @@ class OptionsGreeks {
    * Calculates the Vega of a European option, which measures the sensitivity of the option's price to changes in the volatility of the underlying asset.
    * Vega represents the amount the option's price changes for a 1 percentage point change in the volatility.
    *
-   * @param S_t - The current spot price of the underlying asset.
+   * @param st - The current spot price of the underlying asset.
    * @param K - The strike price of the option.
    * @param r - The risk-free interest rate.
    * @param q - The dividend yield of the underlying asset.
    * @param sigma - The volatility of the asset.
    * @param tau - The time to expiration of the option, in years.
-   * @returns The Vega of the option. This value is expressed as the amount of money per underlying share that the option's value will gain or lose as volatility rises or falls by 1 percentage point.
-   *
-   * Vega is crucial for assessing how sensitive an option is to changes in the market volatility. It is especially important in volatile markets where option prices can be greatly affected by changes in volatility. For options strategies like straddles, where the outcome is heavily dependent on volatility, Vega can provide key insights into the potential risk and reward.
+   * @returns The Vega of the option, expressed as the amount the option's price will change per 1 percentage point change in volatility.
    */
   public static vega(
-    S_t: number,
-    K: number,
-    r: number,
-    q: number,
-    sigma: number,
-    tau: number,
+      st: number,
+      K: number,
+      r: number,
+      q: number,
+      sigma: number,
+      tau: number,
   ): number {
     // Calculate d1
-    const d1 = this.d1(S_t, K, r, q, sigma, tau);
+    const d1 = this.d1(st, K, r, q, sigma, tau);
 
     // Calculate Vega using the phi function for the standard normal probability density
-    return (
-      (S_t * exp(-q * tau) * sqrt(tau) * exp(-pow(d1, 2) / 2)) / sqrt(2 * pi)
-    ); // Vega is often represented per 1% change in volatility, i.e., in decimal form
+    const vegaValue = (st * exp(-q * tau) * sqrt(tau) * exp(-pow(d1, 2) / 2)) / sqrt(2 * pi);
+
+    // Adjust the Vega value to be per 1% change in volatility
+    return vegaValue * 0.01;
   }
 
   /**
@@ -244,7 +358,7 @@ class OptionsGreeks {
    * with respect to the passage of time, also known as time decay.
    *
    * @param type - The type of option (call or put).
-   * @param S_t - The current spot price of the underlying asset.
+   * @param st - The current spot price of the underlying asset.
    * @param K - The strike price of the option.
    * @param r - The risk-free interest rate.
    * @param q - The dividend yield.
@@ -254,7 +368,7 @@ class OptionsGreeks {
    */
   public static theta(
     type: OptionType,
-    S_t: number,
+    st: number,
     K: number,
     r: number,
     q: number,
@@ -262,12 +376,12 @@ class OptionsGreeks {
     tau: number,
   ): number {
     // Calculate d1 and d2 using the private methods for d1 and d2 calculation
-    const d1 = this.d1(S_t, K, r, q, sigma, tau);
+    const d1 = this.d1(st, K, r, q, sigma, tau);
     const d2 = this.d2(d1, sigma, tau);
 
     // Calculate the first part of the theta formula which is common between call and put
     const thetaCommon =
-      (-S_t * sigma * exp(-q * tau) * this.phi(d1)) / (2 * sqrt(tau));
+      (-st * sigma * exp(-q * tau) * this.phi(d1)) / (2 * sqrt(tau));
 
     // Depending on the option type calculate the rest of the theta value
     if (type === OptionType.Call) {
@@ -283,7 +397,7 @@ class OptionsGreeks {
    * Calculates the Rho of a European option, which measures the sensitivity of the option's price to changes in the risk-free interest rate.
    *
    * @param type - The type of option (either 'call' or 'put').
-   * @param S_t - The current spot price of the underlying asset.
+   * @param st - The current spot price of the underlying asset.
    * @param K - The strike price of the option.
    * @param r - The risk-free interest rate.
    * @param q - The dividend yield of the underlying asset.
@@ -298,7 +412,7 @@ class OptionsGreeks {
    */
   public static rho(
     type: OptionType,
-    S_t: number,
+    st: number,
     K: number,
     r: number,
     q: number,
@@ -306,7 +420,7 @@ class OptionsGreeks {
     tau: number,
   ): number {
     // Calculate d1 and d2 components used in the Black-Scholes model
-    const d1 = this.d1(S_t, K, r, q, sigma, tau);
+    const d1 = this.d1(st, K, r, q, sigma, tau);
     const d2 = this.d2(d1, sigma, tau);
 
     if (type === OptionType.Call) {
@@ -322,7 +436,7 @@ class OptionsGreeks {
    * Calculates the Epsilon (ε) of a European option, which measures the sensitivity of the option's price to a change in the underlying asset's dividend yield.
    *
    * @param type - The type of option (either 'call' or 'put').
-   * @param S_t - The current spot price of the underlying asset.
+   * @param st - The current spot price of the underlying asset.
    * @param K - The strike price of the option.
    * @param r - The risk-free interest rate.
    * @param q - The dividend yield of the underlying asset.
@@ -336,21 +450,21 @@ class OptionsGreeks {
    */
   public static epsilon(
     type: OptionType,
-    S_t: number,
+    st: number,
     K: number,
     r: number,
     q: number,
     sigma: number,
     tau: number,
   ): number {
-    const d1 = this.d1(S_t, K, r, q, sigma, tau);
+    const d1 = this.d1(st, K, r, q, sigma, tau);
 
     if (type === OptionType.Call) {
       // Epsilon for a Call option
-      return -S_t * tau * exp(-q * tau) * this.phi(d1);
+      return -st * tau * exp(-q * tau) * this.phi(d1);
     } 
       // Epsilon for a Put option
-      return S_t * tau * exp(-q * tau) * this.phi(-d1);
+      return st * tau * exp(-q * tau) * this.phi(-d1);
     
   }
 
@@ -359,7 +473,7 @@ class OptionsGreeks {
    * Lambda measures the percentage change in option value per percentage change in the underlying asset price.
    *
    * @param type - The type of option ('call' or 'put').
-   * @param S_t - The current spot price of the underlying asset.
+   * @param st - The current spot price of the underlying asset.
    * @param K - The strike price of the option.
    * @param r - The risk-free interest rate.
    * @param q - The dividend yield of the underlying asset.
@@ -372,7 +486,7 @@ class OptionsGreeks {
    */
   public static lambda(
     type: OptionType,
-    S_t: number,
+    st: number,
     K: number,
     r: number,
     q: number,
@@ -380,20 +494,20 @@ class OptionsGreeks {
     tau: number,
   ): number {
     // Calculate the fair value of the option using the Black-Scholes formula
-    const optionValue = this.blackScholesMerton(type, S_t, K, r, q, sigma, tau);
+    const optionValue = this.blackScholesMerton(type, st, K, r, q, sigma, tau);
 
     // Calculate Delta as it is part of the Lambda formula
-    const optionDelta = this.delta(type, S_t, K, r, q, sigma, tau);
+    const optionDelta = this.delta(type, st, K, r, q, sigma, tau);
 
     // Lambda is calculated as Delta times the ratio of the spot price to the option value
-    return optionDelta * (S_t / optionValue);
+    return optionDelta * (st / optionValue);
   }
 
   /**
    * Calculates the Gamma (Γ) of a European option using the Black-Scholes model.
    * Gamma measures the rate of change of the option's delta with respect to changes in the underlying asset's price.
    *
-   * @param S_t - The current spot price of the underlying asset.
+   * @param st - The current spot price of the underlying asset.
    * @param K - The strike price of the option.
    * @param r - The risk-free interest rate.
    * @param q - The dividend yield of the underlying asset.
@@ -407,7 +521,7 @@ class OptionsGreeks {
    * an option's price to move in relation to movements in the underlying asset.
    */
   public static gamma(
-    S_t: number,
+    st: number,
     K: number,
     r: number,
     q: number,
@@ -415,13 +529,13 @@ class OptionsGreeks {
     tau: number,
   ): number {
     // Calculate d1 using the existing method for d1 calculation
-    const d1 = this.d1(S_t, K, r, q, sigma, tau);
+    const d1 = this.d1(st, K, r, q, sigma, tau);
 
     // Calculate the probability density function of d1
-    const pdf_d1 = exp(-pow(d1, 2) / 2) / sqrt(2 * pi);
+    const pdfD1 = exp(-pow(d1, 2) / 2) / sqrt(2 * pi);
 
     // Calculate Gamma using the standard normal probability density function (pdf)
-    return (exp(-q * tau) * pdf_d1) / (S_t * sigma * sqrt(tau));
+    return (exp(-q * tau) * pdfD1) / (st * sigma * sqrt(tau));
   }
 
   /**
@@ -430,7 +544,7 @@ class OptionsGreeks {
    * hedging strategies related to changes in volatility and the underlying asset price.
    *
    * @param type - The type of option (either 'call' or 'put').
-   * @param S_t - The current spot price of the underlying asset.
+   * @param st - The current spot price of the underlying asset.
    * @param K - The strike price of the option.
    * @param r - The risk-free interest rate.
    * @param q - The dividend yield of the underlying asset.
@@ -444,7 +558,7 @@ class OptionsGreeks {
    * of delta with respect to volatility.
    */
   public static vanna(
-    S_t: number,
+    st: number,
     K: number,
     r: number,
     q: number,
@@ -452,9 +566,8 @@ class OptionsGreeks {
     tau: number,
   ): number {
     // Calculate the required d1, d2 and vega values
-    const d1 = this.d1(S_t, K, r, q, sigma, tau);
-    const d2 = this.d2(d1, sigma, tau);
-    const vega = this.vega(S_t, K, r, q, sigma, tau);
+    const d1 = this.d1(st, K, r, q, sigma, tau);
+    const vega = this.vega(st, K, r, q, sigma, tau);
 
     // Calculate Vanna
     // Vanna is a second order cross derivative of the option value: ∂V/∂σ∂S
@@ -468,7 +581,7 @@ class OptionsGreeks {
    * Charm, also known as delta decay, is particularly useful when delta-hedging over periods where time decay is relevant.
    *
    * @param type - The type of option (either 'call' or 'put').
-   * @param S_t - The current spot price of the underlying asset.
+   * @param st - The current spot price of the underlying asset.
    * @param K - The strike price of the option.
    * @param r - The risk-free interest rate.
    * @param q - The dividend yield of the underlying asset.
@@ -483,7 +596,7 @@ class OptionsGreeks {
    */
   public static charm(
     type: OptionType,
-    S_t: number,
+    st: number,
     K: number,
     r: number,
     q: number,
@@ -491,7 +604,7 @@ class OptionsGreeks {
     tau: number,
   ): number {
     // Calculate d1 and d2 components used in the Black-Scholes model
-    const d1 = this.d1(S_t, K, r, q, sigma, tau);
+    const d1 = this.d1(st, K, r, q, sigma, tau);
     const d2 = this.d2(d1, sigma, tau);
 
     // The common term in the Charm formula for both call and put options
@@ -513,7 +626,7 @@ class OptionsGreeks {
   /**
    * Calculates the Vomma of a European option, which measures the rate of change of Vega with respect to changes in volatility.
    *
-   * @param S_t - The current spot price of the underlying asset.
+   * @param st - The current spot price of the underlying asset.
    * @param K - The strike price of the option.
    * @param r - The risk-free interest rate.
    * @param q - The dividend yield of the underlying asset.
@@ -527,7 +640,7 @@ class OptionsGreeks {
    * of options, where volatility risk can have a significant impact on the overall value.
    */
   public static vomma(
-    S_t: number,
+    st: number,
     K: number,
     r: number,
     q: number,
@@ -535,11 +648,11 @@ class OptionsGreeks {
     tau: number,
   ): number {
     // Calculate the d1 and d2 values using previously defined methods
-    const d1 = this.d1(S_t, K, r, q, sigma, tau);
+    const d1 = this.d1(st, K, r, q, sigma, tau);
     const d2 = this.d2(d1, sigma, tau);
 
     // Calculate Vega as it is required for the vomma calculation
-    const vega = this.vega(S_t, K, r, q, sigma, tau);
+    const vega = this.vega(st, K, r, q, sigma, tau);
 
     // Vomma is Vega times the d1 and d2 divided by volatility
     return vega * ((d1 * d2) / sigma);
@@ -550,7 +663,7 @@ class OptionsGreeks {
    * with respect to the passage of time. Veta is the second derivative of the option value function
    * with respect to volatility and time.
    *
-   * @param S_t - The current spot price of the underlying asset.
+   * @param st - The current spot price of the underlying asset.
    * @param K - The strike price of the option.
    * @param r - The risk-free interest rate.
    * @param q - The dividend yield of the underlying asset.
@@ -564,7 +677,7 @@ class OptionsGreeks {
    * decay of an option's price.
    */
   public static veta(
-    S_t: number,
+    st: number,
     K: number,
     r: number,
     q: number,
@@ -572,11 +685,11 @@ class OptionsGreeks {
     tau: number,
   ): number {
     // Calculate d1 and d2 components used in the Black-Scholes model
-    const d1 = this.d1(S_t, K, r, q, sigma, tau);
+    const d1 = this.d1(st, K, r, q, sigma, tau);
     const d2 = this.d2(d1, sigma, tau);
 
     // Calculate the Vega of the option
-    const vega = this.vega(S_t, K, r, q, sigma, tau);
+    const vega = this.vega(st, K, r, q, sigma, tau);
 
     // Calculate Veta, which is the rate of change of Vega with respect to time
     return (
@@ -589,7 +702,7 @@ class OptionsGreeks {
    * Calculates the probability density function (pdf) of the asset price in the Black-Scholes model at strike price K.
    * This is used in the calculation of various option Greeks and is also sometimes referred to as 'phi' or 'ϕ'.
    *
-   * @param S_t - The current spot price of the underlying asset.
+   * @param st - The current spot price of the underlying asset.
    * @param K - The strike price of the option.
    * @param r - The risk-free interest rate.
    * @param q - The dividend yield of the underlying asset.
@@ -598,7 +711,7 @@ class OptionsGreeks {
    * @returns The value of the pdf at the strike price.
    */
   public static phiK(
-    S_t: number,
+    st: number,
     K: number,
     r: number,
     q: number,
@@ -607,7 +720,7 @@ class OptionsGreeks {
   ): number {
     const part1 = exp(-r * tau) / (K * sqrt(2 * pi * sigma * sigma * tau));
     const part2 = exp(
-      -pow(log(K / S_t) - (r - q - (sigma * sigma) / 2) * tau, 2) /
+      -pow(log(K / st) - (r - q - (sigma * sigma) / 2) * tau, 2) /
         (2 * sigma * sigma * tau),
     );
 
@@ -617,7 +730,7 @@ class OptionsGreeks {
   /**
    * Calculates the Speed of a European option, which measures the rate of change of Gamma with respect to changes in the underlying asset's price.
    *
-   * @param S_t - The current spot price of the underlying asset.
+   * @param st - The current spot price of the underlying asset.
    * @param K - The strike price of the option.
    * @param r - The risk-free interest rate.
    * @param q - The dividend yield of the underlying asset.
@@ -626,27 +739,27 @@ class OptionsGreeks {
    * @returns The speed of the option.
    */
   public static speed(
-    S_t: number,
+    st: number,
     K: number,
     r: number,
     q: number,
     sigma: number,
     tau: number,
   ): number {
-    const d1 = this.d1(S_t, K, r, q, sigma, tau);
-    const pdf_d1 = exp(-pow(d1, 2) / 2) / sqrt(2 * pi);
+    const d1 = this.d1(st, K, r, q, sigma, tau);
+    const pdfD1 = exp(-pow(d1, 2) / 2) / sqrt(2 * pi);
     const term =
       -exp(-q * tau) *
-      pdf_d1 *
-      (d1 / (sigma * sigma * tau) + 1 / (S_t * sigma * sqrt(tau)));
+      pdfD1 *
+      (d1 / (sigma * sigma * tau) + 1 / (st * sigma * sqrt(tau)));
 
-    return term / (S_t * S_t);
+    return term / (st * st);
   }
 
   /**
    * Calculates the Zomma of a European option, which measures the rate of change of Gamma with respect to changes in volatility.
    *
-   * @param S_t - The current spot price of the underlying asset.
+   * @param st - The current spot price of the underlying asset.
    * @param K - The strike price of the option.
    * @param r - The risk-free interest rate.
    * @param q - The dividend yield of the underlying asset.
@@ -655,15 +768,15 @@ class OptionsGreeks {
    * @returns The zomma of the option.
    */
   public static zomma(
-    S_t: number,
+    st: number,
     K: number,
     r: number,
     q: number,
     sigma: number,
     tau: number,
   ): number {
-    const gamma = this.gamma(S_t, K, r, q, sigma, tau);
-    const d1 = this.d1(S_t, K, r, q, sigma, tau);
+    const gamma = this.gamma(st, K, r, q, sigma, tau);
+    const d1 = this.d1(st, K, r, q, sigma, tau);
     const d2 = d1 - sigma * sqrt(tau);
 
     return gamma * ((d1 * d2 - 1) / sigma);
@@ -672,7 +785,7 @@ class OptionsGreeks {
   /**
    * Calculates the Color of a European option, which measures the rate of change of Gamma with respect to the passage of time.
    *
-   * @param S_t - The current spot price of the underlying asset.
+   * @param st - The current spot price of the underlying asset.
    * @param K - The strike price of the option.
    * @param r - The risk-free interest rate.
    * @param q - The dividend yield of the underlying asset.
@@ -681,22 +794,23 @@ class OptionsGreeks {
    * @returns The color of the option.
    */
   public static color(
-    S_t: number,
+    st: number,
     K: number,
     r: number,
     q: number,
     sigma: number,
     tau: number,
   ): number {
-    const d1 = this.d1(S_t, K, r, q, sigma, tau);
-    const pdf_d1 = exp(-pow(d1, 2) / 2) / sqrt(2 * pi);
+    const d1 = this.d1(st, K, r, q, sigma, tau);
+    const d2 = this.d2(d1, sigma, tau);
+    const pdfD1 = exp(-pow(d1, 2) / 2) / sqrt(2 * pi);
     const term1 =
       2 * q * tau +
       1 -
       (d1 * (2 * (r - q) * tau - d2 * sigma * sqrt(tau))) / (sigma * sqrt(tau));
 
     return (
-      (-exp(-q * tau) * pdf_d1 * term1) / (2 * S_t * tau * sigma * sqrt(tau))
+      (-exp(-q * tau) * pdfD1 * term1) / (2 * st * tau * sigma * sqrt(tau))
     );
   }
 
@@ -704,7 +818,7 @@ class OptionsGreeks {
    * Calculates the Ultima of a European option, which measures the sensitivity of the option's Vega to changes in volatility.
    * Ultima is a third-order Greek that gives the rate of change of Vomma with respect to changes in volatility.
    *
-   * @param S_t - The current spot price of the underlying asset.
+   * @param st - The current spot price of the underlying asset.
    * @param K - The strike price of the option.
    * @param r - The risk-free interest rate.
    * @param q - The dividend yield of the underlying asset.
@@ -713,17 +827,16 @@ class OptionsGreeks {
    * @returns The ultima of the option.
    */
   public static ultima(
-    S_t: number,
+    st: number,
     K: number,
     r: number,
     q: number,
     sigma: number,
     tau: number,
   ): number {
-    const d1 = this.d1(S_t, K, r, q, sigma, tau);
+    const d1 = this.d1(st, K, r, q, sigma, tau);
     const d2 = this.d2(d1, sigma, tau);
-    const vega = this.vega(S_t, K, r, q, sigma, tau);
-    const vomma = this.vomma(S_t, K, r, q, sigma, tau);
+    const vomma = this.vomma(st, K, r, q, sigma, tau);
 
     // Ultima calculation
     const ultima =
@@ -738,7 +851,7 @@ class OptionsGreeks {
    * asset's price fixed.
    *
    * @param type - The type of option (either 'call' or 'put').
-   * @param S_t - The current spot price of the underlying asset.
+   * @param st - The current spot price of the underlying asset.
    * @param K - The strike price of the option.
    * @param r - The risk-free interest rate.
    * @param q - The dividend yield of the underlying asset.
@@ -748,14 +861,14 @@ class OptionsGreeks {
    */
   public static dualDelta(
     type: OptionType,
-    S_t: number,
+    st: number,
     K: number,
     r: number,
     q: number,
     sigma: number,
     tau: number,
   ): number {
-    const d2 = this.d2(this.d1(S_t, K, r, q, sigma, tau), sigma, tau);
+    const d2 = this.d2(this.d1(st, K, r, q, sigma, tau), sigma, tau);
 
     if (type === OptionType.Call) {
       // Dual Delta for a Call option
@@ -770,7 +883,7 @@ class OptionsGreeks {
    * Calculates the Dual Gamma of a European option, which measures the rate of change of the option's Dual Delta with respect to changes
    * in the strike price. Dual Gamma provides insight into the convexity of the option's value with respect to the strike price.
    *
-   * @param S_t - The current spot price of the underlying asset.
+   * @param st - The current spot price of the underlying asset.
    * @param K - The strike price of the option.
    * @param r - The risk-free interest rate.
    * @param q - The dividend yield of the underlying asset.
@@ -779,19 +892,20 @@ class OptionsGreeks {
    * @returns The dual gamma of the option.
    */
   public static dualGamma(
-    S_t: number,
+    st: number,
     K: number,
     r: number,
     q: number,
     sigma: number,
     tau: number,
   ): number {
-    const d2 = this.d2(this.d1(S_t, K, r, q, sigma, tau), sigma, tau);
-    const pdf_d2 = exp(-pow(d2, 2) / 2) / sqrt(2 * pi);
+    const d2 = this.d2(this.d1(st, K, r, q, sigma, tau), sigma, tau);
+    const pdfD2 = exp(-pow(d2, 2) / 2) / sqrt(2 * pi);
 
     // Dual Gamma calculation
-    return (exp(-r * tau) * pdf_d2) / (K * sigma * sqrt(tau));
+    return (exp(-r * tau) * pdfD2) / (K * sigma * sqrt(tau));
   }
 }
 
-export default {OptionsGreeks};
+export {OptionsGreeks, OptionType};
+export type {Market, Underlying, OptionData};
