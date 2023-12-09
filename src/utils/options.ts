@@ -39,8 +39,8 @@ class OptionsGreeks {
 
   /**
    * Calculates the time to expiration for an option.
-   * @param T The expiration time of the option.
-   * @param t The current time.
+   * @param T - The expiration time of the option.
+   * @param t - The current time.
    * @returns The time remaining until the option's expiration, in years.
    */
   public static tau(T: number, t: number): number {
@@ -49,11 +49,11 @@ class OptionsGreeks {
 
   /**
    * Calculates the d1 component used in the Black-Scholes formula.
-   * @param S_t The spot price of the underlying asset.
-   * @param K The strike price of the option.
-   * @param r The risk-free interest rate.
-   * @param q The dividend yield.
-   * @param sigma The volatility of the asset.
+   * @param S_t - The spot price of the underlying asset.
+   * @param K - The strike price of the option.
+   * @param r - The risk-free interest rate.
+   * @param q - The dividend yield.
+   * @param sigma - The volatility of the asset.
    * @param tau - The time to expiration.
    * @returns The d1 value.
    */
@@ -83,13 +83,13 @@ class OptionsGreeks {
 
   /**
    * Calculates the fair value of a European call option using the Black-Scholes model.
-   * @param {OptionType} type - The type of option (either 'call' or 'put').
-   * @param S_t The current spot price of the underlying asset.
-   * @param K The strike price of the option.
-   * @param r The risk-free interest rate.
-   * @param q The dividend yield.
-   * @param sigma The volatility of the asset.
-   * @param tau The time to expiration.
+   * @param type - The type of option (either 'call' or 'put').
+   * @param S_t - The current spot price of the underlying asset.
+   * @param K - The strike price of the option.
+   * @param r - The risk-free interest rate.
+   * @param q - The dividend yield.
+   * @param sigma - The volatility of the asset.
+   * @param tau - The time to expiration.
    * @returns The fair value of the call option.
    */
   public static blackScholesMerton(
@@ -126,13 +126,13 @@ class OptionsGreeks {
   /**
    * Calculates the implied volatility of an option using the Newton-Raphson method.
    *
-   * @param type The type of option: 'call' for a call option or 'put' for a put option.
-   * @param marketPrice The current market price of the option.
-   * @param S_t The current spot price of the underlying asset.
-   * @param K The strike price of the option.
-   * @param r The risk-free interest rate, expressed as a decimal.
-   * @param q The dividend yield of the underlying asset, expressed as a decimal.
-   * @param tau The time to expiration of the option, in years.
+   * @param type - The type of option: 'call' for a call option or 'put' for a put option.
+   * @param marketPrice - The current market price of the option.
+   * @param S_t - The current spot price of the underlying asset.
+   * @param K - The strike price of the option.
+   * @param r - The risk-free interest rate, expressed as a decimal.
+   * @param q - The dividend yield of the underlying asset, expressed as a decimal.
+   * @param tau - The time to expiration of the option, in years.
    * @returns The implied volatility as a decimal.
    */
   public static sigma(
@@ -175,16 +175,15 @@ class OptionsGreeks {
    * Calculates the Delta (Δ) of a European option using the Black-Scholes model.
    * Delta measures the rate of change of the theoretical option value with respect to changes in the underlying asset's price.
    *
-   * @param {OptionType} type - The type of option (either 'call' or 'put').
-   * @param {number} S_t - The current spot price of the underlying asset.
-   * @param {number} K - The strike price of the option.
-   * @param {number} r - The risk-free interest rate.
-   * @param {number} q - The dividend yield of the underlying asset.
-   * @param {number} sigma - The volatility of the asset.
-   * @param {number} tau - Time to expiration of the option, in years.
-   * @returns {number} The delta of the option. For a call option, delta ranges between 0 and 1, and for a put option, it ranges between -1 and 0.
+   * @param type - The type of option (either 'call' or 'put').
+   * @param S_t - The current spot price of the underlying asset.
+   * @param K - The strike price of the option.
+   * @param r - The risk-free interest rate.
+   * @param q - The dividend yield of the underlying asset.
+   * @param sigma - The volatility of the asset.
+   * @param tau - Time to expiration of the option, in years.
+   * @returns The delta of the option. For a call option, delta ranges between 0 and 1, and for a put option, it ranges between -1 and 0.
    *
-   * @description
    * Practical use of delta includes understanding the equivalent stock position in an option. For example,
    * a delta of 0.5 suggests that the option's price will move $0.50 for every $1 move in the underlying asset.
    * Delta is also used for hedging strategies, where a position can be delta-hedged by taking positions in the underlying asset.
@@ -213,15 +212,14 @@ class OptionsGreeks {
    * Calculates the Vega of a European option, which measures the sensitivity of the option's price to changes in the volatility of the underlying asset.
    * Vega represents the amount the option's price changes for a 1 percentage point change in the volatility.
    *
-   * @param {number} S_t - The current spot price of the underlying asset.
-   * @param {number} K - The strike price of the option.
-   * @param {number} r - The risk-free interest rate.
-   * @param {number} q - The dividend yield of the underlying asset.
-   * @param {number} sigma - The volatility of the asset.
-   * @param {number} tau - The time to expiration of the option, in years.
-   * @returns {number} The Vega of the option. This value is expressed as the amount of money per underlying share that the option's value will gain or lose as volatility rises or falls by 1 percentage point.
+   * @param S_t - The current spot price of the underlying asset.
+   * @param K - The strike price of the option.
+   * @param r - The risk-free interest rate.
+   * @param q - The dividend yield of the underlying asset.
+   * @param sigma - The volatility of the asset.
+   * @param tau - The time to expiration of the option, in years.
+   * @returns The Vega of the option. This value is expressed as the amount of money per underlying share that the option's value will gain or lose as volatility rises or falls by 1 percentage point.
    *
-   * @description
    * Vega is crucial for assessing how sensitive an option is to changes in the market volatility. It is especially important in volatile markets where option prices can be greatly affected by changes in volatility. For options strategies like straddles, where the outcome is heavily dependent on volatility, Vega can provide key insights into the potential risk and reward.
    */
   public static vega(
@@ -245,13 +243,13 @@ class OptionsGreeks {
    * Calculates the theta (Θ) of a European option, which measures the rate of change of the option's price
    * with respect to the passage of time, also known as time decay.
    *
-   * @param type The type of option (call or put).
-   * @param S_t The current spot price of the underlying asset.
-   * @param K The strike price of the option.
-   * @param r The risk-free interest rate.
-   * @param q The dividend yield.
-   * @param sigma The volatility of the asset.
-   * @param tau The time to expiration in years.
+   * @param type - The type of option (call or put).
+   * @param S_t - The current spot price of the underlying asset.
+   * @param K - The strike price of the option.
+   * @param r - The risk-free interest rate.
+   * @param q - The dividend yield.
+   * @param sigma - The volatility of the asset.
+   * @param tau - The time to expiration in years.
    * @returns The theta value of the option. Theta is typically negative since options lose value as time passes.
    */
   public static theta(
@@ -284,17 +282,16 @@ class OptionsGreeks {
   /**
    * Calculates the Rho of a European option, which measures the sensitivity of the option's price to changes in the risk-free interest rate.
    *
-   * @param {OptionType} type - The type of option (either 'call' or 'put').
-   * @param {number} S_t - The current spot price of the underlying asset.
-   * @param {number} K - The strike price of the option.
-   * @param {number} r - The risk-free interest rate.
-   * @param {number} q - The dividend yield of the underlying asset.
-   * @param {number} sigma - The volatility of the asset.
-   * @param {number} tau - The time to expiration of the option, in years.
-   * @returns {number} The rho of the option. It is expressed as the amount of money, per share of the underlying,
+   * @param type - The type of option (either 'call' or 'put').
+   * @param S_t - The current spot price of the underlying asset.
+   * @param K - The strike price of the option.
+   * @param r - The risk-free interest rate.
+   * @param q - The dividend yield of the underlying asset.
+   * @param sigma - The volatility of the asset.
+   * @param tau - The time to expiration of the option, in years.
+   * @returns The rho of the option. It is expressed as the amount of money, per share of the underlying,
    * that the value of the option will gain or lose as the risk-free interest rate rises or falls by 1.0% per annum (100 basis points).
    *
-   * @description
    * Rho is typically the least sensitive of the Greeks and is often overlooked by traders. However, in environments where
    * interest rate shifts are expected, understanding rho can be crucial. It is particularly relevant for longer-term options
    * where a shift in interest rates could have a more pronounced effect on the option's value.
@@ -324,16 +321,15 @@ class OptionsGreeks {
   /**
    * Calculates the Epsilon (ε) of a European option, which measures the sensitivity of the option's price to a change in the underlying asset's dividend yield.
    *
-   * @param {OptionType} type - The type of option (either 'call' or 'put').
-   * @param {number} S_t - The current spot price of the underlying asset.
-   * @param {number} K - The strike price of the option.
-   * @param {number} r - The risk-free interest rate.
-   * @param {number} q - The dividend yield of the underlying asset.
-   * @param {number} sigma - The volatility of the asset.
-   * @param {number} tau - The time to expiration of the option, in years.
-   * @returns {number} The epsilon of the option, representing the sensitivity to the dividend yield.
+   * @param type - The type of option (either 'call' or 'put').
+   * @param S_t - The current spot price of the underlying asset.
+   * @param K - The strike price of the option.
+   * @param r - The risk-free interest rate.
+   * @param q - The dividend yield of the underlying asset.
+   * @param sigma - The volatility of the asset.
+   * @param tau - The time to expiration of the option, in years.
+   * @returns The epsilon of the option, representing the sensitivity to the dividend yield.
    *
-   * @description
    * Epsilon is a lesser-known Greek that indicates the rate of change of the option's price relative to the dividend yield of the underlying asset.
    * It is particularly useful for options on assets with high dividend yields. A positive epsilon for a call option suggests that its price increases
    * with a decrease in dividend yield, while a negative epsilon indicates the price decreases as the dividend yield rises.
@@ -362,16 +358,15 @@ class OptionsGreeks {
    * Calculates the Lambda (Λ), also known as elasticity or omega, of a European option.
    * Lambda measures the percentage change in option value per percentage change in the underlying asset price.
    *
-   * @param {OptionType} type - The type of option ('call' or 'put').
-   * @param {number} S_t - The current spot price of the underlying asset.
-   * @param {number} K - The strike price of the option.
-   * @param {number} r - The risk-free interest rate.
-   * @param {number} q - The dividend yield of the underlying asset.
-   * @param {number} sigma - The volatility of the asset's returns.
-   * @param {number} tau - The time to expiration of the option, in years.
-   * @returns {number} The lambda (elasticity) of the option.
+   * @param type - The type of option ('call' or 'put').
+   * @param S_t - The current spot price of the underlying asset.
+   * @param K - The strike price of the option.
+   * @param r - The risk-free interest rate.
+   * @param q - The dividend yield of the underlying asset.
+   * @param sigma - The volatility of the asset's returns.
+   * @param tau - The time to expiration of the option, in years.
+   * @returns The lambda (elasticity) of the option.
    *
-   * @description
    * Lambda is a measure of leverage indicating how much the value of an option will change in response to a 1% change
    * in the price of the underlying asset. It is similar to Delta but expressed in percentage terms.
    */
@@ -398,15 +393,14 @@ class OptionsGreeks {
    * Calculates the Gamma (Γ) of a European option using the Black-Scholes model.
    * Gamma measures the rate of change of the option's delta with respect to changes in the underlying asset's price.
    *
-   * @param {number} S_t - The current spot price of the underlying asset.
-   * @param {number} K - The strike price of the option.
-   * @param {number} r - The risk-free interest rate.
-   * @param {number} q - The dividend yield of the underlying asset.
-   * @param {number} sigma - The volatility of the asset.
-   * @param {number} tau - The time to expiration of the option, in years.
-   * @returns {number} The gamma of the option.
+   * @param S_t - The current spot price of the underlying asset.
+   * @param K - The strike price of the option.
+   * @param r - The risk-free interest rate.
+   * @param q - The dividend yield of the underlying asset.
+   * @param sigma - The volatility of the asset.
+   * @param tau - The time to expiration of the option, in years.
+   * @returns The gamma of the option.
    *
-   * @description
    * Gamma is used to measure the curvature of the value of an option relative to the underlying asset's price.
    * It is highest for at-the-money options and decreases as the option becomes more in-the-money or out-of-the-money.
    * Gamma is important for understanding the stability of an option's Delta, as well as the potential for
@@ -435,16 +429,15 @@ class OptionsGreeks {
    * to changes in the underlying asset's volatility, and vice versa. It's an important measure for assessing the risk and
    * hedging strategies related to changes in volatility and the underlying asset price.
    *
-   * @param {OptionType} type - The type of option (either 'call' or 'put').
-   * @param {number} S_t - The current spot price of the underlying asset.
-   * @param {number} K - The strike price of the option.
-   * @param {number} r - The risk-free interest rate.
-   * @param {number} q - The dividend yield of the underlying asset.
-   * @param {number} sigma - The volatility of the asset.
-   * @param {number} tau - The time to expiration of the option, in years.
-   * @returns {number} The vanna of the option, which represents the rate of change of delta with respect to volatility.
+   * @param type - The type of option (either 'call' or 'put').
+   * @param S_t - The current spot price of the underlying asset.
+   * @param K - The strike price of the option.
+   * @param r - The risk-free interest rate.
+   * @param q - The dividend yield of the underlying asset.
+   * @param sigma - The volatility of the asset.
+   * @param tau - The time to expiration of the option, in years.
+   * @returns The vanna of the option, which represents the rate of change of delta with respect to volatility.
    *
-   * @description
    * Vanna is useful for traders who maintain delta- or vega-hedged portfolios as it helps to anticipate how the hedge
    * might perform as volatility changes or as the underlying asset price changes. It is calculated by taking the
    * partial derivative of vega with respect to the underlying asset price, which is also equal to the partial derivative
@@ -474,16 +467,15 @@ class OptionsGreeks {
    * Calculates the Charm of an option, which measures the rate of change of Delta over the passage of time.
    * Charm, also known as delta decay, is particularly useful when delta-hedging over periods where time decay is relevant.
    *
-   * @param {OptionType} type - The type of option (either 'call' or 'put').
-   * @param {number} S_t - The current spot price of the underlying asset.
-   * @param {number} K - The strike price of the option.
-   * @param {number} r - The risk-free interest rate.
-   * @param {number} q - The dividend yield of the underlying asset.
-   * @param {number} sigma - The volatility of the asset.
-   * @param {number} tau - The time to expiration of the option, in years.
-   * @returns {number} The charm of the option, representing the rate of change of delta over time.
+   * @param type - The type of option (either 'call' or 'put').
+   * @param S_t - The current spot price of the underlying asset.
+   * @param K - The strike price of the option.
+   * @param r - The risk-free interest rate.
+   * @param q - The dividend yield of the underlying asset.
+   * @param sigma - The volatility of the asset.
+   * @param tau - The time to expiration of the option, in years.
+   * @returns The charm of the option, representing the rate of change of delta over time.
    *
-   * @description
    * Charm is a second-order derivative of the option value, once to the price and once to the passage of time.
    * It is the partial derivative of theta with respect to the underlying's price. This Greek is essential
    * for monitoring the effectiveness of delta-hedging strategies, especially over weekends or other periods
@@ -521,15 +513,14 @@ class OptionsGreeks {
   /**
    * Calculates the Vomma of a European option, which measures the rate of change of Vega with respect to changes in volatility.
    *
-   * @param {number} S_t - The current spot price of the underlying asset.
-   * @param {number} K - The strike price of the option.
-   * @param {number} r - The risk-free interest rate.
-   * @param {number} q - The dividend yield of the underlying asset.
-   * @param {number} sigma - The volatility of the asset.
-   * @param {number} tau - The time to expiration of the option, in years.
-   * @returns {number} The vomma of the option.
+   * @param S_t - The current spot price of the underlying asset.
+   * @param K - The strike price of the option.
+   * @param r - The risk-free interest rate.
+   * @param q - The dividend yield of the underlying asset.
+   * @param sigma - The volatility of the asset.
+   * @param tau - The time to expiration of the option, in years.
+   * @returns The vomma of the option.
    *
-   * @description
    * Vomma is a second-order Greek that measures the convexity of Vega. A positive vomma indicates that an option's Vega will
    * increase as volatility increases, suggesting that the option's price is becoming more sensitive to changes in volatility.
    * This is analogous to having a long gamma position. Vomma is particularly important for traders managing large portfolios
@@ -559,15 +550,14 @@ class OptionsGreeks {
    * with respect to the passage of time. Veta is the second derivative of the option value function
    * with respect to volatility and time.
    *
-   * @param {number} S_t - The current spot price of the underlying asset.
-   * @param {number} K - The strike price of the option.
-   * @param {number} r - The risk-free interest rate.
-   * @param {number} q - The dividend yield of the underlying asset.
-   * @param {number} sigma - The volatility of the asset.
-   * @param {number} tau - The time to expiration of the option, in years.
-   * @returns {number} The veta of the option, representing the sensitivity of vega to the passage of time.
+   * @param S_t - The current spot price of the underlying asset.
+   * @param K - The strike price of the option.
+   * @param r - The risk-free interest rate.
+   * @param q - The dividend yield of the underlying asset.
+   * @param sigma - The volatility of the asset.
+   * @param tau - The time to expiration of the option, in years.
+   * @returns The veta of the option, representing the sensitivity of vega to the passage of time.
    *
-   * @description
    * Veta is useful for understanding how the option's sensitivity to volatility (vega) changes as time passes.
    * This can be particularly important in dynamic hedging strategies where the passage of time affects the
    * effectiveness of a vega hedge. It is often used in conjunction with theta to manage the time and volatility
@@ -599,13 +589,13 @@ class OptionsGreeks {
    * Calculates the probability density function (pdf) of the asset price in the Black-Scholes model at strike price K.
    * This is used in the calculation of various option Greeks and is also sometimes referred to as 'phi' or 'ϕ'.
    *
-   * @param {number} S_t - The current spot price of the underlying asset.
-   * @param {number} K - The strike price of the option.
-   * @param {number} r - The risk-free interest rate.
-   * @param {number} q - The dividend yield of the underlying asset.
-   * @param {number} sigma - The volatility of the asset.
-   * @param {number} tau - The time to expiration of the option, in years.
-   * @returns {number} The value of the pdf at the strike price.
+   * @param S_t - The current spot price of the underlying asset.
+   * @param K - The strike price of the option.
+   * @param r - The risk-free interest rate.
+   * @param q - The dividend yield of the underlying asset.
+   * @param sigma - The volatility of the asset.
+   * @param tau - The time to expiration of the option, in years.
+   * @returns The value of the pdf at the strike price.
    */
   public static phiK(
     S_t: number,
@@ -627,13 +617,13 @@ class OptionsGreeks {
   /**
    * Calculates the Speed of a European option, which measures the rate of change of Gamma with respect to changes in the underlying asset's price.
    *
-   * @param {number} S_t - The current spot price of the underlying asset.
-   * @param {number} K - The strike price of the option.
-   * @param {number} r - The risk-free interest rate.
-   * @param {number} q - The dividend yield of the underlying asset.
-   * @param {number} sigma - The volatility of the asset.
-   * @param {number} tau - The time to expiration of the option, in years.
-   * @returns {number} The speed of the option.
+   * @param S_t - The current spot price of the underlying asset.
+   * @param K - The strike price of the option.
+   * @param r - The risk-free interest rate.
+   * @param q - The dividend yield of the underlying asset.
+   * @param sigma - The volatility of the asset.
+   * @param tau - The time to expiration of the option, in years.
+   * @returns The speed of the option.
    */
   public static speed(
     S_t: number,
@@ -656,13 +646,13 @@ class OptionsGreeks {
   /**
    * Calculates the Zomma of a European option, which measures the rate of change of Gamma with respect to changes in volatility.
    *
-   * @param {number} S_t - The current spot price of the underlying asset.
-   * @param {number} K - The strike price of the option.
-   * @param {number} r - The risk-free interest rate.
-   * @param {number} q - The dividend yield of the underlying asset.
-   * @param {number} sigma - The volatility of the asset.
-   * @param {number} tau - The time to expiration of the option, in years.
-   * @returns {number} The zomma of the option.
+   * @param S_t - The current spot price of the underlying asset.
+   * @param K - The strike price of the option.
+   * @param r - The risk-free interest rate.
+   * @param q - The dividend yield of the underlying asset.
+   * @param sigma - The volatility of the asset.
+   * @param tau - The time to expiration of the option, in years.
+   * @returns The zomma of the option.
    */
   public static zomma(
     S_t: number,
@@ -682,13 +672,13 @@ class OptionsGreeks {
   /**
    * Calculates the Color of a European option, which measures the rate of change of Gamma with respect to the passage of time.
    *
-   * @param {number} S_t - The current spot price of the underlying asset.
-   * @param {number} K - The strike price of the option.
-   * @param {number} r - The risk-free interest rate.
-   * @param {number} q - The dividend yield of the underlying asset.
-   * @param {number} sigma - The volatility of the asset.
-   * @param {number} tau - The time to expiration of the option, in years.
-   * @returns {number} The color of the option.
+   * @param S_t - The current spot price of the underlying asset.
+   * @param K - The strike price of the option.
+   * @param r - The risk-free interest rate.
+   * @param q - The dividend yield of the underlying asset.
+   * @param sigma - The volatility of the asset.
+   * @param tau - The time to expiration of the option, in years.
+   * @returns The color of the option.
    */
   public static color(
     S_t: number,
@@ -714,13 +704,13 @@ class OptionsGreeks {
    * Calculates the Ultima of a European option, which measures the sensitivity of the option's Vega to changes in volatility.
    * Ultima is a third-order Greek that gives the rate of change of Vomma with respect to changes in volatility.
    *
-   * @param {number} S_t - The current spot price of the underlying asset.
-   * @param {number} K - The strike price of the option.
-   * @param {number} r - The risk-free interest rate.
-   * @param {number} q - The dividend yield of the underlying asset.
-   * @param {number} sigma - The volatility of the asset.
-   * @param {number} tau - The time to expiration of the option, in years.
-   * @returns {number} The ultima of the option.
+   * @param S_t - The current spot price of the underlying asset.
+   * @param K - The strike price of the option.
+   * @param r - The risk-free interest rate.
+   * @param q - The dividend yield of the underlying asset.
+   * @param sigma - The volatility of the asset.
+   * @param tau - The time to expiration of the option, in years.
+   * @returns The ultima of the option.
    */
   public static ultima(
     S_t: number,
@@ -747,14 +737,14 @@ class OptionsGreeks {
    * Dual Delta is important for understanding how the option's price will change as the strike price is adjusted, holding the underlying
    * asset's price fixed.
    *
-   * @param {OptionType} type - The type of option (either 'call' or 'put').
-   * @param {number} S_t - The current spot price of the underlying asset.
-   * @param {number} K - The strike price of the option.
-   * @param {number} r - The risk-free interest rate.
-   * @param {number} q - The dividend yield of the underlying asset.
-   * @param {number} sigma - The volatility of the asset.
-   * @param {number} tau - The time to expiration of the option, in years.
-   * @returns {number} The dual delta of the option.
+   * @param type - The type of option (either 'call' or 'put').
+   * @param S_t - The current spot price of the underlying asset.
+   * @param K - The strike price of the option.
+   * @param r - The risk-free interest rate.
+   * @param q - The dividend yield of the underlying asset.
+   * @param sigma - The volatility of the asset.
+   * @param tau - The time to expiration of the option, in years.
+   * @returns The dual delta of the option.
    */
   public static dualDelta(
     type: OptionType,
@@ -804,4 +794,4 @@ class OptionsGreeks {
   }
 }
 
-export default OptionsGreeks;
+export default {OptionsGreeks};
