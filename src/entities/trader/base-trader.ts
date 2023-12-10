@@ -37,6 +37,9 @@ import { ClearinghouseContract, SeaportContract } from '../contracts';
 import { Action, QuoteRequest } from '../../lib/codegen/rfq_pb';
 import { ItemType } from '../../lib/codegen/seaport_pb';
 
+/**
+ * Constructor arguments for creating a Trader instance.
+ */
 export interface TraderConstructorArgs extends ValoremGRPCClients {
   account: Account;
   chain: Chain;
@@ -46,6 +49,11 @@ export interface TraderConstructorArgs extends ValoremGRPCClients {
 
 type Spender = typeof CLEAR_ADDRESS | typeof SEAPORT_ADDRESS;
 
+/**
+ * The Trader class encapsulates trading functionalities within the Valorem SDK.
+ * It includes methods for authentication, RFQ handling, and interacting with
+ * various contracts like ERC20, Clearinghouse, and Seaport.
+ */
 export class Trader {
   public account: Account;
   public chain: Chain;
@@ -70,6 +78,11 @@ export class Trader {
     }
   >();
 
+  /**
+   * Constructs a new Trader instance with the given Valorem GRPC clients and
+   * blockchain account details. It sets up clients for public and wallet interactions,
+   * as well as initializing contracts for trading operations.
+   */
   public constructor({
     account,
     chain,
@@ -107,7 +120,9 @@ export class Trader {
   }
 
   /**
-   * Authenticate with Valorem Trade API via SIWE
+   * Authenticates the trader with the Valorem Trade API using SIWE (Sign-In with Ethereum).
+   * This process involves getting a session nonce, creating and signing a SIWE message,
+   * and submitting the verification to Valorem Trade API.
    */
   public async signIn() {
     // check if already authenticated, early return if true
@@ -131,12 +146,20 @@ export class Trader {
     }
   }
 
+  /**
+   * Retrieves a nonce for SIWE authentication.
+   * @returns - A promise that resolves to the nonce.
+   */
   public async getNonce() {
     const res = await handleGRPCRequest(async () => this.authClient.nonce({}));
     if (res === null) throw new Error('Failed to get nonce for SIWE message.');
     return res.nonce;
   }
 
+  /**
+   * Checks if the trader is currently authenticated.
+   * @returns - A promise indicating authentication status.
+   */
   public async checkAuthentication() {
     const res = await handleGRPCRequest(async () =>
       this.authClient.authenticate({}),
@@ -148,6 +171,12 @@ export class Trader {
     return this.authenticated;
   }
 
+  /**
+   * Verifies the signed SIWE message for authentication.
+   * @param message - The signed message.
+   * @param signature - The signature of the message.
+   * @returns - A promise with the verification result.
+   */
   public async verifyWithSIWE(message: string, signature: `0x${string}`) {
     const res = await handleGRPCRequest(async () =>
       this.authClient.verify({
@@ -166,6 +195,11 @@ export class Trader {
     return { verified: null };
   }
 
+  /**
+   * Creates and signs a SIWE message for authentication.
+   * @param nonce - The nonce to use in the message.
+   * @returns - A promise with the message and its signature.
+   */
   public async createAndSignMessage(nonce: string) {
     if (!(this.account as PrivateKeyAccount | undefined)?.signMessage) {
       throw new Error('Account does not support signing messages.');
@@ -182,7 +216,9 @@ export class Trader {
   }
 
   /**
-   * RFQs
+   * Creates a new quote request for trading options. This method is used to generate
+   * the request payload for an RFQ, specifying details such as the option ID, quantity,
+   * and other relevant parameters.
    */
   public createQuoteRequest({
     optionId,
@@ -204,6 +240,11 @@ export class Trader {
     });
   }
 
+  /**
+   * Opens a stream for RFQs, continuously sending requests and handling responses.
+   * This method is a key part of the trading process, allowing the trader to interact
+   * with market makers and receive quotes for option trades.
+   */
   public async openRFQStream<TMethod extends 'taker' | 'webTaker'>({
     method,
     request,
@@ -390,6 +431,14 @@ export class Trader {
     }
   }
 
+  /**
+   * Executes a given transaction request. This method is crucial for submitting
+   * and confirming blockchain transactions as part of trading operations, such as
+   * option exercises, claim redemptions, and accepting quotes.
+   *
+   * @param request - The simulated transaction request.
+   * @returns - A promise with the transaction receipt.
+   */
   public async executeTransaction(request: SimulatedTxRequest) {
     // submit tx to chain
     const hash = await this.walletClient.writeContract(request);
