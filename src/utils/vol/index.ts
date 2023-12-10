@@ -370,12 +370,12 @@ class OptionsGreeks {
       // Call option theta formula
       const secondTerm = -q * st * exp(-q * tau) * this.phi(d1);
       const thirdTerm = r * K * exp(-r * tau) * this.phi(d2);
-      return -(thetaCommon + secondTerm + thirdTerm) / 365;
+      return -(thetaCommon + secondTerm + thirdTerm);
     }
     // Put option theta formula
     const secondTerm = -q * st * exp(-q * tau) * this.phi(-d1);
     const thirdTerm = r * K * exp(-r * tau) * this.phi(-d2);
-    return (-thetaCommon + secondTerm + thirdTerm) / 365;
+    return (-thetaCommon + secondTerm + thirdTerm);
   }
 
   /**
@@ -389,7 +389,7 @@ class OptionsGreeks {
    * @param sigma - The volatility of the asset.
    * @param tau - The time to expiration of the option, in years.
    * @returns The rho of the option. It is expressed as the amount of money, per share of the underlying,
-   * that the value of the option will gain or lose as the risk-free interest rate rises or falls by 1.0% per annum (100 basis points).
+   * that the value of the option will gain or lose as the risk-free interest rate rises or falls by 1 basis point per annum.
    *
    * Rho is typically the least sensitive of the Greeks and is often overlooked by traders. However, in environments where
    * interest rate shifts are expected, understanding rho can be crucial. It is particularly relevant for longer-term options

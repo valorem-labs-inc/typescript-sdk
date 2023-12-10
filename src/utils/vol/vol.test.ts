@@ -105,10 +105,10 @@ describe('OptionsGreeks - Greeks', () => {
     });
 
     it('calculates the correct theta', () => {
-        const thetaCallAnnual = OptionsGreeks.theta(OptionType.Call, S, K, r, q, sigma, t) * 365;
+        const thetaCallAnnual = OptionsGreeks.theta(OptionType.Call, S, K, r, q, sigma, t);
         expect(thetaCallAnnual).toBeCloseTo(-4.30538996455, accuracy);
 
-        const thetaPutAnnual = OptionsGreeks.theta(OptionType.Put, S, K, r, q, sigma, t) * 365;
+        const thetaPutAnnual = OptionsGreeks.theta(OptionType.Put, S, K, r, q, sigma, t);
         expect(thetaPutAnnual).toBeCloseTo(-1.8530056722, accuracy);
     });
 
