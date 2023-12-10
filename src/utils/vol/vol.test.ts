@@ -90,7 +90,7 @@ describe('Options Greeks BSM and IV convergence', () => {
     });
 });
 
-describe('OptionsGreeks - Basic Greeks', () => {
+describe('OptionsGreeks - Greeks', () => {
     const S = 49; // Underlying asset price
     const K = 50; // Strike price
     const r = 0.05; // Risk-free interest rate
@@ -125,5 +125,57 @@ describe('OptionsGreeks - Basic Greeks', () => {
     it('calculates the correct rho', () => {
         const rhoCall = OptionsGreeks.rho(OptionType.Call, S, K, r, q, sigma, t);
         expect(rhoCall).toBeCloseTo(0.089065740988, accuracy);
+    });
+
+    it('calculates the correct vanna (sensitivity of delta to volatility)', () => {
+        const _vannaValue = OptionsGreeks.vanna(S, K, r, q, sigma, t);
+        // TODO(Include assertions based on expected value)
+    });
+
+    it('calculates the correct charm (rate of change of delta over time)', () => {
+        const _charmCall = OptionsGreeks.charm(OptionType.Call, S, K, r, q, sigma, t);
+        const _charmPut = OptionsGreeks.charm(OptionType.Put, S, K, r, q, sigma, t);
+        // TODO(Include assertions based on expected value)
+    });
+
+    it('calculates the correct vomma (sensitivity of vega to volatility)', () => {
+        const _vommaValue = OptionsGreeks.vomma(S, K, r, q, sigma, t);
+        // TODO(Include assertions based on expected value)
+    });
+
+    it('calculates the correct veta (rate of change of vega over time)', () => {
+        const _vetaValue = OptionsGreeks.veta(S, K, r, q, sigma, t);
+        // TODO(Include assertions based on expected value)
+    });
+
+    it('calculates the correct speed (rate of change of gamma with respect to underlying price)', () => {
+        const _speedValue = OptionsGreeks.speed(S, K, r, q, sigma, t);
+        // TODO(Include assertions based on expected value)
+    });
+
+    it('calculates the correct zomma (rate of change of gamma with respect to volatility)', () => {
+        const _zommaValue = OptionsGreeks.zomma(S, K, r, q, sigma, t);
+        // TODO(Include assertions based on expected value)
+    });
+
+    it('calculates the correct color (rate of change of gamma with respect to time)', () => {
+        const _colorValue = OptionsGreeks.color(S, K, r, q, sigma, t);
+        // TODO(Include assertions based on expected value)
+    });
+
+    it('calculates the correct ultima (rate of change of vomma with respect to volatility)', () => {
+        const _ultimaValue = OptionsGreeks.ultima(S, K, r, q, sigma, t);
+        // TODO(Include assertions based on expected value)
+    });
+
+    it('calculates the correct dual delta (sensitivity of option value to strike price)', () => {
+        const _dualDeltaCall = OptionsGreeks.dualDelta(OptionType.Call, S, K, r, q, sigma, t);
+        const _dualDeltaPut = OptionsGreeks.dualDelta(OptionType.Put, S, K, r, q, sigma, t);
+        // TODO(Include assertions based on expected value)
+    });
+
+    it('calculates the correct dual gamma (sensitivity of dual delta to strike price)', () => {
+        const _dualGammaValue = OptionsGreeks.dualGamma(S, K, r, q, sigma, t);
+        // TODO(Include assertions based on expected value)
     });
 });
