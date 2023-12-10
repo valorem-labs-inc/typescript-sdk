@@ -9,6 +9,7 @@ const expectedOptionTypeId =
 describe('Option Class', () => {
   it('Should be able to create an option, and return the correct optionId', async () => {
     // Attempt to create an option type based on provided option information
+    // https://arbiscan.io/tx/0xf78efb7c8f9ed8292ab9d123ad22362c70bec053444f2b38c3cc78d063a3aa0d
     const optionType = await OptionType.fromInfo({
       optionInfo: {
         underlyingAsset: '0x618b9a2Db0CF23Bb20A849dAa2963c72770C1372',
