@@ -1,18 +1,37 @@
-This is a work in progress. The API is not yet stable, and is subject to change, including breaking changes. Contributions welcome.
-
 # Valorem TypeScript SDK
 
-This is a TypeScript SDK for interacting with Valorem's smart contracts and Trade API.
+> This TypeScript SDK provides a streamlined interface for interacting with Valorem's smart
+> contracts and Trade API, enabling developers to build applications on top of Valorem's
+> infrastructure with ease. Please note that this SDK is a work in progress, and the API is
+> subject to change, including potential breaking changes.
+
+## Table of Contents
+
+- [Installation](#installation)
+- [Getting Started](#getting-started)
+- [Usage](#usage)
+- [Examples](#examples)
+- [Documentation](#documentation)
+- [Contributing](#contributing)
+- [License](#license)
 
 ## Installation
+
+To install the Valorem TypeScript SDK, choose your package manager and run the appropriate command:
+
+Using npm:
 
 ```bash
 npm i @valorem-labs-inc/sdk
 ```
 
+Using pnpm:
+
 ```bash
 pnpm i @valorem-labs-inc/sdk
 ```
+
+Using yarn:
 
 ```bash
 yarn add @valorem-labs-inc/sdk
@@ -20,25 +39,31 @@ yarn add @valorem-labs-inc/sdk
 
 ## Getting Started
 
+To get started with the SDK, you'll need to set up the necessary clients from Viem and initialize
+the ValoremSDK. Here's a quick start guide:
+
 ```typescript
 import { createPublicClient, createWalletClient, http } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
 import { arbitrumGoerli } from 'viem/chains';
 import { ValoremSDK } from '@valorem-labs-inc/sdk';
 
-// set up viem clients
+// Replace YOUR_PRIVATE_KEY with your Ethereum private key.
 const account = privateKeyToAccount(YOUR_PRIVATE_KEY);
+
+// Set up Viem clients for the Arbitrum Goerli test network.
 const publicClient = createPublicClient({
   chain: arbitrumGoerli,
   transport: http(),
 });
+
 const walletClient = createWalletClient({
   account,
   chain: arbitrumGoerli,
   transport: http(),
 });
 
-// init Valorem SDK
+// Initialize the Valorem SDK with the created clients.
 const valoremSDK = new ValoremSDK({
   publicClient,
   walletClient,
@@ -47,14 +72,35 @@ const valoremSDK = new ValoremSDK({
 
 ## Usage
 
+Here's how you can sign in and send requests to the Trade API using the SDK:
+
 ```typescript
 const webTaker = valoremSDK.webTaker;
+
+// Sign in to the Trade API.
 await webTaker.signIn();
-// now you can send requests to the Trade API
+
+// Now you can send requests to the Trade API.
 ```
 
-A full example of using the Valorem Typescript SDK to create an option, request a quote, and fulfill a trade order is located here: [@valorem-labs-inc/trade-interfaces/examples/typescript/src/RFQ_taker.ts](https://github.com/valorem-labs-inc/trade-interfaces/blob/main/examples/typescript/src/RFQ_taker.ts).
+Yes, it's really that easy.
+
+## Examples
+
+For a comprehensive example of using the Valorem TypeScript SDK to create options,
+request quotes, and fulfill trade orders, check out the [example file](https://github.com/valorem-labs-inc/trade-interfaces/blob/main/examples/typescript/src/RFQ_taker.ts).
 
 ## Documentation
 
-For documentation, visit [https://valorem-labs-inc.github.io/typescript-sdk/](https://valorem-labs-inc.github.io/typescript-sdk/)
+Documentation for the Valorem TypeScript SDK is available [here](https://valorem-labs-inc.github.io/typescript-sdk/).
+
+## Contributing
+
+We welcome contributions to the Valorem TypeScript SDK!
+If you have suggestions, bug reports, or contributions, please submit them
+as issues or pull requests in the repository.
+
+## License
+
+The Valorem TypeScript SDK is licensed under the MIT License.
+See the [LICENSE](LICENSE) file for more details.

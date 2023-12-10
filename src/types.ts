@@ -21,6 +21,10 @@ export type SupportedChainId = SupportedChain['id'];
 
 export type SupportedAssetSymbol = 'USDC' | 'WETH';
 
+// TODO(These types need to be extended and enhanced to support the full range of types used)
+// And to favor enums and true data keys over token symbols and strings/numbers interpolated
+// throughout the codebase.
+
 export interface OptionTypeInfo {
   underlyingAsset: Address;
   underlyingAmount: bigint;

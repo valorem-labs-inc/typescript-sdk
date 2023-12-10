@@ -12,7 +12,16 @@ import { fromH128, fromH160ToAddress, fromH256 } from './hi-lo-to-big-int';
 
 export type ParsedQuoteResponse = ReturnType<typeof parseQuoteResponse>;
 
+/**
+ * Parses a QuoteResponse from the RFQ service of the Valorem Trade API,
+ * transforming it into a more usable format and performing necessary validations.
+ *
+ * @param res - The raw quote response received from the RFQ service.
+ * @returns - An object representing the parsed quote response.
+ * @throws - Errors if the response is missing essential data.
+ */
 export const parseQuoteResponse = (res: QuoteResponse) => {
+  // Validate the presence of required fields in the response.
   if (!res.seaportAddress)
     throw new Error(
       'Invalid response from RFQ server. Missing seaport address.',
@@ -50,6 +59,7 @@ export const parseQuoteResponse = (res: QuoteResponse) => {
       'Invalid response from RFQ server. Missing order params: makerAddress.',
     );
 
+  // Parsing and restructuring the quote response.
   const { r, s, v } = res.order.signature;
 
   const parsedQuoteResponse = {
@@ -113,6 +123,8 @@ export const parseQuoteResponse = (res: QuoteResponse) => {
       },
     },
   };
+
+  // Additional validation checks for consideration and offer.
 
   if (!parsedQuoteResponse.order.parameters.consideration[0]) {
     throw new Error('Invalid response from RFQ server. Missing consideration.');
