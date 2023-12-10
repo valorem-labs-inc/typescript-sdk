@@ -359,18 +359,23 @@ class OptionsGreeks {
     // Calculate d1 and d2 using the private methods for d1 and d2 calculation
     const d1 = this.d1(st, K, r, q, sigma, tau);
     const d2 = this.d2(d1, sigma, tau);
+    const pdfD1 = exp(-pow(d1, 2) / 2) / sqrt(2 * pi);
 
     // Calculate the first part of the theta formula which is common between call and put
     const thetaCommon =
-      (-st * sigma * exp(-q * tau) * this.phi(d1)) / (2 * sqrt(tau));
+      (st * exp(-q * tau) * pdfD1 * sigma) / (2 * sqrt(tau));
 
     // Depending on the option type calculate the rest of the theta value
     if (type === OptionType.Call) {
       // Call option theta formula
-      return thetaCommon - r * K * exp(-r * tau) * this.phi(d2);
+      const secondTerm = -q * st * exp(-q * tau) * this.phi(d1);
+      const thirdTerm = r * K * exp(-r * tau) * this.phi(d2);
+      return -(thetaCommon + secondTerm + thirdTerm) / 365;
     }
     // Put option theta formula
-    return thetaCommon + r * K * exp(-r * tau) * this.phi(-d2);
+    const secondTerm = -q * st * exp(-q * tau) * this.phi(-d1);
+    const thirdTerm = r * K * exp(-r * tau) * this.phi(-d2);
+    return (-thetaCommon + secondTerm + thirdTerm) / 365;
   }
 
   /**
@@ -405,10 +410,10 @@ class OptionsGreeks {
 
     if (type === OptionType.Call) {
       // Rho for a Call option
-      return K * tau * exp(-r * tau) * this.phi(d2);
+      return K * tau * exp(-r * tau) * this.phi(d2) * 0.01;
     }
     // Rho for a Put option
-    return -K * tau * exp(-r * tau) * this.phi(-d2);
+    return -K * tau * exp(-r * tau) * this.phi(-d2) * 0.01;
   }
 
   /**
