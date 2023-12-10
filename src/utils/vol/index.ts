@@ -31,83 +31,67 @@ interface OptionData {
   K: number; // Strike price of the option
 }
 
-/**
- * Brent's root-finding algorithm.
- * 
- * This method combines the bisection, secant, and inverse quadratic 
- * interpolation methods for finding a root of a continuous function.
- */
 class Brent {
   private readonly maxIter: number;
   private readonly accuracy: number;
 
-  /**
-   * Construct a Brent root-finding object.
-   * @param accuracy - Desired accuracy for finding the root.
-   */
   constructor(accuracy = 1e-15) {
-    this.maxIter = 100; // Setting a sensible default for maximum iterations.
+    this.maxIter = 100;
     this.accuracy = accuracy;
   }
 
-  /**
-   * The main method to find the root of the function using Brent's method.
-   * @param f - The function for which we are trying to find the root.
-   * @param a - Lower bound of the initial bracketing interval.
-   * @param b - Upper bound of the initial bracketing interval.
-   * @returns The root of the function.
-   */
   public findRoot(f: (x: number) => number, a: number, b: number): number {
-    // Internal variables for manipulation.
     let ia = a;
     let ib = b;
-    // Function outputs at the interval endpoints.
     let fa = f(ia);
     let fb = f(ib);
 
     if (fa * fb >= 0) {
-      throw new Error('Function values at the interval endpoints must have opposite signs.');
+      throw new Error(
+        'Function values at the interval endpoints must bracket the root.',
+      );
     }
 
-    // If |f(ia)| < |f(ib)| then swap ia and ib.
     if (abs(fa) < abs(fb)) {
       [ia, ib] = [ib, ia];
       [fa, fb] = [fb, fa];
     }
 
-    let c = ia;  // At the start, c is equal to ia.
+    let c = ia;
     let fc = fa;
-    let s = ib;  // Initial condition for s.
+    let s = ib;
     let fs = fb;
-    let d = ib - ia; // Initialize d to the length of the interval.
+    let d = c;
+    let mflag = true;
 
-    let mflag = true; // A flag used to evaluate conditions.
-
-    // Main iteration loop.
-    for (let iter = 1; iter <= this.maxIter; iter++) {
-      // Check for convergence.
-      if (abs(fs) < this.accuracy || abs(fb - fa) < this.accuracy) {
-        return s;
+    for (let i = 0; i < this.maxIter; i++) {
+      if (abs(ib - ia) < this.accuracy) {
+        return s; // The root has been found with sufficient accuracy.
+      } else if (fb === 0 && i !== 1) {
+        return ib; // The root has been found exactly.
+      } else if (fs === 0 && i !== 1) {
+        return s; // The root has been found exactly.
       }
 
-      // Inverse quadratic interpolation.
       if (fa !== fc && fb !== fc) {
-        s = (ia * fb * fc) / ((fa - fb) * (fa - fc)) +
-            (ib * fa * fc) / ((fb - fa) * (fb - fc)) +
-            (c * fa * fb) / ((fc - fa) * (fc - fb));
+        // Inverse quadratic interpolation.
+        s =
+          (ia * fb * fc) / ((fa - fb) * (fa - fc)) +
+          (ib * fa * fc) / ((fb - fa) * (fb - fc)) +
+          (c * fa * fb) / ((fc - fa) * (fc - fb));
       } else {
         // Secant method.
-        s = ib - fb * (ib - ia) / (fb - fa);
+        s = ib - (fb * (ib - ia)) / (fb - fa);
       }
 
-      const condition1 = (s < (3 * ia + ib) / 4 || s > ib);
-      const condition2 = (mflag && abs(s - ib) >= abs(ib - c) / 2);
-      const condition3 = (!mflag && abs(s - ib) >= abs(c - d) / 2);
-      const condition4 = (mflag && abs(ib - c) < this.accuracy);
-      const condition5 = (!mflag && abs(c - d) < this.accuracy);
+      const condition1 = !(s >= (3 * ia + ib) / 4 && s <= ib);
+      const condition2 = mflag && abs(s - ib) >= abs(ib - c) / 2;
+      const condition3 = !mflag && abs(s - ib) >= abs(c - d) / 2;
+      const condition4 = mflag && abs(ib - c) < abs(this.accuracy);
+      const condition5 = !mflag && abs(c - d) < abs(this.accuracy);
 
-      // Bisection method.
       if (condition1 || condition2 || condition3 || condition4 || condition5) {
+        // Bisection method.
         s = (ia + ib) / 2;
         mflag = true;
       } else {
@@ -119,7 +103,6 @@ class Brent {
       c = ib;
       fc = fb;
 
-      // Update ia, ib, fa, fb based on the value of f(s).
       if (fa * fs < 0) {
         ib = s;
         fb = fs;
@@ -128,8 +111,7 @@ class Brent {
         fa = fs;
       }
 
-      // Ensure |f(ia)| >= |f(ib)| holds for the next iteration.
-      if (abs(fa) < abs(fb)) {
+      if (Math.abs(fa) < Math.abs(fb)) {
         [ia, ib] = [ib, ia];
         [fa, fb] = [fb, fa];
       }
@@ -207,7 +189,7 @@ class OptionsGreeks {
    * @param q - The dividend yield.
    * @param sigma - The volatility of the asset.
    * @param tau - The time to expiration.
-   * @returns The fair value of the call option.
+   * @returns The fair value of the option.
    */
   public static blackScholesMerton(
     type: OptionType,
@@ -232,16 +214,15 @@ class OptionsGreeks {
       return (
         st * exp(-q * tau) * this.phi(d1) - K * exp(-r * tau) * this.phi(d2)
       );
-    } 
-      // Calculate put option price
-      return (
-        K * exp(-r * tau) * this.phi(-d2) - st * exp(-q * tau) * this.phi(-d1)
-      );
-    
+    }
+    // Calculate put option price
+    return (
+      K * exp(-r * tau) * this.phi(-d2) - st * exp(-q * tau) * this.phi(-d1)
+    );
   }
 
   /**
-   * Calculates the implied volatility of an option using the Brent method.
+   * Calculates the implied volatility, or sigma, of an option using the Brent method.
    *
    * @param type - The type of option: 'call' for a call option or 'put' for a put option.
    * @param marketPrice - The current market price of the option.
@@ -253,37 +234,37 @@ class OptionsGreeks {
    * @returns The implied volatility as a decimal.
    */
   public static sigma(
-      type: OptionType,
-      marketPrice: number,
-      st: number,
-      K: number,
-      r: number,
-      q: number,
-      T: number,
+    type: OptionType,
+    marketPrice: number,
+    st: number,
+    K: number,
+    r: number,
+    q: number,
+    T: number,
   ): number {
     const brent = new Brent();
     const lowerBound = 0.001; // Lower bound for volatility search
     const upperBound = 5.0; // Upper bound for volatility search
 
-    // Define the function for which we want to find the root
+    // Function for Brent's method to find the root
     const marketPriceDelta = (sigma: number) => {
       const optionPrice = this.blackScholesMerton(type, st, K, r, q, sigma, T);
       return optionPrice - marketPrice;
     };
 
-    try {
-      // Use the Brent method to find the implied volatility
-      const impliedVolatility = brent.getRoot(marketPriceDelta, lowerBound, upperBound);
+    // Use Brent's method to find the implied volatility
+    const impliedVolatility = brent.findRoot(
+      marketPriceDelta,
+      lowerBound,
+      upperBound,
+    );
 
-      // Check if the implied volatility is within a reasonable range
-      if (impliedVolatility < lowerBound || impliedVolatility > upperBound) {
-        throw new Error('Implied volatility is outside the expected range.');
-      }
-
-      return impliedVolatility;
-    } catch (error) {
-      throw new Error('Implied volatility calculation did not converge.');
+    // Check if the implied volatility is within a reasonable range
+    if (impliedVolatility < lowerBound || impliedVolatility > upperBound) {
+      throw new Error('Implied volatility is outside the expected range.');
     }
+
+    return impliedVolatility;
   }
 
   /**
@@ -317,10 +298,9 @@ class OptionsGreeks {
     if (type === OptionType.Call) {
       // Delta for a Call option
       return exp(-q * tau) * this.phi(d1);
-    } 
-      // Delta for a Put option
-      return -exp(-q * tau) * this.phi(-d1);
-    
+    }
+    // Delta for a Put option
+    return -exp(-q * tau) * this.phi(-d1);
   }
 
   /**
@@ -336,18 +316,19 @@ class OptionsGreeks {
    * @returns The Vega of the option, expressed as the amount the option's price will change per 1 percentage point change in volatility.
    */
   public static vega(
-      st: number,
-      K: number,
-      r: number,
-      q: number,
-      sigma: number,
-      tau: number,
+    st: number,
+    K: number,
+    r: number,
+    q: number,
+    sigma: number,
+    tau: number,
   ): number {
     // Calculate d1
     const d1 = this.d1(st, K, r, q, sigma, tau);
 
     // Calculate Vega using the phi function for the standard normal probability density
-    const vegaValue = (st * exp(-q * tau) * sqrt(tau) * exp(-pow(d1, 2) / 2)) / sqrt(2 * pi);
+    const vegaValue =
+      (st * exp(-q * tau) * sqrt(tau) * exp(-pow(d1, 2) / 2)) / sqrt(2 * pi);
 
     // Adjust the Vega value to be per 1% change in volatility
     return vegaValue * 0.01;
@@ -387,10 +368,9 @@ class OptionsGreeks {
     if (type === OptionType.Call) {
       // Call option theta formula
       return thetaCommon - r * K * exp(-r * tau) * this.phi(d2);
-    } 
-      // Put option theta formula
-      return thetaCommon + r * K * exp(-r * tau) * this.phi(-d2);
-    
+    }
+    // Put option theta formula
+    return thetaCommon + r * K * exp(-r * tau) * this.phi(-d2);
   }
 
   /**
@@ -426,10 +406,9 @@ class OptionsGreeks {
     if (type === OptionType.Call) {
       // Rho for a Call option
       return K * tau * exp(-r * tau) * this.phi(d2);
-    } 
-      // Rho for a Put option
-      return -K * tau * exp(-r * tau) * this.phi(-d2);
-    
+    }
+    // Rho for a Put option
+    return -K * tau * exp(-r * tau) * this.phi(-d2);
   }
 
   /**
@@ -462,10 +441,9 @@ class OptionsGreeks {
     if (type === OptionType.Call) {
       // Epsilon for a Call option
       return -st * tau * exp(-q * tau) * this.phi(d1);
-    } 
-      // Epsilon for a Put option
-      return st * tau * exp(-q * tau) * this.phi(-d1);
-    
+    }
+    // Epsilon for a Put option
+    return st * tau * exp(-q * tau) * this.phi(-d1);
   }
 
   /**
@@ -617,10 +595,9 @@ class OptionsGreeks {
     if (type === OptionType.Call) {
       // Charm for a Call option
       return commonTerm;
-    } 
-      // Charm for a Put option, need to adjust the sign for the second term
-      return commonTerm - q * exp(-q * tau) * this.phi(-d1);
-    
+    }
+    // Charm for a Put option, need to adjust the sign for the second term
+    return commonTerm - q * exp(-q * tau) * this.phi(-d1);
   }
 
   /**
@@ -873,10 +850,9 @@ class OptionsGreeks {
     if (type === OptionType.Call) {
       // Dual Delta for a Call option
       return -exp(-r * tau) * this.phi(d2);
-    } 
-      // Dual Delta for a Put option
-      return exp(-r * tau) * this.phi(-d2);
-    
+    }
+    // Dual Delta for a Put option
+    return exp(-r * tau) * this.phi(-d2);
   }
 
   /**
@@ -907,5 +883,5 @@ class OptionsGreeks {
   }
 }
 
-export {OptionsGreeks, OptionType};
-export type {Market, Underlying, OptionData};
+export { OptionsGreeks, OptionType, Brent };
+export type { Market, Underlying, OptionData };
