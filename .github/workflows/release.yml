@@ -46,7 +46,7 @@ jobs:
 
       - name: Publish to Github Packages
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GHP_PAT: ${{ secrets.GHP_PAT }}
         run: pnpm ci:release
 
       - name: Setup .npmrc file to publish to npm
