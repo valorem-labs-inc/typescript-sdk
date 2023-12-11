@@ -18,6 +18,13 @@ jobs:
         with:
           submodules: true
 
+      - name: Setup .npmrc for pulling/publishing from/to github packages
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@valorem-labs-inc'
+
       - name: Install pnpm
         uses: pnpm/action-setup@v2
         with:
@@ -37,6 +44,11 @@ jobs:
       - name: Verify the integrity of provenance attestations and registry signatures for installed dependencies
         run: pnpm audit signatures
 
+      - name: Publish to Github Packages
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: pnpm ci:release
+
       - name: Setup .npmrc file to publish to npm
         uses: actions/setup-node@v4
         with:
@@ -44,22 +56,8 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
           scope: '@valorem-labs-inc'
 
-      - name: Publish
+      - name: Publish to NPM
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           pnpm ci:release
-
-      - name: Setup .npmrc for publishing to github packages
-        uses: actions/setup-node@v4
-        with:
-          node-version: 18
-          registry-url: 'https://npm.pkg.github.com'
-          scope: '@valorem-labs-inc'
-
-        # Runs changeset version to see if pkg v needs bumped
-        # () || true prevents exit code 1 when there is no v bump needed
-      - name: Publish to Github Packages
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: pnpm ci:release
