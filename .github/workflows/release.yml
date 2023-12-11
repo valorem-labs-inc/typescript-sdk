@@ -12,6 +12,8 @@ jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
+    env:
+      GHP_PAT: ${{ secrets.GHP_PAT }}
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
@@ -45,8 +47,6 @@ jobs:
         run: pnpm audit signatures
 
       - name: Publish to Github Packages
-        env:
-          GHP_PAT: ${{ secrets.GHP_PAT }}
         run: pnpm ci:release
 
       - name: Setup .npmrc file to publish to npm
