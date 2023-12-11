@@ -24,6 +24,9 @@
     "test": "vitest run --coverage"
   },
   "prettier": "@vercel/style-guide/prettier",
+  "dependencies": {
+    "mathjs": "^12.2.0"
+  },
   "devDependencies": {
     "@bufbuild/buf": "^1.28.1",
     "@bufbuild/protoc-gen-es": "^1.4.2",
@@ -37,13 +40,13 @@
     "@parcel/transformer-typescript-types": "2.10.3",
     "@types/node": "^20.9.1",
     "@vercel/style-guide": "^5.1.0",
-    "@vitest/coverage-v8": "^0.34.6",
+    "@vitest/coverage-v8": "^1.0.4",
     "eslint": "^8.53.0",
     "parcel": "^2.10.3",
     "prettier": "^3.1.0",
     "typedoc": "^0.25.3",
     "typedoc-plugin-missing-exports": "^2.1.0",
-    "vitest": "^0.34.6"
+    "vitest": "^1.0.4"
   },
   "peerDependencies": {
     "@bufbuild/protobuf": "^1.4.2",
@@ -60,8 +63,5 @@
   "packageManager": "pnpm@8.6.10",
   "engines": {
     "node": ">=18"
-  },
-  "dependencies": {
-    "mathjs": "^12.2.0"
   }
 }
