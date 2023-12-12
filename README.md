@@ -100,6 +100,13 @@ We welcome contributions to the Valorem TypeScript SDK!
 If you have suggestions, bug reports, or contributions, please submit them
 as issues or pull requests in the repository.
 
+To update the version of a package:
+
+1. Make sure `@changesets/cli` is installed locally
+2. Then run `pnpm changeset` in your terminal to write a changelog update
+3. Then `pnpm changeset version` to to compile changes into changelog.md and bump version
+4. Finally run `pnpm build && pnpm publish --no-git-checks --tag alpha` to publish
+
 ## License
 
 The Valorem TypeScript SDK is licensed under the MIT License.
