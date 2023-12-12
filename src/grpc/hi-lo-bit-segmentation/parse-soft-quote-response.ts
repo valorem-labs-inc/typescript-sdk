@@ -1,11 +1,4 @@
-import {
-  bytesToBigInt,
-  bytesToHex,
-  pad,
-  signatureToHex,
-  toHex,
-  zeroAddress,
-} from 'viem';
+import { pad, toHex, zeroAddress } from 'viem';
 import { NULL_BYTES32 } from '../../constants';
 import type { SoftQuoteResponse } from '../../lib';
 import { fromH128, fromH160ToAddress, fromH256 } from './hi-lo-to-big-int';
