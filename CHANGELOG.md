@@ -1,5 +1,11 @@
 # @valorem-labs-inc/sdk
 
+## 0.0.8
+
+### Patch Changes
+
+- Minor fixes to soft quote parser
+
 ## 0.0.7
 
 ### Patch Changes
