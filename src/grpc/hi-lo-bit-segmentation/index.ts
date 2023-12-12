@@ -11,3 +11,8 @@ export {
   parseQuoteResponse,
   type ParsedQuoteResponse,
 } from './parse-quote-response';
+
+export {
+  parseSoftQuoteResponse,
+  type ParsedSoftQuoteResponse,
+} from './parse-soft-quote-response';
