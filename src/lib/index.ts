@@ -8,3 +8,5 @@ export * from './codegen/seaport_pb';
 export * from './codegen/spot_connect';
 export * from './codegen/spot_pb';
 export * from './codegen/types_pb';
+export * from './codegen/soft_quote_pb';
+export * from './codegen/soft_quote_connect';

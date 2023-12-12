@@ -1,5 +1,23 @@
 # @valorem-labs-inc/sdk
 
+## 0.0.8
+
+### Patch Changes
+
+- Minor fixes to soft quote parser
+
+## 0.0.7
+
+### Patch Changes
+
+- Exports interfaces for parsing soft quote responses
+
+## 0.0.6
+
+### Patch Changes
+
+- Updates trade-interfaces to v1.2.0
+
 ## 0.0.5
 
 ### Patch Changes
