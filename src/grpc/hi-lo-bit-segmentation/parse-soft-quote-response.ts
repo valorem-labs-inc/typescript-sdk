@@ -32,10 +32,6 @@ export const parseSoftQuoteResponse = (res: SoftQuoteResponse) => {
     throw new Error(
       'Invalid response from RFQ server. Missing order params: offer.',
     );
-  if (!res.order.consideration)
-    throw new Error(
-      'Invalid response from RFQ server. Missing order params: consideration.',
-    );
   if (!res.order.orderType)
     throw new Error(
       'Invalid response from RFQ server. Missing order params: orderType.',
@@ -66,11 +62,11 @@ export const parseSoftQuoteResponse = (res: SoftQuoteResponse) => {
   const parsedSoftQuoteResponse = {
     ulid: fromH128(res.ulid),
     makerAddress: fromH160ToAddress(res.makerAddress),
-    chainId: res.chainId ? Number(fromH256(res.chainId).toString()) : undefined,
+    chainId: Number(fromH256(res.chainId).toString()),
     seaportAddress: fromH160ToAddress(res.seaportAddress),
     order: {
       offerer: fromH160ToAddress(res.order.offerer),
-      zone: res.order.zone ? fromH160ToAddress(res.order.zone) : zeroAddress,
+      zone: fromH160ToAddress(res.order.zone),
       offer: res.order.offer.map((o) => {
         return {
           itemType: o.itemType,
