@@ -23,14 +23,9 @@ export const parseSoftQuoteResponse = (res: SoftQuoteResponse) => {
     throw new Error(
       'Invalid response from RFQ server. Missing order parameters.',
     );
-
   if (!res.order.zone)
     throw new Error(
       'Invalid response from RFQ server. Missing order params: zone.',
-    );
-  if (!res.order.offer)
-    throw new Error(
-      'Invalid response from RFQ server. Missing order params: offer.',
     );
   if (!res.order.orderType)
     throw new Error(
