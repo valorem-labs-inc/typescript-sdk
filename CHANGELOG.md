@@ -1,5 +1,11 @@
 # @valorem-labs-inc/sdk
 
+## 0.0.6
+
+### Patch Changes
+
+- Updates trade-interfaces to v1.2.0
+
 ## 0.0.5
 
 ### Patch Changes
