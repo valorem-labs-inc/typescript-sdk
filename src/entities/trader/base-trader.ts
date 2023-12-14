@@ -152,7 +152,6 @@ export class Trader {
    */
   public async getNonce() {
     // TODO(Why?)
-    // eslint-disable-next-line @typescript-eslint/require-await
     const res = await handleGRPCRequest(async () => this.authClient.nonce({}));
     if (res === null) throw new Error('Failed to get nonce for SIWE message.');
     return res.nonce;
@@ -164,7 +163,6 @@ export class Trader {
    */
   public async checkAuthentication() {
     // TODO(Why?)
-    // eslint-disable-next-line @typescript-eslint/require-await
     const res = await handleGRPCRequest(async () =>
       this.authClient.authenticate({}),
     );
@@ -183,7 +181,6 @@ export class Trader {
    */
   public async verifyWithSIWE(message: string, signature: `0x${string}`) {
     // TODO(Why?)
-    // eslint-disable-next-line @typescript-eslint/require-await
     const res = await handleGRPCRequest(async () =>
       this.authClient.verify({
         body: JSON.stringify({

@@ -6,57 +6,57 @@ settings:
 
 dependencies:
   '@bufbuild/protobuf':
-    specifier: ^1.4.2
+    specifier: ^1.6.0
     version: 1.6.0
   '@connectrpc/connect':
-    specifier: ^1.1.3
-    version: 1.1.4(@bufbuild/protobuf@1.6.0)
+    specifier: ^1.2.0
+    version: 1.2.0(@bufbuild/protobuf@1.6.0)
   '@wagmi/core':
-    specifier: ^1.4.7
-    version: 1.4.11(react@18.2.0)(typescript@5.3.3)(viem@1.19.13)
+    specifier: ^1.4.12
+    version: 1.4.12(react@18.2.0)(typescript@5.3.3)(viem@1.19.15)
   mathjs:
     specifier: ^12.2.0
     version: 12.2.0
   typescript:
-    specifier: ^5.2.0
+    specifier: ^5.3.0
     version: 5.3.3
   viem:
-    specifier: ^1.19.9
-    version: 1.19.13(typescript@5.3.3)
+    specifier: ^1.19.15
+    version: 1.19.15(typescript@5.3.3)
 
 devDependencies:
   '@bufbuild/buf':
     specifier: ^1.28.1
     version: 1.28.1
   '@bufbuild/protoc-gen-es':
-    specifier: ^1.4.2
+    specifier: ^1.6.0
     version: 1.6.0(@bufbuild/protobuf@1.6.0)
   '@changesets/cli':
     specifier: ^2.27.1
     version: 2.27.1
   '@connectrpc/connect-node':
-    specifier: ^1.1.3
-    version: 1.1.4(@bufbuild/protobuf@1.6.0)(@connectrpc/connect@1.1.4)
+    specifier: ^1.2.0
+    version: 1.2.0(@bufbuild/protobuf@1.6.0)(@connectrpc/connect@1.2.0)
   '@connectrpc/connect-web':
-    specifier: ^1.1.3
-    version: 1.1.4(@bufbuild/protobuf@1.6.0)(@connectrpc/connect@1.1.4)
+    specifier: ^1.2.0
+    version: 1.2.0(@bufbuild/protobuf@1.6.0)(@connectrpc/connect@1.2.0)
   '@connectrpc/protoc-gen-connect-es':
-    specifier: ^1.1.3
-    version: 1.1.4(@bufbuild/protoc-gen-es@1.6.0)(@connectrpc/connect@1.1.4)
+    specifier: ^1.2.0
+    version: 1.2.0(@bufbuild/protoc-gen-es@1.6.0)(@connectrpc/connect@1.2.0)
   '@parcel/config-default':
     specifier: ^2.10.3
     version: 2.10.3(@parcel/core@2.10.3)(typescript@5.3.3)
   '@parcel/packager-ts':
-    specifier: 2.10.3
+    specifier: ^2.10.3
     version: 2.10.3(@parcel/core@2.10.3)
   '@parcel/transformer-typescript-tsc':
     specifier: ^2.10.3
     version: 2.10.3(@parcel/core@2.10.3)(typescript@5.3.3)
   '@parcel/transformer-typescript-types':
-    specifier: 2.10.3
+    specifier: ^2.10.3
     version: 2.10.3(@parcel/core@2.10.3)(typescript@5.3.3)
   '@types/node':
-    specifier: ^20.9.1
+    specifier: ^20.10.4
     version: 20.10.4
   '@vercel/style-guide':
     specifier: ^5.1.0
@@ -65,16 +65,16 @@ devDependencies:
     specifier: ^1.0.4
     version: 1.0.4(vitest@1.0.4)
   eslint:
-    specifier: ^8.53.0
+    specifier: ^8.55.0
     version: 8.55.0
   parcel:
     specifier: ^2.10.3
     version: 2.10.3(typescript@5.3.3)
   prettier:
-    specifier: ^3.1.0
+    specifier: ^3.1.1
     version: 3.1.1
   typedoc:
-    specifier: ^0.25.3
+    specifier: ^0.25.4
     version: 0.25.4(typescript@5.3.3)
   typedoc-plugin-missing-exports:
     specifier: ^2.1.0
@@ -625,42 +625,42 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@connectrpc/connect-node@1.1.4(@bufbuild/protobuf@1.6.0)(@connectrpc/connect@1.1.4):
-    resolution: {integrity: sha512-1Pv4PSTh7k6+c8kNjVx9wZiWm8dChexsq+hW4EKcYItjSqvyKpmTfLBTl12y6W+RBQ9vCuFCu3xT79outhNY9g==}
+  /@connectrpc/connect-node@1.2.0(@bufbuild/protobuf@1.6.0)(@connectrpc/connect@1.2.0):
+    resolution: {integrity: sha512-mt/2qxYnxmdn3Dv9Jsy9nK9sizNsVsg/8TKU8cwO/exUoEgZCjIcCW602xgUqBXfFcbZklCbskvZIB2E94U1Ag==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
       '@bufbuild/protobuf': ^1.4.2
-      '@connectrpc/connect': 1.1.4
+      '@connectrpc/connect': 1.2.0
     dependencies:
       '@bufbuild/protobuf': 1.6.0
-      '@connectrpc/connect': 1.1.4(@bufbuild/protobuf@1.6.0)
+      '@connectrpc/connect': 1.2.0(@bufbuild/protobuf@1.6.0)
       undici: 5.28.2
     dev: true
 
-  /@connectrpc/connect-web@1.1.4(@bufbuild/protobuf@1.6.0)(@connectrpc/connect@1.1.4):
-    resolution: {integrity: sha512-y/CHMipRSpIIR1PCax536PquyuZ03soGTgO1gqQM4pv8lCCgAKE1S+OrirIbpyohJiUszxaRH69PoB8uACiOZA==}
+  /@connectrpc/connect-web@1.2.0(@bufbuild/protobuf@1.6.0)(@connectrpc/connect@1.2.0):
+    resolution: {integrity: sha512-vjFKTP/AzSnC8JvkGKRgpggZIB0v+Lv7U+/Tb/pRNGZI0WSElhGDXWgIn3xfcSNQWi079m45c5MlikszzIRsYg==}
     peerDependencies:
       '@bufbuild/protobuf': ^1.4.2
-      '@connectrpc/connect': 1.1.4
+      '@connectrpc/connect': 1.2.0
     dependencies:
       '@bufbuild/protobuf': 1.6.0
-      '@connectrpc/connect': 1.1.4(@bufbuild/protobuf@1.6.0)
+      '@connectrpc/connect': 1.2.0(@bufbuild/protobuf@1.6.0)
     dev: true
 
-  /@connectrpc/connect@1.1.4(@bufbuild/protobuf@1.6.0):
-    resolution: {integrity: sha512-kFiOi3jsEyOuL4gGW55LgNCqQBNA0Z/GLXrfeJO4r6pI/f8L9rqnjrFZTCeyrvzu1TuqEtL51cR+c46KMCposw==}
+  /@connectrpc/connect@1.2.0(@bufbuild/protobuf@1.6.0):
+    resolution: {integrity: sha512-kHF30xAlXF2Y7S1I7XN/D3psKLfjxitgNRmF093KNP+cE9yAnqDAGop6aby3Z5k4XQw2ebjeX4E41db7R3FzaQ==}
     peerDependencies:
       '@bufbuild/protobuf': ^1.4.2
     dependencies:
       '@bufbuild/protobuf': 1.6.0
 
-  /@connectrpc/protoc-gen-connect-es@1.1.4(@bufbuild/protoc-gen-es@1.6.0)(@connectrpc/connect@1.1.4):
-    resolution: {integrity: sha512-q+leRn9Bd1FzEbthN1qWHwYaGYGc84rLXy/hEkDlMCiWrqz2zxb4Ijy37gOMlE8eRfwYRwn08XcEhV+Y/1jlyA==}
+  /@connectrpc/protoc-gen-connect-es@1.2.0(@bufbuild/protoc-gen-es@1.6.0)(@connectrpc/connect@1.2.0):
+    resolution: {integrity: sha512-VJ50wqjLJ4Thk6nOgARALCny+AMxHDS3fxAVEV1oveVXRbrCl5pb8ge/erKYyxuLKyBYe/I00MFa+ns6C3nN7g==}
     engines: {node: '>=16.0.0'}
     hasBin: true
     peerDependencies:
-      '@bufbuild/protoc-gen-es': ^1.3.3
-      '@connectrpc/connect': 1.1.4
+      '@bufbuild/protoc-gen-es': ^1.6.0
+      '@connectrpc/connect': 1.2.0
     peerDependenciesMeta:
       '@bufbuild/protoc-gen-es':
         optional: true
@@ -670,7 +670,7 @@ packages:
       '@bufbuild/protobuf': 1.6.0
       '@bufbuild/protoc-gen-es': 1.6.0(@bufbuild/protobuf@1.6.0)
       '@bufbuild/protoplugin': 1.6.0
-      '@connectrpc/connect': 1.1.4(@bufbuild/protobuf@1.6.0)
+      '@connectrpc/connect': 1.2.0(@bufbuild/protobuf@1.6.0)
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -980,10 +980,6 @@ packages:
       '@jridgewell/resolve-uri': 3.1.1
       '@jridgewell/sourcemap-codec': 1.4.15
     dev: true
-
-  /@ledgerhq/connect-kit-loader@1.1.2:
-    resolution: {integrity: sha512-mscwGroSJQrCTjtNGBu+18FQbZYA4+q6Tyx6K7CXHl6AwgZKbWfZYdgP2F+fyZcRUdGRsMX8QtvU61VcGGtO1A==}
-    dev: false
 
   /@lezer/common@1.1.2:
     resolution: {integrity: sha512-V+GqBsga5+cQJMfM0GdnHmg4DgWvLzgMWjbldBg0+jC3k9Gu6nJNZDLJxXEBT1Xj8KhRN4jmbC5CY7SIL++sVw==}
@@ -2067,6 +2063,7 @@ packages:
     dependencies:
       is-glob: 4.0.3
       micromatch: 4.0.5
+      napi-wasm: 1.1.0
     dev: false
     bundledDependencies:
       - napi-wasm
@@ -2268,7 +2265,7 @@ packages:
     resolution: {integrity: sha512-XJbEPuaVc7b9n23MqlF6c+ToYIS3f7P2Sel8f3cSBQ9WORE4xrSuvhMpK9fDSFqJ7by/brc+rmJR/5HViRr0/w==}
     dependencies:
       '@safe-global/safe-gateway-typescript-sdk': 3.13.3
-      viem: 1.19.13(typescript@5.3.3)
+      viem: 1.19.15(typescript@5.3.3)
     transitivePeerDependencies:
       - bufferutil
       - typescript
@@ -2289,14 +2286,14 @@ packages:
     resolution: {integrity: sha512-N1ZhksgwD3OBlwTv3R6KFEcPojl/W4ElJOeCZdi+vuI5QmTFwLq3OFf2zd2ROpKvxFdgZ6hUpb0dx9bVNEwYCA==}
     dependencies:
       '@noble/curves': 1.2.0
-      '@noble/hashes': 1.3.2
+      '@noble/hashes': 1.3.3
       '@scure/base': 1.1.4
     dev: false
 
   /@scure/bip39@1.2.1:
     resolution: {integrity: sha512-Z3/Fsz1yr904dduJD0NpiyRHhRYHdcnyh73FZWiV+/qhWi83wNJ3NWolYqCEN+ZWsUz2TWwajJggcRE9r1zUYg==}
     dependencies:
-      '@noble/hashes': 1.3.2
+      '@noble/hashes': 1.3.3
       '@scure/base': 1.1.4
     dev: false
 
@@ -2946,8 +2943,8 @@ packages:
       pretty-format: 29.7.0
     dev: true
 
-  /@wagmi/connectors@3.1.9(react@18.2.0)(typescript@5.3.3)(viem@1.19.13):
-    resolution: {integrity: sha512-q7Hz6WDnvOcZ/EPzuFgilirSwyoWYo1owowHmHqHTxEu0yu6HFNQGuaMNK9hsM/XCHeCisW/ZdUvudQSBUVpHQ==}
+  /@wagmi/connectors@3.1.10(react@18.2.0)(typescript@5.3.3)(viem@1.19.15):
+    resolution: {integrity: sha512-ZLJC1QaeiZarkF07Cr9mOlVjPO1Lf5TBx+JKBms2y5fUIXlKrxCfQgO/gDCureboI+Us2X3IRI659+XacSGpbA==}
     peerDependencies:
       typescript: '>=5.0.4'
       viem: '>=0.3.35'
@@ -2956,7 +2953,6 @@ packages:
         optional: true
     dependencies:
       '@coinbase/wallet-sdk': 3.7.2
-      '@ledgerhq/connect-kit-loader': 1.1.2
       '@safe-global/safe-apps-provider': 0.18.1(typescript@5.3.3)
       '@safe-global/safe-apps-sdk': 8.1.0(typescript@5.3.3)
       '@walletconnect/ethereum-provider': 2.10.6(react@18.2.0)
@@ -2966,7 +2962,7 @@ packages:
       abitype: 0.8.7(typescript@5.3.3)
       eventemitter3: 4.0.7
       typescript: 5.3.3
-      viem: 1.19.13(typescript@5.3.3)
+      viem: 1.19.15(typescript@5.3.3)
     transitivePeerDependencies:
       - '@azure/app-configuration'
       - '@azure/cosmos'
@@ -2989,8 +2985,8 @@ packages:
       - zod
     dev: false
 
-  /@wagmi/core@1.4.11(react@18.2.0)(typescript@5.3.3)(viem@1.19.13):
-    resolution: {integrity: sha512-H6y5v+PpvYbT5Qsk7PTVu5MtcSqudDqGZC/LZFV6Y+UeJlBsnfJNy5+cPEzKmvaz+6tSyVPGCF9aWK+sNdC0sQ==}
+  /@wagmi/core@1.4.12(react@18.2.0)(typescript@5.3.3)(viem@1.19.15):
+    resolution: {integrity: sha512-bLcYmmGgjtl3jAGo8X3Sm6oUwsdjbVxFMu9SWnwHdE4S9JdYeWM57dEhQgq8SYul2yQ7yY2/gimBf1Or0Ky3dQ==}
     peerDependencies:
       typescript: '>=5.0.4'
       viem: '>=0.3.35'
@@ -2998,11 +2994,11 @@ packages:
       typescript:
         optional: true
     dependencies:
-      '@wagmi/connectors': 3.1.9(react@18.2.0)(typescript@5.3.3)(viem@1.19.13)
+      '@wagmi/connectors': 3.1.10(react@18.2.0)(typescript@5.3.3)(viem@1.19.15)
       abitype: 0.8.7(typescript@5.3.3)
       eventemitter3: 4.0.7
       typescript: 5.3.3
-      viem: 1.19.13(typescript@5.3.3)
+      viem: 1.19.15(typescript@5.3.3)
       zustand: 4.4.7(react@18.2.0)
     transitivePeerDependencies:
       - '@azure/app-configuration'
@@ -6645,6 +6641,10 @@ packages:
     hasBin: true
     dev: true
 
+  /napi-wasm@1.1.0:
+    resolution: {integrity: sha512-lHwIAJbmLSjF9VDRm9GoVOy9AGp3aIvkjv+Kvz9h16QR3uSVYH78PNQUnT2U4X53mhlnV2M7wrhibQ3GHicDmg==}
+    dev: false
+
   /natural-compare@1.4.0:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
     dev: true
@@ -8389,8 +8389,8 @@ packages:
       use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false
 
-  /viem@1.19.13(typescript@5.3.3):
-    resolution: {integrity: sha512-DizIwJAecLedI+nq6c5LIqCLAnYXUhQX5BnH6o1H2ln6isPyJVf+v4H1IfMlRHgR5KRlC+wGI/mCjarr3tW6eg==}
+  /viem@1.19.15(typescript@5.3.3):
+    resolution: {integrity: sha512-rc87AkyrUUsoOAgMNYP+X/wN4GYwbhP87DkmsqQCYKxxQyzTX0+yliKs6Bxljbjr8ybU72GOb12Oyus6393AjQ==}
     peerDependencies:
       typescript: '>=5.0.4'
     peerDependenciesMeta:

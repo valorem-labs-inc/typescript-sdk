@@ -1,5 +1,12 @@
 # @valorem-labs-inc/sdk
 
+## 0.0.9
+
+### Patch Changes
+
+- Add helpers for calculating option's greek
+- update dependencies
+
 ## 0.0.8
 
 ### Patch Changes
