@@ -20,13 +20,13 @@ interface Underlying {
 }
 
 // Enumeration for option type
-enum OptionType {
+enum TypeOfOption {
   Call = 'call', // The option is a call
   Put = 'put', // The option is a put
 }
 
 interface OptionData {
-  type: OptionType;
+  type: TypeOfOption;
   T: number; // Time of expiration in years, expressed as a decimal
   K: number; // Strike price of the option
 }
@@ -192,7 +192,7 @@ class OptionsGreeks {
    * @returns The fair value of the option.
    */
   public static blackScholesMerton(
-    type: OptionType,
+    type: TypeOfOption,
     st: number,
     K: number,
     r: number,
@@ -209,7 +209,7 @@ class OptionsGreeks {
     const d1 = this.d1(st, K, r, q, sigma, tau);
     const d2 = this.d2(d1, sigma, tau);
 
-    if (type === OptionType.Call) {
+    if (type === TypeOfOption.Call) {
       // Calculate call option price
       return (
         st * exp(-q * tau) * this.phi(d1) - K * exp(-r * tau) * this.phi(d2)
@@ -234,7 +234,7 @@ class OptionsGreeks {
    * @returns The implied volatility as a decimal.
    */
   public static sigma(
-    type: OptionType,
+    type: TypeOfOption,
     marketPrice: number,
     st: number,
     K: number,
@@ -285,7 +285,7 @@ class OptionsGreeks {
    * Delta is also used for hedging strategies, where a position can be delta-hedged by taking positions in the underlying asset.
    */
   public static delta(
-    type: OptionType,
+    type: TypeOfOption,
     st: number,
     K: number,
     r: number,
@@ -295,7 +295,7 @@ class OptionsGreeks {
   ): number {
     const d1 = this.d1(st, K, r, q, sigma, tau);
 
-    if (type === OptionType.Call) {
+    if (type === TypeOfOption.Call) {
       // Delta for a Call option
       return exp(-q * tau) * this.phi(d1);
     }
@@ -348,7 +348,7 @@ class OptionsGreeks {
    * @returns The theta value of the option. Theta is typically negative since options lose value as time passes.
    */
   public static theta(
-    type: OptionType,
+    type: TypeOfOption,
     st: number,
     K: number,
     r: number,
@@ -362,11 +362,10 @@ class OptionsGreeks {
     const pdfD1 = exp(-pow(d1, 2) / 2) / sqrt(2 * pi);
 
     // Calculate the first part of the theta formula which is common between call and put
-    const thetaCommon =
-      (st * exp(-q * tau) * pdfD1 * sigma) / (2 * sqrt(tau));
+    const thetaCommon = (st * exp(-q * tau) * pdfD1 * sigma) / (2 * sqrt(tau));
 
     // Depending on the option type calculate the rest of the theta value
-    if (type === OptionType.Call) {
+    if (type === TypeOfOption.Call) {
       // Call option theta formula
       const secondTerm = -q * st * exp(-q * tau) * this.phi(d1);
       const thirdTerm = r * K * exp(-r * tau) * this.phi(d2);
@@ -375,7 +374,7 @@ class OptionsGreeks {
     // Put option theta formula
     const secondTerm = -q * st * exp(-q * tau) * this.phi(-d1);
     const thirdTerm = r * K * exp(-r * tau) * this.phi(-d2);
-    return (-thetaCommon + secondTerm + thirdTerm);
+    return -thetaCommon + secondTerm + thirdTerm;
   }
 
   /**
@@ -396,7 +395,7 @@ class OptionsGreeks {
    * where a shift in interest rates could have a more pronounced effect on the option's value.
    */
   public static rho(
-    type: OptionType,
+    type: TypeOfOption,
     st: number,
     K: number,
     r: number,
@@ -408,7 +407,7 @@ class OptionsGreeks {
     const d1 = this.d1(st, K, r, q, sigma, tau);
     const d2 = this.d2(d1, sigma, tau);
 
-    if (type === OptionType.Call) {
+    if (type === TypeOfOption.Call) {
       // Rho for a Call option
       return K * tau * exp(-r * tau) * this.phi(d2) * 0.01;
     }
@@ -433,7 +432,7 @@ class OptionsGreeks {
    * with a decrease in dividend yield, while a negative epsilon indicates the price decreases as the dividend yield rises.
    */
   public static epsilon(
-    type: OptionType,
+    type: TypeOfOption,
     st: number,
     K: number,
     r: number,
@@ -443,7 +442,7 @@ class OptionsGreeks {
   ): number {
     const d1 = this.d1(st, K, r, q, sigma, tau);
 
-    if (type === OptionType.Call) {
+    if (type === TypeOfOption.Call) {
       // Epsilon for a Call option
       return -st * tau * exp(-q * tau) * this.phi(d1);
     }
@@ -468,7 +467,7 @@ class OptionsGreeks {
    * in the price of the underlying asset. It is similar to Delta but expressed in percentage terms.
    */
   public static lambda(
-    type: OptionType,
+    type: TypeOfOption,
     st: number,
     K: number,
     r: number,
@@ -578,7 +577,7 @@ class OptionsGreeks {
    * without trading.
    */
   public static charm(
-    type: OptionType,
+    type: TypeOfOption,
     st: number,
     K: number,
     r: number,
@@ -597,7 +596,7 @@ class OptionsGreeks {
       ((2 * (r - q) * tau - d2 * sigma * sqrt(tau)) /
         (2 * tau * sigma * sqrt(tau)));
 
-    if (type === OptionType.Call) {
+    if (type === TypeOfOption.Call) {
       // Charm for a Call option
       return commonTerm;
     }
@@ -842,7 +841,7 @@ class OptionsGreeks {
    * @returns The dual delta of the option.
    */
   public static dualDelta(
-    type: OptionType,
+    type: TypeOfOption,
     st: number,
     K: number,
     r: number,
@@ -852,7 +851,7 @@ class OptionsGreeks {
   ): number {
     const d2 = this.d2(this.d1(st, K, r, q, sigma, tau), sigma, tau);
 
-    if (type === OptionType.Call) {
+    if (type === TypeOfOption.Call) {
       // Dual Delta for a Call option
       return -exp(-r * tau) * this.phi(d2);
     }
@@ -888,5 +887,5 @@ class OptionsGreeks {
   }
 }
 
-export { OptionsGreeks, OptionType, Brent };
+export { OptionsGreeks, TypeOfOption, Brent };
 export type { Market, Underlying, OptionData };
