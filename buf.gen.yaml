@@ -2,7 +2,7 @@ version: v1
 plugins:
   - plugin: es
     opt: target=ts+js+dts
-    out: src/lib/codegen
+    out: src/lib/codegen/grpc
   - plugin: connect-es
     opt: target=ts+js+dts
-    out: src/lib/codegen
+    out: src/lib/codegen/grpc

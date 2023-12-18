@@ -34,8 +34,8 @@ import {
 import { createSIWEMessage } from '../../utils';
 import { CLEAR_ADDRESS, SEAPORT_ADDRESS, NULL_BYTES32 } from '../../constants';
 import { ClearinghouseContract, SeaportContract } from '../contracts';
-import { Action, QuoteRequest } from '../../lib/codegen/rfq_pb';
-import { ItemType } from '../../lib/codegen/seaport_pb';
+import { Action, QuoteRequest } from '../../lib/codegen/grpc/rfq_pb';
+import { ItemType } from '../../lib/codegen/grpc/seaport_pb';
 
 /**
  * Constructor arguments for creating a Trader instance.

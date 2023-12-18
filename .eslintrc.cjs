@@ -43,5 +43,9 @@ module.exports = {
     'trade-interfaces',
     'codegen',
     'docs',
+    'codegen.ts',
+    'package.json',
+    'buf.gen.yaml',
+    'buf.work.yaml',
   ],
 };

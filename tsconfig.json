@@ -18,6 +18,6 @@
     "allowJs": true,
     "resolveJsonModule": true
   },
-  "include": ["src", "test", "*.d.ts"],
+  "include": ["src", "test", "*.d.ts", "codegen.ts"],
   "exclude": ["dist", "src/lib/trade-interfaces", "src/lib/codegen"]
 }

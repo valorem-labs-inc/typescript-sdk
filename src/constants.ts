@@ -17,6 +17,10 @@ export const VALIDATOR_ADDRESS = '0x00e5F120f500006757E984F1DED400fc00370000';
 /** URLs */
 export const GRPC_ENDPOINT = 'https://trade.valorem.xyz';
 export const DOMAIN = 'trade.valorem.xyz';
+export const ARBITRUM_SUBGRAPH =
+  'https://api.thegraph.com/subgraphs/name/valorem-labs-inc/valorem-v1-arbitrum';
+export const ARBITRUM_GOERLI_SUBGRAPH =
+  'https://api.thegraph.com/subgraphs/name/valorem-labs-inc/valorem-v1-arbitrum-goerli';
 
 /** Time & Dates */
 export const ONE_DAY_UNIX = 60 * 60 * 24;

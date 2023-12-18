@@ -35,7 +35,7 @@ jobs:
       - name: Install packages, compile SDK, and build docs
         run: |
           pnpm i
-          pnpm codegen
+          pnpm generate
           pnpm gen-docs
 
       - name: Deploy Docs to Github Pages
