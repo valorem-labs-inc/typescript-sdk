@@ -27,7 +27,7 @@ export class Asset {
   }
 
   get isStableCoin() {
-    return this.symbol === 'USDC';
+    return this.symbol.toLowerCase() === 'usdc';
   }
 
   parse(value: string) {

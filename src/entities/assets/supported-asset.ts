@@ -78,4 +78,18 @@ export const SUPPORTED_ASSETS: SupportedAsset[] = [
     decimals: 18,
     address: '0x618b9a2db0cf23bb20a849daa2963c72770c1372',
   } as const,
+  {
+    chainId: 31337,
+    name: 'USD Coin',
+    symbol: 'USDC',
+    decimals: 6,
+    address: '0xa957Cfc02c20D513aAfA5FaA91A5Ff0068eE2De7',
+  } as const,
+  {
+    chainId: 31337,
+    name: 'Wrapped Ether',
+    symbol: 'WETH',
+    decimals: 18,
+    address: '0x9Eb7fE3FA85f44e74e0407d060429e5a11431f3E',
+  } as const,
 ].map((token) => new SupportedAsset(token));
