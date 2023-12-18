@@ -9,6 +9,8 @@ import {
 import type { OptionTypeInfo, SimulatedTxRequest } from '../../types';
 import type { Trader } from '../trader/base-trader';
 import type { ClearinghouseContract } from '../contracts/clearinghouse';
+import { SupportedAsset } from '../assets';
+import { OptionAssetPair } from '../assets/asset-pair';
 
 /**
  * Arguments required for constructing an OptionType instance.
@@ -22,7 +24,7 @@ export interface OptionTypeArgs {
 /**
  * Represents the type of option in the Valorem Clear system.
  */
-export class OptionType {
+export class OptionType extends OptionAssetPair {
   // Information about the option type.
   public optionInfo: OptionTypeInfo;
   // Unique identifier derived from the option information.
@@ -39,6 +41,10 @@ export class OptionType {
    * Constructs an OptionType instance with the provided arguments.
    */
   public constructor({ optionInfo, optionTypeId, typeExists }: OptionTypeArgs) {
+    super({
+      exerciseAsset: SupportedAsset.fromAddress(optionInfo.exerciseAsset),
+      underlyingAsset: SupportedAsset.fromAddress(optionInfo.underlyingAsset),
+    });
     this.optionInfo = optionInfo;
     this.optionTypeId = optionTypeId;
     this.typeExists = typeExists;
