@@ -18,6 +18,7 @@ module.exports = {
     '@vercel/style-guide/eslint/node',
     '@vercel/style-guide/eslint/typescript',
   ].map(require.resolve),
+  plugins: ['canonical'],
   rules: {
     'no-bitwise': 'off',
     'no-console': 'warn',
@@ -31,7 +32,21 @@ module.exports = {
     '@typescript-eslint/no-unsafe-argument': 'off',
     '@typescript-eslint/no-unsafe-assignment': 'off',
     '@typescript-eslint/explicit-function-return-type': 'off',
+    'canonical/no-barrel-import': 'error',
+    'canonical/no-export-all': 'error',
   },
+  overrides: [
+    {
+      files: ['**/*.test.*', 'test/**/*'],
+      rules: {
+        'canonical/no-barrel-import': 'off',
+        'import/no-default-export': 'off',
+        'import/no-relative-packages': 'off',
+        'no-console': 'off',
+        'react-hooks/rules-of-hooks': 'off',
+      },
+    },
+  ],
   ignorePatterns: [
     '*.config.*',
     'tsup*',

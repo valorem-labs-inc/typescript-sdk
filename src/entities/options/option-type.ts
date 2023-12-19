@@ -13,7 +13,7 @@ import type {
 } from '../../types';
 import type { Trader } from '../trader/base-trader';
 import type { ClearinghouseContract } from '../contracts/clearinghouse';
-import { SupportedAsset } from '../assets';
+import { SupportedAsset } from '../assets/supported-asset';
 import { OptionAssetPair } from '../assets/asset-pair';
 import type { SubgraphOptionType } from '../../lib/subgraph/types';
 

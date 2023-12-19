@@ -5,11 +5,9 @@ import type {
 } from '@wagmi/core';
 import type { Abi, Account, Address, Chain, Transport } from 'viem';
 import { getContract } from 'viem';
-import type {
-  CLEAR_ABI,
-  SEAPORT_V1_5_ABI,
-  SEAPORT_VALIDATOR_ABI,
-} from '../../abi';
+import type { SEAPORT_VALIDATOR_ABI } from '../../abi/seaport-order-validator';
+import type { SEAPORT_V1_5_ABI } from '../../abi/seaport';
+import type { CLEAR_ABI } from '../../abi/clearinghouse';
 
 /**
  * Type helper for creating a contract instance.

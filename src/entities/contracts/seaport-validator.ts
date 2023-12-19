@@ -1,6 +1,6 @@
 import type { Address } from 'viem';
 import { getContract } from 'viem';
-import { SEAPORT_VALIDATOR_ABI } from '../../abi';
+import { SEAPORT_VALIDATOR_ABI } from '../../abi/seaport-order-validator';
 import { VALIDATOR_ADDRESS } from '../../constants';
 import type {
   ContractConstructorArgs,

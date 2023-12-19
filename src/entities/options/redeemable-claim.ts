@@ -1,6 +1,6 @@
 import type { Trader } from '../trader/base-trader';
 import type { SimulatedTxRequest } from '../../types';
-import type { ClearinghouseContract } from '../contracts';
+import type { ClearinghouseContract } from '../contracts/clearinghouse';
 import type { OptionTypeArgs } from './option-type';
 import { OptionType } from './option-type';
 

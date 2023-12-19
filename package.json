@@ -52,6 +52,7 @@
     "@vercel/style-guide": "^5.1.0",
     "@vitest/coverage-v8": "^1.0.4",
     "eslint": "^8.55.0",
+    "eslint-config-canonical": "^42.8.0",
     "parcel": "^2.10.3",
     "prettier": "^3.1.1",
     "typedoc": "^0.25.4",
