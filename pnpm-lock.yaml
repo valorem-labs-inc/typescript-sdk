@@ -11,6 +11,9 @@ dependencies:
   '@connectrpc/connect':
     specifier: ^1.2.0
     version: 1.2.0(@bufbuild/protobuf@1.6.0)
+  '@graphql-typed-document-node/core':
+    specifier: ^3.2.0
+    version: 3.2.0(graphql@16.8.1)
   '@wagmi/core':
     specifier: ^1.4.12
     version: 1.4.12(react@18.2.0)(typescript@5.3.3)(viem@1.19.15)
@@ -61,9 +64,6 @@ devDependencies:
   '@graphql-codegen/typescript-operations':
     specifier: ^4.0.1
     version: 4.0.1(graphql@16.8.1)
-  '@graphql-typed-document-node/core':
-    specifier: ^3.2.0
-    version: 3.2.0(graphql@16.8.1)
   '@parcel/config-default':
     specifier: ^2.10.3
     version: 2.10.3(@parcel/core@2.10.3)(typescript@5.3.3)
@@ -1748,7 +1748,7 @@ packages:
       graphql-ws: 5.14.2(graphql@16.8.1)
       isomorphic-ws: 5.0.0(ws@8.15.0)
       tslib: 2.6.2
-      ws: 8.15.0
+      ws: 8.15.0(bufferutil@4.0.8)(utf-8-validate@5.0.10)
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -1817,7 +1817,7 @@ packages:
       graphql: 16.8.1
       isomorphic-ws: 5.0.0(ws@8.15.0)
       tslib: 2.6.2
-      ws: 8.15.0
+      ws: 8.15.0(bufferutil@4.0.8)(utf-8-validate@5.0.10)
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -2144,7 +2144,7 @@ packages:
       isomorphic-ws: 5.0.0(ws@8.15.0)
       tslib: 2.6.2
       value-or-promise: 1.0.12
-      ws: 8.15.0
+      ws: 8.15.0(bufferutil@4.0.8)(utf-8-validate@5.0.10)
     transitivePeerDependencies:
       - '@types/node'
       - bufferutil
@@ -2171,7 +2171,7 @@ packages:
       isomorphic-ws: 5.0.0(ws@8.15.0)
       tslib: 2.6.2
       value-or-promise: 1.0.12
-      ws: 8.15.0
+      ws: 8.15.0(bufferutil@4.0.8)(utf-8-validate@5.0.10)
     transitivePeerDependencies:
       - '@types/node'
       - bufferutil
@@ -2235,7 +2235,6 @@ packages:
       graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
     dependencies:
       graphql: 16.8.1
-    dev: true
 
   /@humanwhocodes/config-array@0.11.13:
     resolution: {integrity: sha512-JSBDMiDKSzQVngfRjOdFXgFfklaXI4K9nLF49Auh21lmBWRLIK3+xTErTWD4KU54pb6coM6ESE7Awz/FNU3zgQ==}
@@ -5486,7 +5485,6 @@ packages:
     requiresBuild: true
     dependencies:
       node-gyp-build: 4.7.1
-    dev: false
 
   /builtin-modules@3.3.0:
     resolution: {integrity: sha512-zhaCDicdLuWN5UbN5IMnFqNMhNfo919sH85y2/ea+5Yg9TsTkeZxpL+JLbp6cgYFS4sRLp3YV4S6yDuqVWHYOw==}
@@ -6600,7 +6598,7 @@ packages:
       debug: 3.2.7
       eslint: 8.55.0
       eslint-import-resolver-node: 0.3.9
-      eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@6.14.0)(eslint-plugin-i@2.29.1)(eslint@8.55.0)
+      eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@6.14.0)(eslint-plugin-import@2.29.0)(eslint@8.55.0)
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -8486,7 +8484,7 @@ packages:
     peerDependencies:
       ws: '*'
     dependencies:
-      ws: 8.15.0
+      ws: 8.15.0(bufferutil@4.0.8)(utf-8-validate@5.0.10)
     dev: true
 
   /isows@1.0.3(ws@8.13.0):
@@ -9425,7 +9423,6 @@ packages:
   /node-gyp-build@4.7.1:
     resolution: {integrity: sha512-wTSrZ+8lsRRa3I3H8Xr65dLWSgCvY2l4AOnaeKdPA9TB/WYMPaTcrzf3rXvFoVvjKNVnu0CcWSx54qq9GKRUYg==}
     hasBin: true
-    dev: false
 
   /node-int64@0.4.0:
     resolution: {integrity: sha512-O5lz91xSOeoXP6DulyHfllpq+Eg00MWitZIbtPfoSEvqIHdl5gfcY6hYzDWnj0qD5tz52PI08u9qUvSVeUBeHw==}
@@ -11437,7 +11434,6 @@ packages:
     requiresBuild: true
     dependencies:
       node-gyp-build: 4.7.1
-    dev: false
 
   /util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
@@ -11804,19 +11800,6 @@ packages:
       utf-8-validate:
         optional: true
 
-  /ws@8.15.0:
-    resolution: {integrity: sha512-H/Z3H55mrcrgjFwI+5jKavgXvwQLtfPCUEp6pi35VhoB0pfcHnSoyuTzkBEZpzq49g1193CUEwIvmsjcotenYw==}
-    engines: {node: '>=10.0.0'}
-    peerDependencies:
-      bufferutil: ^4.0.1
-      utf-8-validate: '>=5.0.2'
-    peerDependenciesMeta:
-      bufferutil:
-        optional: true
-      utf-8-validate:
-        optional: true
-    dev: true
-
   /ws@8.15.0(bufferutil@4.0.8)(utf-8-validate@5.0.10):
     resolution: {integrity: sha512-H/Z3H55mrcrgjFwI+5jKavgXvwQLtfPCUEp6pi35VhoB0pfcHnSoyuTzkBEZpzq49g1193CUEwIvmsjcotenYw==}
     engines: {node: '>=10.0.0'}
@@ -11831,7 +11814,6 @@ packages:
     dependencies:
       bufferutil: 4.0.8
       utf-8-validate: 5.0.10
-    dev: false
 
   /xregexp@5.1.1:
     resolution: {integrity: sha512-fKXeVorD+CzWvFs7VBuKTYIW63YD1e1osxwQ8caZ6o1jg6pDAbABDG54LCIq0j5cy7PjRvGIq6sef9DYPXpncg==}
