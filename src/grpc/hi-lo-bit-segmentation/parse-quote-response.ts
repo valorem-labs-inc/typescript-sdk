@@ -22,39 +22,39 @@ export type ParsedQuoteResponse = ReturnType<typeof parseQuoteResponse>;
  */
 export const parseQuoteResponse = (res: QuoteResponse) => {
   // Validate the presence of required fields in the response.
-  if (!res.seaportAddress)
+  if (res.seaportAddress === undefined)
     throw new Error(
       'Invalid response from RFQ server. Missing seaport address.',
     );
-  if (!res.order?.parameters)
+  if (res.order?.parameters === undefined)
     throw new Error(
       'Invalid response from RFQ server. Missing order parameters.',
     );
-  if (!res.order.signature)
+  if (res.order.signature === undefined)
     throw new Error(
       'Invalid response from RFQ server. Missing order signature.',
     );
-  if (!res.order.parameters.offerer)
+  if (res.order.parameters.offerer === undefined)
     throw new Error(
       'Invalid response from RFQ server. Missing order params: offerer.',
     );
-  if (!res.order.parameters.startTime)
+  if (res.order.parameters.startTime === undefined)
     throw new Error(
       'Invalid response from RFQ server. Missing order params: startTime.',
     );
-  if (!res.order.parameters.endTime)
+  if (res.order.parameters.endTime === undefined)
     throw new Error(
       'Invalid response from RFQ server. Missing order params: endTime.',
     );
-  if (!res.order.parameters.salt)
+  if (res.order.parameters.salt === undefined)
     throw new Error(
       'Invalid response from RFQ server. Missing order params: salt.',
     );
-  if (!res.ulid)
+  if (res.ulid === undefined)
     throw new Error(
       'Invalid response from RFQ server. Missing order params: ulid.',
     );
-  if (!res.makerAddress)
+  if (res.makerAddress === undefined)
     throw new Error(
       'Invalid response from RFQ server. Missing order params: makerAddress.',
     );
