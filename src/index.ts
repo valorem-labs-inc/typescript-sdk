@@ -97,6 +97,12 @@ export {
   Empty,
   SoftQuoteResponse,
   SoftQuote,
+  optionsByAccountQuery,
+  positionByIDTotalSupplyQuery,
+  positionByOwnerAndIDQuery,
+  type SubgraphOptionPosition,
+  type SubgraphClaimERC1155,
+  type SubgraphOptionType,
 } from './lib';
 export type {
   SimulatedTxRequest,

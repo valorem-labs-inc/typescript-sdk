@@ -32,3 +32,13 @@ export { SoftQuote } from './codegen/grpc/soft_quote_connect';
 
 // eslint-disable-next-line canonical/no-export-all
 export * from './codegen/gql';
+export {
+  optionsByAccountQuery,
+  positionByIDTotalSupplyQuery,
+  positionByOwnerAndIDQuery,
+} from './subgraph/queries';
+export type {
+  SubgraphOptionPosition,
+  SubgraphClaimERC1155,
+  SubgraphOptionType,
+} from './subgraph/types';
