@@ -29,9 +29,6 @@ export {
 } from './codegen/grpc/types_pb';
 export { SoftQuoteResponse } from './codegen/grpc/soft_quote_pb';
 export { SoftQuote } from './codegen/grpc/soft_quote_connect';
-
-// eslint-disable-next-line canonical/no-export-all
-export * from './codegen/gql';
 export {
   optionsByAccountQuery,
   positionByIDTotalSupplyQuery,
@@ -42,3 +39,6 @@ export type {
   SubgraphClaimERC1155,
   SubgraphOptionType,
 } from './subgraph/types';
+
+// eslint-disable-next-line canonical/no-export-all
+export * from './codegen/gql';
