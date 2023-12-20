@@ -13,104 +13,80 @@ export type ParsedSoftQuoteResponse = ReturnType<typeof parseSoftQuoteResponse>;
  * @returns - An object representing the parsed quote response.
  * @throws - Errors if the response is missing essential data.
  */
-export const parseSoftQuoteResponse = (res: SoftQuoteResponse) => {
-  // Validate the presence of required fields in the response.
-  if (!res.seaportAddress)
-    throw new Error(
-      'Invalid response from RFQ server. Missing seaport address.',
-    );
-  if (!res.order?.offerer)
-    throw new Error(
-      'Invalid response from RFQ server. Missing order parameters.',
-    );
-  if (!res.order.zone)
-    throw new Error(
-      'Invalid response from RFQ server. Missing order params: zone.',
-    );
-  if (!res.order.orderType)
-    throw new Error(
-      'Invalid response from RFQ server. Missing order params: orderType.',
-    );
-  if (!res.order.startTime)
-    throw new Error(
-      'Invalid response from RFQ server. Missing order params: startTime.',
-    );
-  if (!res.order.endTime)
-    throw new Error(
-      'Invalid response from RFQ server. Missing order params: endTime.',
-    );
+export const parseSoftQuoteResponse = (res: Partial<SoftQuoteResponse>) => {
+  if (
+    (res.order as undefined | Partial<SoftQuoteResponse['order']>)?.offer ===
+      undefined ||
+    (res.order as undefined | Partial<SoftQuoteResponse['order']>)
+      ?.consideration === undefined
+  ) {
+    throw new Error('Invalid response from RFQ server. Missing order params.');
+  }
 
-  if (!res.chainId)
-    throw new Error(
-      'Invalid response from RFQ server. Missing order params: chainId.',
-    );
-
-  if (!res.ulid)
-    throw new Error(
-      'Invalid response from RFQ server. Missing order params: ulid.',
-    );
-  if (!res.makerAddress)
-    throw new Error(
-      'Invalid response from RFQ server. Missing order params: makerAddress.',
-    );
+  if (res.order?.offer.length === 0 || res.order?.consideration.length === 0) {
+    throw new Error('Invalid response from RFQ server. Empty array.');
+  }
 
   const parsedSoftQuoteResponse = {
-    ulid: fromH128(res.ulid),
-    makerAddress: fromH160ToAddress(res.makerAddress),
-    chainId: Number(fromH256(res.chainId).toString()),
-    seaportAddress: fromH160ToAddress(res.seaportAddress),
+    ulid: res.ulid !== undefined ? fromH128(res.ulid) : undefined,
+    makerAddress:
+      res.makerAddress !== undefined
+        ? fromH160ToAddress(res.makerAddress)
+        : undefined,
+    chainId:
+      res.chainId !== undefined
+        ? Number(fromH256(res.chainId).toString())
+        : undefined,
+    seaportAddress:
+      res.seaportAddress !== undefined
+        ? fromH160ToAddress(res.seaportAddress)
+        : undefined,
     order: {
-      offerer: fromH160ToAddress(res.order.offerer),
-      zone: fromH160ToAddress(res.order.zone),
-      offer: res.order.offer.map((o) => {
-        return {
-          itemType: o.itemType,
-          token: o.token ? fromH160ToAddress(o.token) : zeroAddress,
-          identifierOrCriteria: o.identifierOrCriteria
-            ? fromH256(o.identifierOrCriteria)
-            : 0n,
-          startAmount: o.startAmount ? fromH256(o.startAmount) : 0n,
-          endAmount: o.endAmount ? fromH256(o.endAmount) : 0n,
-        };
-      }),
-      consideration: res.order.consideration.map((c) => {
-        return {
-          itemType: c.itemType,
-          token: c.token ? fromH160ToAddress(c.token) : zeroAddress,
-          identifierOrCriteria: c.identifierOrCriteria
-            ? fromH256(c.identifierOrCriteria)
-            : 0n,
-          startAmount: c.startAmount ? fromH256(c.startAmount) : 0n,
-          endAmount: c.endAmount ? fromH256(c.endAmount) : 0n,
-          recipient: c.recipient ? fromH160ToAddress(c.recipient) : zeroAddress,
-        };
-      }),
-      orderType: res.order.orderType,
-      startTime: fromH256(res.order.startTime),
-      endTime: fromH256(res.order.endTime),
-      zoneHash: res.order.zoneHash
-        ? pad(toHex(fromH256(res.order.zoneHash)), {
-            size: 32,
-          })
+      offerer:
+        res.order?.offerer !== undefined
+          ? fromH160ToAddress(res.order.offerer)
+          : undefined,
+      zone:
+        res.order?.zone !== undefined
+          ? fromH160ToAddress(res.order.zone)
+          : undefined,
+      offer: res.order?.offer.map((o) => ({
+        itemType: o.itemType,
+        token: o.token ? fromH160ToAddress(o.token) : zeroAddress,
+        identifierOrCriteria: o.identifierOrCriteria
+          ? fromH256(o.identifierOrCriteria)
+          : 0n,
+        startAmount: o.startAmount ? fromH256(o.startAmount) : 0n,
+        endAmount: o.endAmount ? fromH256(o.endAmount) : 0n,
+      })),
+      consideration: res.order?.consideration.map((c) => ({
+        itemType: c.itemType,
+        token: c.token ? fromH160ToAddress(c.token) : zeroAddress,
+        identifierOrCriteria: c.identifierOrCriteria
+          ? fromH256(c.identifierOrCriteria)
+          : 0n,
+        startAmount: c.startAmount ? fromH256(c.startAmount) : 0n,
+        endAmount: c.endAmount ? fromH256(c.endAmount) : 0n,
+        recipient: c.recipient ? fromH160ToAddress(c.recipient) : zeroAddress,
+      })),
+      orderType: res.order?.orderType,
+      startTime:
+        res.order?.startTime !== undefined
+          ? fromH256(res.order.startTime)
+          : undefined,
+      endTime:
+        res.order?.endTime !== undefined
+          ? fromH256(res.order.endTime)
+          : undefined,
+      zoneHash: res.order?.zoneHash
+        ? pad(toHex(fromH256(res.order.zoneHash)), { size: 32 })
         : NULL_BYTES32,
-      salt: res.order.salt ? fromH256(res.order.salt) : 0n,
-      conduitKey: res.order.conduitKey
-        ? pad(toHex(fromH256(res.order.conduitKey)), {
-            size: 32,
-          })
+      salt: res.order?.salt ? fromH256(res.order.salt) : 0n,
+      conduitKey: res.order?.conduitKey
+        ? pad(toHex(fromH256(res.order.conduitKey)), { size: 32 })
         : NULL_BYTES32,
     },
   };
-
-  // Additional validation checks for consideration and offer.
-
-  if (!parsedSoftQuoteResponse.order.consideration[0]) {
-    throw new Error('Invalid response from RFQ server. Missing consideration.');
-  }
-
-  if (!parsedSoftQuoteResponse.order.offer[0]) {
-    throw new Error('Invalid response from RFQ server. Missing offer.');
-  }
 
   return parsedSoftQuoteResponse;
 };
