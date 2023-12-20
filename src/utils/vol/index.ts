@@ -164,9 +164,7 @@ class OptionsGreeks {
     sigma: number,
     tau: number,
   ): number {
-    return (
-      (log(st / K) + (r - q + pow(sigma, 2) / 2) * tau) / (sigma * sqrt(tau))
-    );
+    return (log(st / K) + (r + pow(sigma, 2) / 2) * tau) / (sigma * sqrt(tau));
   }
 
   /**
@@ -205,20 +203,23 @@ class OptionsGreeks {
       return 0;
     }
 
+    let ist = st;
+
+    if (q !== 0) {
+      const dividendValue = st * q * tau * exp(-r * tau);
+      ist = st - dividendValue;
+    }
+
     // Calculate d1 and d2
-    const d1 = this.d1(st, K, r, q, sigma, tau);
+    const d1 = this.d1(ist, K, r, q, sigma, tau);
     const d2 = this.d2(d1, sigma, tau);
 
     if (type === TypeOfOption.Call) {
       // Calculate call option price
-      return (
-        st * exp(-q * tau) * this.phi(d1) - K * exp(-r * tau) * this.phi(d2)
-      );
+      return ist * this.phi(d1) - K * exp(-r * tau) * this.phi(d2);
     }
     // Calculate put option price
-    return (
-      K * exp(-r * tau) * this.phi(-d2) - st * exp(-q * tau) * this.phi(-d1)
-    );
+    return K * exp(-r * tau) * this.phi(-d2) - ist * this.phi(-d1);
   }
 
   /**
