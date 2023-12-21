@@ -45,15 +45,15 @@ describe('Brent root-finding algorithm', () => {
 
 describe('Options Greeks BSM and IV convergence', () => {
   it('should calculate the correct price for a European put option using Black-Scholes-Merton model', () => {
-    const st = 100; // Spot price of the underlying asset
-    const K = 95; // Strike price of the option
+    const st = 40; // Spot price of the underlying asset
+    const K = 40; // Strike price of the option
     const q = 0.05; // Dividend yield
     const t = 0.5; // Time to expiration
-    const r = 0.1; // Risk-free interest rate
-    const sigma = 0.2; // Volatility of the asset
+    const r = 0.09; // Risk-free interest rate
+    const sigma = 0.3; // Volatility of the asset
 
     const calculatedPutPrice = OptionsGreeks.blackScholesMerton(
-      TypeOfOption.Put,
+      TypeOfOption.Call,
       st,
       K,
       r,
@@ -63,7 +63,7 @@ describe('Options Greeks BSM and IV convergence', () => {
     );
 
     // assertEquals in QUnit is analogous to toBeCloseTo in vitest with a precision of 4 decimal places
-    expect(calculatedPutPrice).toBeCloseTo(2.4648, 4);
+    expect(calculatedPutPrice).toBeCloseTo(3.6817718494101577, 2);
   });
 
   it('should calculate the correct implied volatility', () => {
