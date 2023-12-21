@@ -29,9 +29,9 @@
   "prettier": "@vercel/style-guide/prettier",
   "dependencies": {
     "@graphql-typed-document-node/core": "^3.2.0",
-    "date-fns": "^3.0.0",
+    "date-fns": "^3.0.5",
     "graphql": "^16.8.1",
-    "mathjs": "^12.2.0"
+    "mathjs": "^12.2.1"
   },
   "devDependencies": {
     "@bufbuild/buf": "^1.28.1",
@@ -48,16 +48,16 @@
     "@parcel/packager-ts": "^2.10.3",
     "@parcel/transformer-typescript-tsc": "^2.10.3",
     "@parcel/transformer-typescript-types": "^2.10.3",
-    "@types/node": "^20.10.4",
+    "@types/node": "^20.10.5",
     "@vercel/style-guide": "^5.1.0",
-    "@vitest/coverage-v8": "^1.0.4",
-    "eslint": "^8.55.0",
+    "@vitest/coverage-v8": "^1.1.0",
+    "eslint": "^8.56.0",
     "eslint-config-canonical": "^42.8.0",
     "parcel": "^2.10.3",
     "prettier": "^3.1.1",
     "typedoc": "^0.25.4",
     "typedoc-plugin-missing-exports": "^2.1.0",
-    "vitest": "^1.0.4"
+    "vitest": "^1.1.0"
   },
   "peerDependencies": {
     "@bufbuild/protobuf": "^1.6.0",
