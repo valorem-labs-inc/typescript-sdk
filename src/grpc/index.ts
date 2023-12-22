@@ -1,4 +1,26 @@
-export * from './clients';
-export * from './hi-lo-bit-segmentation';
-export * from './interceptors';
-export * from './utils';
+export type {
+  AuthClient,
+  FeesClient,
+  RFQClient,
+  SpotClient,
+  ValoremGRPCClients,
+} from './clients';
+export {
+  toH40,
+  toH96,
+  toH128,
+  toH160,
+  toH256,
+  fromH40,
+  fromH96,
+  fromH128,
+  fromH160,
+  fromH160ToAddress,
+  fromH256,
+  parseQuoteResponse,
+  type ParsedQuoteResponse,
+  parseSoftQuoteResponse,
+  type ParsedSoftQuoteResponse,
+} from './hi-lo-bit-segmentation';
+export { trackCookieInterceptor } from './interceptors';
+export { handleGRPCRequest } from './utils';

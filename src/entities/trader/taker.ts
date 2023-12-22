@@ -1,5 +1,5 @@
-import type { ParsedQuoteResponse } from '../../grpc';
-import type { QuoteRequest } from '../../lib/codegen/rfq_pb';
+import type { ParsedQuoteResponse } from '../../grpc/hi-lo-bit-segmentation/parse-quote-response';
+import type { QuoteRequest } from '../../lib/codegen/grpc/rfq_pb';
 import { Trader } from './base-trader';
 import type { TraderConstructorArgs } from './base-trader';
 

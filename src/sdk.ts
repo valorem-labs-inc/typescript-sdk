@@ -1,7 +1,9 @@
 import type { Chain, PrivateKeyAccount, Account, LocalAccount } from 'viem';
 import { arbitrum, arbitrumGoerli } from 'viem/chains';
 import type { PublicClient, WalletClient } from '@wagmi/core';
-import { ClearinghouseContract, SeaportContract, WebTaker } from './entities';
+import { SeaportContract } from './entities/contracts/seaport';
+import { ClearinghouseContract } from './entities/contracts/clearinghouse';
+import { WebTaker } from './entities/trader/web-taker';
 import { Maker } from './entities/trader/maker';
 import { Taker } from './entities/trader/taker';
 import type { ValoremGRPCClients } from './grpc/clients';

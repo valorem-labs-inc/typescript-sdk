@@ -6,9 +6,16 @@ import {
   sliceHex,
   toBytes,
 } from 'viem';
-import type { OptionTypeInfo, SimulatedTxRequest } from '../../types';
+import type {
+  OptionTypeInfo,
+  SimulatedTxRequest,
+  SupportedChainId,
+} from '../../types';
 import type { Trader } from '../trader/base-trader';
 import type { ClearinghouseContract } from '../contracts/clearinghouse';
+import { SupportedAsset } from '../assets/supported-asset';
+import { OptionAssetPair } from '../assets/asset-pair';
+import type { SubgraphOptionType } from '../../lib/subgraph/types';
 
 /**
  * Arguments required for constructing an OptionType instance.
@@ -22,7 +29,7 @@ export interface OptionTypeArgs {
 /**
  * Represents the type of option in the Valorem Clear system.
  */
-export class OptionType {
+export class OptionType extends OptionAssetPair {
   // Information about the option type.
   public optionInfo: OptionTypeInfo;
   // Unique identifier derived from the option information.
@@ -39,6 +46,10 @@ export class OptionType {
    * Constructs an OptionType instance with the provided arguments.
    */
   public constructor({ optionInfo, optionTypeId, typeExists }: OptionTypeArgs) {
+    super({
+      exerciseAsset: SupportedAsset.fromAddress(optionInfo.exerciseAsset),
+      underlyingAsset: SupportedAsset.fromAddress(optionInfo.underlyingAsset),
+    });
     this.optionInfo = optionInfo;
     this.optionTypeId = optionTypeId;
     this.typeExists = typeExists;
@@ -130,6 +141,48 @@ export class OptionType {
     });
   }
 
+  static fromSubgraph({
+    subgraphOptionType,
+    chainId,
+  }: {
+    subgraphOptionType: SubgraphOptionType;
+    chainId: SupportedChainId;
+  }) {
+    // get tokens
+    const exerciseToken = SupportedAsset.getSupportedAssetsByChainId(
+      chainId,
+    ).find((token) => token.symbol === subgraphOptionType.exerciseAsset.symbol);
+    const underlyingToken = SupportedAsset.getSupportedAssetsByChainId(
+      chainId,
+    ).find(
+      (token) => token.symbol === subgraphOptionType.underlyingAsset.symbol,
+    );
+
+    if (!exerciseToken) throw new Error('Exercise token not found');
+    if (!underlyingToken) throw new Error('Underlying token not found');
+
+    // extract amounts and timestamps to pass to option constructor
+    const underlyingAmount = BigInt(subgraphOptionType.underlyingAmount);
+    const exerciseAmount = BigInt(subgraphOptionType.exerciseAmount);
+    const exerciseTimestamp = Number(subgraphOptionType.exerciseTimestamp);
+    const expiryTimestamp = Number(subgraphOptionType.expiryTimestamp);
+
+    const optionInfo = {
+      underlyingAsset: underlyingToken.address,
+      underlyingAmount,
+      exerciseAsset: exerciseToken.address,
+      exerciseAmount,
+      exerciseTimestamp,
+      expiryTimestamp,
+    };
+
+    return new this({
+      optionInfo,
+      optionTypeId: BigInt(subgraphOptionType.id),
+      typeExists: true,
+    });
+  }
+
   /**
    * Retrieves the option type information from the clearinghouse contract.
    * @param tokenId - The unique identifier of the option or claim.
@@ -161,7 +214,7 @@ export class OptionType {
    * @param info - The information detailing the option type.
    * @returns The generated option type ID.
    */
-  protected static getOptionTypeId(info: OptionTypeInfo) {
+  static getOptionTypeId(info: OptionTypeInfo) {
     // Encode the option type information into ABI parameters.
     const encoded = encodeAbiParameters(
       [

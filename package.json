@@ -1,6 +1,6 @@
 {
   "name": "@valorem-labs-inc/sdk",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "repository": {
     "type": "git",
     "url": "https://github.com/valorem-labs-inc/typescript-sdk.git"
@@ -12,12 +12,14 @@
   "source": "src/index.ts",
   "types": "dist/types.d.ts",
   "scripts": {
-    "build": "pnpm clean && pnpm codegen && pnpm parcel build --no-cache",
+    "build": "pnpm clean && pnpm generate && pnpm parcel build --no-cache",
     "ci:release": "pnpm build && pnpm changeset publish",
     "clean": "rm -rf ./dist",
-    "codegen": "rm -rf ./src/lib/codegen && npx buf generate",
     "format": "prettier --write \"**/*.{ts,tsx,md,json}\"",
     "gen-docs": "typedoc",
+    "generate": "pnpm generate:clean && pnpm generate:grpc && pnpm generate:gql",
+    "generate:clean": "rm -rf ./src/lib/codegen",
+    "generate:gql": "graphql-codegen",
     "generate:grpc": "npx buf generate",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
@@ -26,7 +28,10 @@
   },
   "prettier": "@vercel/style-guide/prettier",
   "dependencies": {
-    "mathjs": "^12.2.0"
+    "@graphql-typed-document-node/core": "^3.2.0",
+    "date-fns": "^3.0.5",
+    "graphql": "^16.8.1",
+    "mathjs": "^12.2.1"
   },
   "devDependencies": {
     "@bufbuild/buf": "^1.28.1",
@@ -35,19 +40,24 @@
     "@connectrpc/connect-node": "^1.2.0",
     "@connectrpc/connect-web": "^1.2.0",
     "@connectrpc/protoc-gen-connect-es": "^1.2.0",
+    "@graphql-codegen/cli": "^5.0.0",
+    "@graphql-codegen/client-preset": "^4.1.0",
+    "@graphql-codegen/typescript": "^4.0.1",
+    "@graphql-codegen/typescript-operations": "^4.0.1",
     "@parcel/config-default": "^2.10.3",
     "@parcel/packager-ts": "^2.10.3",
     "@parcel/transformer-typescript-tsc": "^2.10.3",
     "@parcel/transformer-typescript-types": "^2.10.3",
-    "@types/node": "^20.10.4",
+    "@types/node": "^20.10.5",
     "@vercel/style-guide": "^5.1.0",
-    "@vitest/coverage-v8": "^1.0.4",
-    "eslint": "^8.55.0",
+    "@vitest/coverage-v8": "^1.1.0",
+    "eslint": "^8.56.0",
+    "eslint-config-canonical": "^42.8.0",
     "parcel": "^2.10.3",
     "prettier": "^3.1.1",
     "typedoc": "^0.25.4",
     "typedoc-plugin-missing-exports": "^2.1.0",
-    "vitest": "^1.0.4"
+    "vitest": "^1.1.0"
   },
   "peerDependencies": {
     "@bufbuild/protobuf": "^1.6.0",

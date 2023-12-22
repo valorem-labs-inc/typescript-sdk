@@ -1,5 +1,13 @@
 # @valorem-labs-inc/sdk
 
+## 0.0.10
+
+### Patch Changes
+
+- add subgraph utils/classes
+- add supported assets
+- fix bug where OptionsGreeks would throw an error calculating IV
+
 ## 0.0.9
 
 ### Patch Changes

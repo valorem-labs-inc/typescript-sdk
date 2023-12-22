@@ -18,24 +18,27 @@ import type { PartialMessage } from '@bufbuild/protobuf';
 import { ConnectError } from '@connectrpc/connect';
 import { ERC20Contract } from '../contracts/erc20';
 import type { SimulatedTxRequest } from '../../types';
+import { type ParsedQuoteResponse } from '../../grpc/hi-lo-bit-segmentation/parse-quote-response';
+import type {
+  SpotClient,
+  RFQClient,
+  FeesClient,
+  AuthClient,
+  ValoremGRPCClients,
+} from '../../grpc/clients';
+import { handleGRPCRequest } from '../../grpc/utils';
+import { fromH160ToAddress } from '../../grpc/hi-lo-bit-segmentation/hi-lo-to-big-int';
 import {
-  parseQuoteResponse,
-  toH256,
   toH160,
-  fromH160ToAddress,
-  handleGRPCRequest,
-  type AuthClient,
-  type FeesClient,
-  type RFQClient,
-  type SpotClient,
-  type ParsedQuoteResponse,
-  type ValoremGRPCClients,
-} from '../../grpc';
-import { createSIWEMessage } from '../../utils';
+  toH256,
+} from '../../grpc/hi-lo-bit-segmentation/bigint-to-hi-lo';
+import { parseQuoteResponse } from '../../grpc/hi-lo-bit-segmentation/parse-quote-response';
+import { createSIWEMessage } from '../../utils/siwe';
 import { CLEAR_ADDRESS, SEAPORT_ADDRESS, NULL_BYTES32 } from '../../constants';
-import { ClearinghouseContract, SeaportContract } from '../contracts';
-import { Action, QuoteRequest } from '../../lib/codegen/rfq_pb';
-import { ItemType } from '../../lib/codegen/seaport_pb';
+import { SeaportContract } from '../contracts/seaport';
+import { ClearinghouseContract } from '../contracts/clearinghouse';
+import { Action, QuoteRequest } from '../../lib/codegen/grpc/rfq_pb';
+import { ItemType } from '../../lib/codegen/grpc/seaport_pb';
 
 /**
  * Constructor arguments for creating a Trader instance.
