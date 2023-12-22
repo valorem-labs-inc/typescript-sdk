@@ -67,19 +67,21 @@ describe('Options Greeks BSM and IV convergence', () => {
   });
 
   it('should calculate the correct implied volatility', () => {
-    const S = 100; // Spot price of the underlying asset
-    const K = 100; // Strike price of the option
+    const S = 2225; // Spot price of the underlying asset
+    const K = 2200; // Strike price of the option
     const sigma = 0.2; // Volatility of the asset
     const r = 0.01; // Risk-free interest rate
     const type = TypeOfOption.Call; // 'c' for call option
-    const t = 0.5; // Time to expiration
+    const t = 0.0076; // Time to expiration
     const q = 0; // Dividend yield
 
     const expectedPrice = 5.87602423383;
     const expectedIv = 0.2;
 
     // Calculate the option price using Black-Scholes-Merton model
-    const price = OptionsGreeks.blackScholesMerton(type, S, K, r, q, sigma, t);
+    //const price = OptionsGreeks.blackScholesMerton(type, S, K, r, q, sigma, t);
+
+    const price = 10;
 
     // Calculate the implied volatility using the provided sigma function
     const impliedVol = OptionsGreeks.sigma(type, price, S, K, r, q, t);
