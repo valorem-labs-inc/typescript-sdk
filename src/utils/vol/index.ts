@@ -244,8 +244,8 @@ class OptionsGreeks {
     T: number,
   ): number {
     const brent = new Brent();
-    const lowerBound = 0.001; // Lower bound for volatility search
-    const upperBound = 5.0; // Upper bound for volatility search
+    const lowerBound = -5; // Lower bound for volatility search
+    const upperBound = 5; // Upper bound for volatility search
 
     // Function for Brent's method to find the root
     const marketPriceDelta = (sigma: number) => {
