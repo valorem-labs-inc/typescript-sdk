@@ -34,6 +34,7 @@ jobs:
 
       - name: Install packages, compile SDK, and build docs
         run: |
+          pnpm ci:preinstall
           pnpm i
           pnpm generate
           pnpm gen-docs

@@ -13,6 +13,7 @@
   "types": "dist/types.d.ts",
   "scripts": {
     "build": "pnpm clean && pnpm generate && pnpm parcel build --no-cache",
+    "ci:preinstall": "pnpm i -g node-gyp-build node-gyp-build-optional-packages",
     "ci:release": "pnpm build && pnpm changeset publish",
     "clean": "rm -rf ./dist",
     "format": "prettier --write \"**/*.{ts,tsx,md,json}\"",
