@@ -29,7 +29,7 @@
   "prettier": "@vercel/style-guide/prettier",
   "dependencies": {
     "@graphql-typed-document-node/core": "^3.2.0",
-    "date-fns": "^3.0.5",
+    "date-fns": "^3.0.6",
     "graphql": "^16.8.1",
     "mathjs": "^12.2.1"
   },
@@ -64,7 +64,7 @@
     "@connectrpc/connect": "^1.2.0",
     "@wagmi/core": "^1.4.12",
     "typescript": "^5.3.0",
-    "viem": "^1.19.15"
+    "viem": "^1.21.1"
   },
   "peerDependenciesMeta": {
     "typescript": {
