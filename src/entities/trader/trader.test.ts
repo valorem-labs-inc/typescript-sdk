@@ -1,4 +1,4 @@
-import { arbitrumGoerli } from 'viem/chains';
+import { arbitrumSepolia } from 'viem/chains';
 import { privateKeyToAccount } from 'viem/accounts';
 import { describe, expect, it, vi } from 'vitest';
 import { createPromiseClient } from '@connectrpc/connect';
@@ -21,7 +21,7 @@ describe('Trader Class', () => {
     // create a Trader instance (essentially a wallet/account/signer, with some utility methods)
     const trader = new Trader({
       account,
-      chain: arbitrumGoerli,
+      chain: arbitrumSepolia,
       authClient,
       rfqClient,
     });

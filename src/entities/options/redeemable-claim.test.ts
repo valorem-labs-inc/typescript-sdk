@@ -6,11 +6,11 @@ import { Option } from './exercisable-option';
 
 // The unique identifier for the claim we want to test.
 const claimId =
-  39619444411110155182191577564943662405077439414287374917766485031893178777601n;
+  72843026366421500206466009172807756685221693984775973000410191373222805504001n;
 
 // Expected option type identifier for the claim.
 const expectedOptionTypeId =
-  39619444411110155182191577564943662405077439414287374917766485031893178777600n;
+  72843026366421500206466009172807756685221693984775973000410191373222805504000n;
 
 describe('Redeemable Claim', () => {
   it('Should be able to load a Claim', async () => {
@@ -19,8 +19,8 @@ describe('Redeemable Claim', () => {
 
     // Assert various properties of the claim to ensure it has loaded correctly.
     expect(claim.tokenId).toEqual(claimId);
-    expect(claim.tokenType).toEqual(0); // 0 indicates a redeemable claim
-    expect(claim.redeemed).toBeTruthy(); // Assumes the claim has already been redeemed
+    expect(claim.tokenType).toEqual(2); // 2 indicates a redeemable claim
+    expect(claim.redeemed).toBeFalsy(); // Assumes the claim has already been redeemed
     expect(claim.typeExists).toBeTruthy();
     expect(claim.optionTypeId).toEqual(expectedOptionTypeId);
     expect(claim.optionInfo).toBeDefined();
