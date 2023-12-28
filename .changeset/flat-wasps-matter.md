@@ -1,5 +1,5 @@
 ---
-"@valorem-labs-inc/sdk": patch
+'@valorem-labs-inc/sdk': patch
 ---
 
-add arbitrum sepolia deployments
+add arbitrum sepolia deployments; drop arbitrum goerli

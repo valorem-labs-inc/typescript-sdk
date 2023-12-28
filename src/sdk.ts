@@ -1,5 +1,5 @@
 import type { Chain, PrivateKeyAccount, Account, LocalAccount } from 'viem';
-import { arbitrum, arbitrumGoerli } from 'viem/chains';
+import { arbitrum, arbitrumSepolia } from 'viem/chains';
 import type { PublicClient, WalletClient } from '@wagmi/core';
 import { SeaportContract } from './entities/contracts/seaport';
 import { ClearinghouseContract } from './entities/contracts/clearinghouse';
@@ -42,10 +42,10 @@ export class ValoremSDK {
   }: SDKOptions) {
     const isSupportedNetwork =
       publicClient.chain.id === arbitrum.id ||
-      publicClient.chain.id === arbitrumGoerli.id;
+      publicClient.chain.id === arbitrumSepolia.id;
     if (!isSupportedNetwork) {
       throw new Error(
-        `Unsupported network: ${publicClient.chain.name}. Please use Arbitrum or Arbitrum Goerli`,
+        `Unsupported network: ${publicClient.chain.name}. Please use Arbitrum or Arbitrum Sepolia`,
       );
     }
 

@@ -45,21 +45,21 @@ the ValoremSDK. Here's a quick start guide:
 ```typescript
 import { createPublicClient, createWalletClient, http } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
-import { arbitrumGoerli } from 'viem/chains';
+import { arbitrumSepolia } from 'viem/chains';
 import { ValoremSDK } from '@valorem-labs-inc/sdk';
 
 // Replace YOUR_PRIVATE_KEY with your Ethereum private key.
 const account = privateKeyToAccount(YOUR_PRIVATE_KEY);
 
-// Set up Viem clients for the Arbitrum Goerli test network.
+// Set up Viem clients for the Arbitrum Sepolia test network.
 const publicClient = createPublicClient({
-  chain: arbitrumGoerli,
+  chain: arbitrumSepolia,
   transport: http(),
 });
 
 const walletClient = createWalletClient({
   account,
-  chain: arbitrumGoerli,
+  chain: arbitrumSepolia,
   transport: http(),
 });
 
