@@ -42,8 +42,8 @@ export class SupportedAsset extends Asset {
     const assets = SUPPORTED_ASSETS.filter(
       (_asset) => _asset.address.toLowerCase() === address.toLowerCase(),
     );
-    if (assets.length !== 1) {
-      throw new Error(`Unable to determine asset for address ${address}`);
+    if (assets.length === 0) {
+      throw new Error(`No asset found for address ${address}`);
     }
     return assets[0];
   }
