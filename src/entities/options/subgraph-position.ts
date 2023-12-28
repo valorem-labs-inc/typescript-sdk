@@ -6,6 +6,7 @@ import type {
   SubgraphOptionType,
 } from '../../lib/subgraph/types';
 import { BASE_SCALAR_BN } from '../../constants';
+import { isSupportedChainId } from '../../utils/chains';
 import { OptionType } from './option-type';
 
 export class SubgraphPosition extends OptionType {
@@ -194,8 +195,7 @@ export class SubgraphPosition extends OptionType {
     subgraphPosition: SubgraphOptionPosition;
     chainId: number;
   }) {
-    if (chainId !== 42161 && chainId !== 421613)
-      throw new Error('Unsupported chainId');
+    if (!isSupportedChainId(chainId)) throw new Error('Unsupported chainId');
 
     // determine if ERC-1155 is exercisable option or redeemable claim
     const isClaim = subgraphPosition.token.type === 2;

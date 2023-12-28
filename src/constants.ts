@@ -1,18 +1,3 @@
-import {
-  arbitrum,
-  arbitrumSepolia,
-  arbitrumGoerli,
-  foundry,
-} from 'viem/chains';
-
-/** Chains */
-export const SUPPORTED_CHAINS = {
-  arbitrum,
-  arbitrumSepolia,
-  arbitrumGoerli,
-  foundry,
-};
-
 /** Contracts */
 // Valorem Clearinghouse on Arbitrum One (mainnet) & Arbitrum Goerli (testnet)
 export const CLEAR_ADDRESS = '0x402A401B1944EBb5A3030F36Aa70d6b5794190c9';

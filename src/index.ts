@@ -1,7 +1,6 @@
 /* eslint-disable camelcase */
 export { CLEAR_ABI, SEAPORT_V1_5_ABI, SEAPORT_VALIDATOR_ABI } from './abi';
 export {
-  SUPPORTED_CHAINS,
   CLEAR_ADDRESS,
   CLEAR_ADDRESS_FOUNDRY,
   SEAPORT_ADDRESS,
@@ -23,6 +22,7 @@ export {
   OptionAssetPair,
   SupportedAsset,
   SUPPORTED_ASSETS,
+  type SupportedAssetSymbol,
   type ContractConstructorArgs,
   type IClearinghouse,
   type IERC20,
@@ -280,13 +280,7 @@ export {
   type SubgraphClaimERC1155,
   type SubgraphOptionType,
 } from './lib';
-export type {
-  SimulatedTxRequest,
-  SupportedChain,
-  SupportedChainId,
-  SupportedAssetSymbol,
-  OptionTypeInfo,
-} from './types';
+export type { SimulatedTxRequest, OptionTypeInfo } from './types';
 export {
   createSIWEMessage,
   toUnix,
@@ -298,5 +292,9 @@ export {
   type Market,
   type OptionData,
   type Underlying,
+  SUPPORTED_CHAINS,
+  type SupportedChain,
+  type SupportedChainId,
+  isSupportedChainId,
 } from './utils';
 export { ValoremSDK } from './sdk';

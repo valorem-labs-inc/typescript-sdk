@@ -1,7 +1,9 @@
 import type { Address } from 'viem';
-import type { SupportedAssetSymbol, SupportedChainId } from '../../types';
+import type { SupportedChainId } from '../../utils/chains';
 import type { ERC20Token } from './asset';
 import { Asset } from './asset';
+
+export type SupportedAssetSymbol = 'USDC' | 'WETH';
 
 interface SupportedERC20Token extends ERC20Token {
   chainId: SupportedChainId;

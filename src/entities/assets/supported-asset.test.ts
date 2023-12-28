@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import type { SupportedAssetSymbol, SupportedChainId } from '../../types';
-import { SUPPORTED_CHAINS } from '../../constants';
+import type { SupportedChainId } from '../../utils/chains';
+import { SUPPORTED_CHAINS } from '../../utils/chains';
+import type { SupportedAssetSymbol } from './supported-asset';
 import { SupportedAsset, SUPPORTED_ASSETS } from './supported-asset';
 
 const arbitrumWETH = SUPPORTED_ASSETS.filter(

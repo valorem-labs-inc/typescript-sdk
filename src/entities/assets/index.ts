@@ -1,3 +1,7 @@
-export { Asset, type ERC20Token } from './asset';
+export { type ERC20Token, Asset } from './asset';
 export { OptionAssetPair } from './asset-pair';
-export { SupportedAsset, SUPPORTED_ASSETS } from './supported-asset';
+export {
+  type SupportedAssetSymbol,
+  SupportedAsset,
+  SUPPORTED_ASSETS,
+} from './supported-asset';

@@ -4,6 +4,7 @@ export {
   OptionAssetPair,
   SupportedAsset,
   SUPPORTED_ASSETS,
+  type SupportedAssetSymbol,
 } from './assets';
 export {
   type ContractConstructorArgs,

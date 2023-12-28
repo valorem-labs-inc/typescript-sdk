@@ -6,11 +6,8 @@ import {
   sliceHex,
   toBytes,
 } from 'viem';
-import type {
-  OptionTypeInfo,
-  SimulatedTxRequest,
-  SupportedChainId,
-} from '../../types';
+import type { OptionTypeInfo, SimulatedTxRequest } from '../../types';
+import type { SupportedChainId } from '../../utils/chains';
 import type { Trader } from '../trader/base-trader';
 import type { ClearinghouseContract } from '../contracts/clearinghouse';
 import { SupportedAsset } from '../assets/supported-asset';
