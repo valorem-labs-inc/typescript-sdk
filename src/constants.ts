@@ -1,8 +1,14 @@
-import { arbitrum, arbitrumGoerli, foundry } from 'viem/chains';
+import {
+  arbitrum,
+  arbitrumSepolia,
+  arbitrumGoerli,
+  foundry,
+} from 'viem/chains';
 
 /** Chains */
 export const SUPPORTED_CHAINS = {
   arbitrum,
+  arbitrumSepolia,
   arbitrumGoerli,
   foundry,
 };

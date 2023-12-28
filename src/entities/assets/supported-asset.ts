@@ -50,6 +50,7 @@ export class SupportedAsset extends Asset {
 }
 
 export const SUPPORTED_ASSETS: SupportedAsset[] = [
+  /* Arbitrum One */
   {
     chainId: 42161,
     name: 'USD Coin',
@@ -64,6 +65,22 @@ export const SUPPORTED_ASSETS: SupportedAsset[] = [
     decimals: 18,
     address: '0x82af49447d8a07e3bd95bd0d56f35241523fbab1',
   } as const,
+  /* Arbitrum Sepolia */
+  {
+    chainId: 421614,
+    name: 'USD Coin',
+    symbol: 'USDC',
+    decimals: 6,
+    address: '0xa957Cfc02c20D513aAfA5FaA91A5Ff0068eE2De7',
+  } as const,
+  {
+    chainId: 421614,
+    name: 'Wrapped Ether',
+    symbol: 'WETH',
+    decimals: 18,
+    address: '0x9Eb7fE3FA85f44e74e0407d060429e5a11431f3E',
+  } as const,
+  /* Arbitrum Goerli */
   {
     chainId: 421613,
     name: 'USD Coin',
@@ -78,6 +95,7 @@ export const SUPPORTED_ASSETS: SupportedAsset[] = [
     decimals: 18,
     address: '0x618b9a2db0cf23bb20a849daa2963c72770c1372',
   } as const,
+  /* Foundry */
   {
     chainId: 31337,
     name: 'USD Coin',

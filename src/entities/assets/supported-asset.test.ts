@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { SupportedAssetSymbol, SupportedChainId } from '../../types';
+import { SUPPORTED_CHAINS } from '../../constants';
 import { SupportedAsset, SUPPORTED_ASSETS } from './supported-asset';
 
 const arbitrumWETH = SUPPORTED_ASSETS.filter(
@@ -43,11 +44,13 @@ describe('Asset Entity', () => {
   });
 
   it('Should load supported assets for a chainId', () => {
-    const assets = SupportedAsset.getSupportedAssetsByChainId(42161);
+    Object.values(SUPPORTED_CHAINS).forEach(({ id }) => {
+      const assets = SupportedAsset.getSupportedAssetsByChainId(id);
 
-    expect(assets.length).toEqual(2);
-    expect(assets[0].symbol).toEqual('USDC');
-    expect(assets[1].symbol).toEqual('WETH');
+      expect(assets.length).toEqual(2);
+      expect(assets[0].symbol).toEqual('USDC');
+      expect(assets[1].symbol).toEqual('WETH');
+    });
   });
 
   it('Should throw an error if no supported asset is found', () => {
