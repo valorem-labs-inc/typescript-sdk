@@ -1,4 +1,4 @@
-import type { OptionPositionsQuery } from '../codegen/gql/graphql';
+import type { OptionPositionsQuery } from './codegen/graphql';
 
 export type SubgraphOptionPosition = Required<
   NonNullable<OptionPositionsQuery['account']>['ERC1155balances'][number]

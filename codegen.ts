@@ -6,7 +6,7 @@ const config: CodegenConfig = {
   documents: ['src/**/!(*.d).{ts,tsx}'],
   ignoreNoDocuments: true,
   generates: {
-    './src/lib/codegen/gql/': {
+    './src/lib/subgraph/codegen/': {
       preset: 'client',
       config: {
         strictScalars: true,

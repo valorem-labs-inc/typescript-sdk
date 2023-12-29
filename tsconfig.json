@@ -19,5 +19,10 @@
     "resolveJsonModule": true
   },
   "include": ["src", "test", "*.d.ts", "codegen.ts"],
-  "exclude": ["dist", "src/lib/trade-interfaces", "src/lib/codegen"]
+  "exclude": [
+    "dist",
+    "src/lib/trade-interfaces",
+    "src/lib/grpc/codegen",
+    "src/lib/subgraph/codegen"
+  ]
 }

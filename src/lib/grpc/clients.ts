@@ -1,8 +1,8 @@
 import type { createPromiseClient } from '@connectrpc/connect';
-import type { Spot } from '../lib/codegen/grpc/spot_connect';
-import type { Auth } from '../lib/codegen/grpc/auth_connect';
-import type { Fees } from '../lib/codegen/grpc/fees_connect';
-import type { RFQ } from '../lib/codegen/grpc/rfq_connect';
+import type { Spot } from './codegen/spot_connect';
+import type { Auth } from './codegen/auth_connect';
+import type { Fees } from './codegen/fees_connect';
+import type { RFQ } from './codegen/rfq_connect';
 
 /**
  * Type definition for the AuthClient, which handles authentication services
