@@ -1,12 +1,6 @@
 import type { Address } from 'viem';
 import { getAddress, pad, toHex } from 'viem';
-import type {
-  H40,
-  H96,
-  H128,
-  H160,
-  H256,
-} from '../../lib/codegen/grpc/types_pb';
+import type { H40, H96, H128, H160, H256 } from '../codegen/types_pb';
 
 /**
  * Converts a H40 (40-bit high-low structure) to a bigint.

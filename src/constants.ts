@@ -1,14 +1,5 @@
-import { arbitrum, arbitrumGoerli, foundry } from 'viem/chains';
-
-/** Chains */
-export const SUPPORTED_CHAINS = {
-  arbitrum,
-  arbitrumGoerli,
-  foundry,
-};
-
 /** Contracts */
-// Valorem Clearinghouse on Arbitrum One (mainnet) & Arbitrum Goerli (testnet)
+// Valorem Clearinghouse on Arbitrum One (mainnet) & Arbitrum Sepolia (testnet)
 export const CLEAR_ADDRESS = '0x402A401B1944EBb5A3030F36Aa70d6b5794190c9';
 export const CLEAR_ADDRESS_FOUNDRY =
   '0x9f13A8276F0cc1e85F0f62c67Cf9f4f940d7D20d';
@@ -22,8 +13,8 @@ export const GRPC_ENDPOINT = 'https://trade.valorem.xyz';
 export const DOMAIN = 'trade.valorem.xyz';
 export const ARBITRUM_SUBGRAPH =
   'https://api.thegraph.com/subgraphs/name/valorem-labs-inc/valorem-v1-arbitrum';
-export const ARBITRUM_GOERLI_SUBGRAPH =
-  'https://api.thegraph.com/subgraphs/name/valorem-labs-inc/valorem-v1-arbitrum-goerli';
+export const ARBITRUM_SEPOLIA_SUBGRAPH =
+  'https://api.thegraph.com/subgraphs/name/valorem-labs-inc/valorem-v1-arbitrum-sepolia';
 
 /** Time & Dates */
 export const ONE_DAY_UNIX = 60 * 60 * 24;

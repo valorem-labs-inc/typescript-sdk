@@ -5,8 +5,8 @@ import { SupportedAsset } from '.';
 describe('Asset Pair Entity', () => {
   it('Should load the proper values', () => {
     const pair1 = new OptionAssetPair({
-      exerciseAsset: SupportedAsset.fromSymbolAndChainId('USDC', 421613),
-      underlyingAsset: SupportedAsset.fromSymbolAndChainId('WETH', 421613),
+      exerciseAsset: SupportedAsset.fromSymbolAndChainId('USDC', 421614),
+      underlyingAsset: SupportedAsset.fromSymbolAndChainId('WETH', 421614),
     });
 
     expect(pair1.underlyingAsset.symbol).toEqual('WETH');
@@ -18,8 +18,8 @@ describe('Asset Pair Entity', () => {
     expect(pair1.volatileAsset.symbol).toEqual('WETH');
 
     const pair2 = new OptionAssetPair({
-      exerciseAsset: SupportedAsset.fromSymbolAndChainId('WETH', 421613),
-      underlyingAsset: SupportedAsset.fromSymbolAndChainId('USDC', 421613),
+      exerciseAsset: SupportedAsset.fromSymbolAndChainId('WETH', 421614),
+      underlyingAsset: SupportedAsset.fromSymbolAndChainId('USDC', 421614),
     });
 
     expect(pair2.underlyingAsset.symbol).toEqual('USDC');

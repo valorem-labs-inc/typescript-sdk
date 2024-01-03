@@ -6,8 +6,8 @@ import {
   toHex,
   zeroAddress,
 } from 'viem';
-import { NULL_BYTES32 } from '../../constants';
-import type { QuoteResponse } from '../../lib/codegen/grpc/rfq_pb';
+import { NULL_BYTES32 } from '../../../constants';
+import type { QuoteResponse } from '../codegen/rfq_pb';
 import { fromH128, fromH160ToAddress, fromH256 } from './hi-lo-to-big-int';
 
 export type ParsedQuoteResponse = ReturnType<typeof parseQuoteResponse>;

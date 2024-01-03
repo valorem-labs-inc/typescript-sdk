@@ -5,7 +5,6 @@ import type {
   Chain,
   WriteContractParameters,
 } from 'viem';
-import type { SUPPORTED_CHAINS } from './constants';
 
 export type SimulatedTxRequest = WriteContractParameters<
   Abi,
@@ -14,12 +13,6 @@ export type SimulatedTxRequest = WriteContractParameters<
   Account | undefined,
   Chain
 >;
-
-export type SupportedChain =
-  (typeof SUPPORTED_CHAINS)[keyof typeof SUPPORTED_CHAINS];
-export type SupportedChainId = SupportedChain['id'];
-
-export type SupportedAssetSymbol = 'USDC' | 'WETH';
 
 // TODO(These types need to be extended and enhanced to support the full range of types used)
 // And to favor enums and true data keys over token symbols and strings/numbers interpolated

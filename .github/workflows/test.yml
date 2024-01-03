@@ -25,6 +25,7 @@ jobs:
 
       - name: Install packages, build, lint, and test
         run: |
+          pnpm ci:preinstall
           pnpm i
           pnpm audit
           pnpm build

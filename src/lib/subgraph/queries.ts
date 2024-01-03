@@ -1,4 +1,4 @@
-import { graphql } from '../codegen/gql';
+import { graphql } from './codegen';
 
 export const optionsByAccountQuery = graphql(/* GraphQL */ `
   query OptionPositions($account: ID!) {

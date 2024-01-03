@@ -1,7 +1,6 @@
 /* eslint-disable camelcase */
 export { CLEAR_ABI, SEAPORT_V1_5_ABI, SEAPORT_VALIDATOR_ABI } from './abi';
 export {
-  SUPPORTED_CHAINS,
   CLEAR_ADDRESS,
   CLEAR_ADDRESS_FOUNDRY,
   SEAPORT_ADDRESS,
@@ -9,7 +8,7 @@ export {
   GRPC_ENDPOINT,
   DOMAIN,
   ARBITRUM_SUBGRAPH,
-  ARBITRUM_GOERLI_SUBGRAPH,
+  ARBITRUM_SEPOLIA_SUBGRAPH,
   ONE_DAY_UNIX,
   ONE_WEEK_UNIX,
   NULL_BYTES32,
@@ -23,6 +22,7 @@ export {
   OptionAssetPair,
   SupportedAsset,
   SUPPORTED_ASSETS,
+  type SupportedAssetSymbol,
   type ContractConstructorArgs,
   type IClearinghouse,
   type IERC20,
@@ -66,8 +66,6 @@ export {
   type ParsedSoftQuoteResponse,
   trackCookieInterceptor,
   handleGRPCRequest,
-} from './grpc';
-export {
   type DocumentType,
   type FragmentType,
   graphql,
@@ -115,7 +113,7 @@ export {
   type Account_Filter,
   type BlockChangedFilter,
   type Block_Height,
-  type Claim as GQLClaim,
+  type GQLClaim,
   type ClaimClaimBucketsArgs,
   type ClaimBucket,
   type ClaimBucket_Filter,
@@ -145,7 +143,7 @@ export {
   type Erc1155Transfer_Filter,
   type Event,
   type Event_Filter,
-  type OptionType as GQLOptionType,
+  type GQLOptionType,
   type OptionTypeBucketsArgs,
   type OptionTypeClaimsArgs,
   type OptionTypeBucket,
@@ -280,13 +278,7 @@ export {
   type SubgraphClaimERC1155,
   type SubgraphOptionType,
 } from './lib';
-export type {
-  SimulatedTxRequest,
-  SupportedChain,
-  SupportedChainId,
-  SupportedAssetSymbol,
-  OptionTypeInfo,
-} from './types';
+export type { SimulatedTxRequest, OptionTypeInfo } from './types';
 export {
   createSIWEMessage,
   toUnix,
@@ -298,5 +290,9 @@ export {
   type Market,
   type OptionData,
   type Underlying,
+  SUPPORTED_CHAINS,
+  type SupportedChain,
+  type SupportedChainId,
+  isSupportedChainId,
 } from './utils';
 export { ValoremSDK } from './sdk';
