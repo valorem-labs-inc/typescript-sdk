@@ -3,7 +3,7 @@ import { http, createPublicClient } from 'viem';
 import { arbitrumSepolia } from 'viem/chains';
 import { createGrpcTransport } from '@connectrpc/connect-node';
 import { ClearinghouseContract, GRPC_ENDPOINT } from '../src';
-import { trackCookieInterceptor } from '../src/grpc';
+import { trackCookieInterceptor } from '../src/lib/grpc';
 
 // our mock USDC on Arbitrum Sepolia
 export const USDC_ADDRESS = '0xa957Cfc02c20D513aAfA5FaA91A5Ff0068eE2De7';

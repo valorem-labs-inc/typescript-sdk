@@ -66,8 +66,6 @@ export {
   type ParsedSoftQuoteResponse,
   trackCookieInterceptor,
   handleGRPCRequest,
-} from './grpc';
-export {
   type DocumentType,
   type FragmentType,
   graphql,
@@ -115,7 +113,7 @@ export {
   type Account_Filter,
   type BlockChangedFilter,
   type Block_Height,
-  type Claim as GQLClaim,
+  type GQLClaim,
   type ClaimClaimBucketsArgs,
   type ClaimBucket,
   type ClaimBucket_Filter,
@@ -145,7 +143,7 @@ export {
   type Erc1155Transfer_Filter,
   type Event,
   type Event_Filter,
-  type OptionType as GQLOptionType,
+  type GQLOptionType,
   type OptionTypeBucketsArgs,
   type OptionTypeClaimsArgs,
   type OptionTypeBucket,

@@ -6,7 +6,7 @@ import { ClearinghouseContract } from './entities/contracts/clearinghouse';
 import { WebTaker } from './entities/trader/web-taker';
 import { Maker } from './entities/trader/maker';
 import { Taker } from './entities/trader/taker';
-import type { ValoremGRPCClients } from './grpc/clients';
+import type { ValoremGRPCClients } from './lib/grpc/clients';
 
 interface ViemClients {
   publicClient: PublicClient;

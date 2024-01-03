@@ -18,27 +18,27 @@ import type { PartialMessage } from '@bufbuild/protobuf';
 import { ConnectError } from '@connectrpc/connect';
 import { ERC20Contract } from '../contracts/erc20';
 import type { SimulatedTxRequest } from '../../types';
-import { type ParsedQuoteResponse } from '../../grpc/hi-lo-bit-segmentation/parse-quote-response';
+import { type ParsedQuoteResponse } from '../../lib/grpc/hi-lo-bit-segmentation/parse-quote-response';
 import type {
   SpotClient,
   RFQClient,
   FeesClient,
   AuthClient,
   ValoremGRPCClients,
-} from '../../grpc/clients';
-import { handleGRPCRequest } from '../../grpc/utils';
-import { fromH160ToAddress } from '../../grpc/hi-lo-bit-segmentation/hi-lo-to-big-int';
+} from '../../lib/grpc/clients';
+import { handleGRPCRequest } from '../../lib/grpc/utils';
+import { fromH160ToAddress } from '../../lib/grpc/hi-lo-bit-segmentation/hi-lo-to-big-int';
 import {
   toH160,
   toH256,
-} from '../../grpc/hi-lo-bit-segmentation/bigint-to-hi-lo';
-import { parseQuoteResponse } from '../../grpc/hi-lo-bit-segmentation/parse-quote-response';
+} from '../../lib/grpc/hi-lo-bit-segmentation/bigint-to-hi-lo';
+import { parseQuoteResponse } from '../../lib/grpc/hi-lo-bit-segmentation/parse-quote-response';
 import { createSIWEMessage } from '../../utils/siwe';
 import { CLEAR_ADDRESS, SEAPORT_ADDRESS, NULL_BYTES32 } from '../../constants';
 import { SeaportContract } from '../contracts/seaport';
 import { ClearinghouseContract } from '../contracts/clearinghouse';
-import { Action, QuoteRequest } from '../../lib/codegen/grpc/rfq_pb';
-import { ItemType } from '../../lib/codegen/grpc/seaport_pb';
+import { Action, QuoteRequest } from '../../lib/grpc/codegen/rfq_pb';
+import { ItemType } from '../../lib/grpc/codegen/seaport_pb';
 
 /**
  * Constructor arguments for creating a Trader instance.

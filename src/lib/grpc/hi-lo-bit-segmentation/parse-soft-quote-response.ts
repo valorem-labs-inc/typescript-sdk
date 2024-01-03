@@ -1,6 +1,6 @@
 import { pad, toHex, zeroAddress } from 'viem';
-import { NULL_BYTES32 } from '../../constants';
-import type { SoftQuoteResponse } from '../../lib/codegen/grpc/soft_quote_pb';
+import { NULL_BYTES32 } from '../../../constants';
+import type { SoftQuoteResponse } from '../codegen/soft_quote_pb';
 import { fromH128, fromH160ToAddress, fromH256 } from './hi-lo-to-big-int';
 
 export type ParsedSoftQuoteResponse = ReturnType<typeof parseSoftQuoteResponse>;

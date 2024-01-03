@@ -5,7 +5,8 @@ dist
 
 coverage
 
-src/lib/codegen
+src/lib/grpc/codegen
+src/lib/subgraph/codegen
 src/lib/trade-interfaces
 
 docs
