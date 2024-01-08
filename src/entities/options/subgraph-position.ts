@@ -80,10 +80,7 @@ export class SubgraphPosition extends OptionType {
   }
 
   get isCall() {
-    return (
-      this.rawPositionFromSubgraph.token.optionType?.exerciseAsset.symbol ===
-      'USDC'
-    );
+    return this.exerciseAsset.symbol === 'USDC';
   }
 
   get amountWritten() {
