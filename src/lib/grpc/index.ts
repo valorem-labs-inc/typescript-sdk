@@ -40,11 +40,7 @@ export {
   SignedOrder,
 } from './codegen/seaport_pb';
 export { Spot } from './codegen/spot_connect';
-export {
-  SpotPriceRequest,
-  SpotPriceResponse,
-  SpotPriceInfo,
-} from './codegen/spot_pb';
+export { SpotPriceRequest, SpotPriceInfo } from './codegen/spot_pb';
 export {
   H40,
   H96,
