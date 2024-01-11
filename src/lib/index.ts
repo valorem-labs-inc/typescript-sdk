@@ -41,7 +41,6 @@ export {
   SignedOrder,
   Spot,
   SpotPriceRequest,
-  SpotPriceResponse,
   SpotPriceInfo,
   H40,
   H96,
