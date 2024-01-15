@@ -50,12 +50,13 @@ jobs:
       - name: Publish to Github Packages
         run: pnpm ci:release
 
-      - name: Setup .npmrc file to publish to npm
-        uses: actions/setup-node@v4
-        with:
-          node-version: 18
-          registry-url: 'https://registry.npmjs.org'
-          scope: '@valorem-labs-inc'
+      - name: Unset GHP scope, set NPM scope (setup-node workaround https://github.com/actions/setup-node/issues/763)
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          pnpm config delete @valorem-labs-inc:registry --location project
+          pnpm config set @valorem-labs-inc:registry 'https://registry.npmjs.org' --location project
+          pnpm config set //registry.npmjs.org/:_authToken '${NODE_AUTH_TOKEN}' --location project
 
       - name: Publish to NPM
         env:
