@@ -75,20 +75,71 @@ const valoremSDK = new ValoremSDK({
 Here's how you can sign in and send requests to the Trade API using the SDK:
 
 ```typescript
+import {
+  ValoremSDK,
+  OptionType,
+  get24HrTimestamps,
+  SupportedAsset,
+  type ParsedQuoteResponse,
+} from '@valorem-labs-inc/sdk';
+
+// ... continuing from `Getting Started` section above
 const webTaker = valoremSDK.webTaker;
+const clearinghouse = valoremSDK.clearinghouse;
 
 // Sign in to the Trade API.
 await webTaker.signIn();
 
-// Now you can send requests to the Trade API.
+// Now you can send requests to the Trade API! Let's walkthrough setting up a basic quote request.
+// First we need to get the option ID for the option we want to buy, so let's define the parameters.
+// We'll use WETH as the underlying asset, and USDC as the exercise.
+// For the exercise window we will use the next 24 hours.
+
+// Our mock tokens on Arbitrum Sepolia
+const USDC = SupportedAsset.fromSymbolAndChainId('USDC', 421614);
+const WETH = SupportedAsset.fromSymbolAndChainId('WETH', 421614);
+
+const underlyingAsset = WETH.address;
+const exerciseAsset = USDC.address;
+const underlyingAmount = 1000000000000n; // 1 WETH, divided by 1e6
+const exerciseAmount = 2500n; // 2500 USDC, divided by 1e6
+const { exerciseTimestamp, expiryTimestamp } = get24HrTimestamps();
+
+// Now we have all the information we need to create an OptionType.
+const optionType = await OptionType.fromInfo({
+  optionInfo: {
+    underlyingAsset,
+    underlyingAmount,
+    exerciseAsset,
+    exerciseAmount,
+    exerciseTimestamp,
+    expiryTimestamp,
+  },
+  clearinghouse,
+});
+
+// And with the OptionType's id, we can initialize a quote request.
+const quoteRequest = webTaker.createQuoteRequest({
+  optionId,
+  quantityToBuy: 1,
+});
+
+// Before we start sending requests, let's define a callback to handle responses from Market Makers.
+// This one will automatically accept any quotes we receive.
+async function onQuoteResponse(quote: ParsedQuoteResponse) {
+  await webTaker.acceptQuote({ quote });
+}
+
+// Continuously send requests and handle responses...
+await webTaker.sendRFQ({
+  quoteRequest,
+  onQuoteResponse,
+});
 ```
 
-Yes, it's really that easy.
+For a more comprehensive example using the Valorem TypeScript SDK to create options, request quotes, and fulfill trade orders, check out the [example script in trade-interfaces](https://github.com/valorem-labs-inc/trade-interfaces/blob/main/examples/typescript/src/RFQ_taker.ts).
 
-## Examples
-
-For a comprehensive example of using the Valorem TypeScript SDK to create options,
-request quotes, and fulfill trade orders, check out the [example file](https://github.com/valorem-labs-inc/trade-interfaces/blob/main/examples/typescript/src/RFQ_taker.ts).
+It covers token approvals, option type creation, and error handling in-depth.
 
 ## Documentation
 
