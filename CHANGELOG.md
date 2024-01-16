@@ -1,5 +1,15 @@
 # @valorem-labs-inc/sdk
 
+## 0.0.11
+
+### Patch Changes
+
+- 2071b42: pin `trade-interfaces` to v1.4.0
+- c3fe828: add arbitrum sepolia deployments; drop arbitrum goerli
+- d2a011a: fix CI workflow for NPM publishing
+- d30df61: update readme
+- 652f797: drop parcel for tsup...
+
 ## 0.0.10
 
 ### Patch Changes
