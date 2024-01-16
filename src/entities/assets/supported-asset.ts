@@ -109,7 +109,7 @@ export const SUPPORTED_ASSETS: SupportedAsset[] = [
     name: 'Arbitrum',
     symbol: 'ARB',
     decimals: 18,
-    address: '0xd20A4136D7f88dBa2ACB2C72379697CE7DD82cD0',
+    address: '0x998a301ed303D9b6fAc3096E27eb3FAd72379360',
   } as const,
   /* Foundry */
   {
