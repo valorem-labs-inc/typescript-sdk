@@ -3,7 +3,7 @@ import type { SupportedChainId } from '../../utils/chains';
 import type { ERC20Token } from './asset';
 import { Asset } from './asset';
 
-export type SupportedAssetSymbol = 'USDC' | 'WETH';
+export type SupportedAssetSymbol = 'USDC' | 'WETH' | 'WBTC' | 'ARB';
 
 interface SupportedERC20Token extends ERC20Token {
   chainId: SupportedChainId;
@@ -67,6 +67,20 @@ export const SUPPORTED_ASSETS: SupportedAsset[] = [
     decimals: 18,
     address: '0x82af49447d8a07e3bd95bd0d56f35241523fbab1',
   } as const,
+  {
+    chainId: 42161,
+    name: 'Wrapped Bitcoin',
+    symbol: 'WBTC',
+    decimals: 8,
+    address: '0x2f2a2543B76A4166549F7aaB2e75Bef0aefC5B0f',
+  } as const,
+  {
+    chainId: 42161,
+    name: 'Arbitrum',
+    symbol: 'ARB',
+    decimals: 18,
+    address: '0x912CE59144191C1204E64559FE8253a0e49E6548',
+  } as const,
   /* Arbitrum Sepolia */
   {
     chainId: 421614,
@@ -82,6 +96,20 @@ export const SUPPORTED_ASSETS: SupportedAsset[] = [
     decimals: 18,
     address: '0x9Eb7fE3FA85f44e74e0407d060429e5a11431f3E',
   } as const,
+  {
+    chainId: 421614,
+    name: 'Wrapped Bitcoin',
+    symbol: 'WBTC',
+    decimals: 8,
+    address: '0xB5D16f8DEda771E1f6aa0Bc4c26007B16bcB8009',
+  } as const,
+  {
+    chainId: 421614,
+    name: 'Arbitrum',
+    symbol: 'ARB',
+    decimals: 18,
+    address: '0x998a301ed303D9b6fAc3096E27eb3FAd72379360',
+  } as const,
   /* Foundry */
   {
     chainId: 31337,
@@ -96,5 +124,19 @@ export const SUPPORTED_ASSETS: SupportedAsset[] = [
     symbol: 'WETH',
     decimals: 18,
     address: '0x9Eb7fE3FA85f44e74e0407d060429e5a11431f3E',
+  } as const,
+  {
+    chainId: 31337,
+    name: 'Wrapped Bitcoin',
+    symbol: 'WBTC',
+    decimals: 8,
+    address: '0xB5D16f8DEda771E1f6aa0Bc4c26007B16bcB8009',
+  } as const,
+  {
+    chainId: 31337,
+    name: 'Arbitrum',
+    symbol: 'ARB',
+    decimals: 18,
+    address: '0xd20A4136D7f88dBa2ACB2C72379697CE7DD82cD0',
   } as const,
 ].map((token) => new SupportedAsset(token));

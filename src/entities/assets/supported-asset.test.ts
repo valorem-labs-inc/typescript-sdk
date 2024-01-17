@@ -48,9 +48,11 @@ describe('Asset Entity', () => {
     Object.values(SUPPORTED_CHAINS).forEach(({ id }) => {
       const assets = SupportedAsset.getSupportedAssetsByChainId(id);
 
-      expect(assets.length).toEqual(2);
+      expect(assets.length).toEqual(4);
       expect(assets[0].symbol).toEqual('USDC');
       expect(assets[1].symbol).toEqual('WETH');
+      expect(assets[2].symbol).toEqual('WBTC');
+      expect(assets[3].symbol).toEqual('ARB');
     });
   });
 
