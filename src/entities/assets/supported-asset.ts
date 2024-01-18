@@ -58,7 +58,8 @@ export const SUPPORTED_ASSETS: SupportedAsset[] = [
     name: 'USD Coin',
     symbol: 'USDC',
     decimals: 6,
-    address: '0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8',
+    // Native USDC address on Arbitrum One (not Bridged USDC.e)
+    address: '0xaf88d065e77c8cC2239327C5EDb3A432268e5831',
   } as const,
   {
     chainId: 42161,
