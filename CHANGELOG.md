@@ -1,5 +1,12 @@
 # @valorem-labs-inc/sdk
 
+## 0.0.12
+
+### Patch Changes
+
+- 8d87f4c: switch from Bridged USDC.e to Native USDC (`0xaf88d065e77c8cC2239327C5EDb3A432268e5831`)
+- d18822f: add WBTC and ARB tokens
+
 ## 0.0.11
 
 ### Patch Changes
